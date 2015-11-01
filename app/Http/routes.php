@@ -11,7 +11,12 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('home.index');
-// });
+ Route::get('/app', function() {
+     return view('app');
+ });
 Route::get('/','HomeController@index');
+
+/*---------------------------------------master ----------------------------------------*/
+Route::get('master/getCates', "MasterController@getAllCategories");
+Route::get('master/regis-course',array('uses'=>'MasterController@index'));
+Route::post('master/regis-process',array('uses'=> 'MasterController@regisProcess'));
