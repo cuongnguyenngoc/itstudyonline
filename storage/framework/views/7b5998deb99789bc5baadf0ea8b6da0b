@@ -1,0 +1,117 @@
+<div class="container">
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" role="dialog">
+	    <div class="modal-dialog">
+	      	<!-- Modal content-->
+	      	<div class="modal-content">
+	        	<div class="modal-header" style="padding:15x 50px;">
+	          		<button type="button" class="close" data-dismiss="modal">&times;</button>
+	          		<h4 id="modal-title"><span class="glyphicon"></span> <span>Login</span></h4>
+	        	</div>
+	        	<div id="modal-login">
+		        	<div class="modal-body" style="padding:60px 30px;">
+		          		<form role="form" class="row">
+
+		          			<div class="col-md-6">
+		          				<h5>Login with your account</h5>
+		          				<div class="form-group">
+			              			<!-- <label for="usrname"> Username or Email</label> -->
+			              			<div class="input-group input-group-md">
+			              				<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+			              				<input type="text" class="form-control" id="usrname" placeholder="Enter email">
+			              			</div>
+			            		</div>
+			            		<div class="form-group">
+						            <!-- <label for="psw"> Password</label> -->
+						            <div class="input-group input-group-md">
+			              				<span class="input-group-addon"><span class="glyphicon glyphicon-eye-open"></span></span>
+			              				<input type="password" class="form-control" id="psw" placeholder="Enter password">
+			              			</div>
+						            
+			            		</div>
+			            		<div class="checkbox">
+			              			<label><input type="checkbox" value="" checked>Remember me</label>
+			            		</div>
+			              		<button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Login</button>
+		          			</div>
+		          			<div class="col-md-1">
+		          				<h5>Or</h5>
+		          			</div>
+		            		<div class="col-md-6">
+			              		<a class="btn btn-facebook col-sm-12 btn-lg" style="margin-bottom: 10px;" href=""><i class="fa fa-facebook "></i> Login with Facebook</a>
+	                    		<a class="btn btn-google-plus col-sm-12 btn-lg" href=""><i class="fa fa-google-plus"></i> Login with Google Plus</a>
+		            		</div>
+		              		
+		          		</form>
+		        	</div>
+		        	<div class="modal-footer">
+		          		<p>Don't have an account? <a href="#" id="signupLink">Sign Up</a></p>
+		          		<p>Forgot <a href="#" id="passwdLink">Password?</a></p>
+		        	</div>
+	        	</div>
+	        	<div id="modal-signup">
+		        	<div class="modal-body" style="padding:60px 50px;">
+		          		<form role="form">
+		          			<div class="form-group">
+		              			<label for="fullname"> Full Name</label>
+		              			<div class="input-group input-group-md">
+		              				<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+		              				<input type="text" class="form-control" id="usrname" placeholder="Enter your name">
+		              			</div>
+		            		</div>
+		            		<div class="form-group">
+		              			<label for="usrname"> Email</label>
+		              			<div class="input-group input-group-md">
+		              				<span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
+		              				<input type="text" class="form-control" id="usrname" placeholder="Enter email">
+		              			</div>
+		            		</div>
+		            		<div class="form-group">
+					            <label for="psw"> Password</label>
+					            <div class="input-group input-group-md">
+		              				<span class="input-group-addon"><span class="glyphicon glyphicon-eye-open"></span></span>
+		              				<input type="password" class="form-control" id="psw" placeholder="Enter password">
+		              			</div>
+					            
+		            		</div>
+		            		<div class="checkbox">
+		              			<label><input type="checkbox" value="" checked>To be the first person gets newest courses or news</label>
+		            		</div>
+		              		<button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Sign Up</button>
+		          		</form>
+		        	</div>
+		        	<div class="modal-footer">
+		          		<p>Already have an account? <a href="#" id="loginLink">Login</a></p>
+		        	</div>
+	        	</div>
+	        	<div id="modal-forgotPwd">
+		        	<div class="modal-body" style="padding:40px 50px;">
+		          		<form role="form">
+		            		<div class="form-group">
+		              			<label for="usrname"> Email</label>
+		              			<div class="input-group input-group-md">
+		              				<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+		              				<input type="text" class="form-control" id="usrname" placeholder="Enter email">
+		              			</div>
+		            		</div>
+		              		<button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Reset Password</button>
+		          		</form>
+		        	</div>
+		        	<div class="modal-footer">
+		          		<p>Already have an account? <a href="#" id="loginLink" onclick="login_selected();">Login</a></p>
+		        	</div>
+	        	</div>
+	      	</div>
+	    </div>
+	</div> 
+</div>
+<script type="text/javascript">
+	function login_selected(){
+			$modalLogin.addClass('is-selected');
+			$modalsignup.removeClass('is-selected');
+			$modalPwd.removeClass('is-selected');
+			$modalTitle.children('span').eq(0).addClass('glyphicon-lock');
+			$modalTitle.children('span').eq(0).removeClass('glyphicon-cog');
+			$modalTitle.children('span').eq(1).text(' LOGIN');
+		};
+</script>
