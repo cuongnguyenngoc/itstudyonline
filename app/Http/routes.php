@@ -15,3 +15,12 @@
 //     return view('home.index');
 // });
 Route::get('/','HomeController@index');
+Route::get('test','HomeController@test');
+Route::get('manage','HomeController@manage');
+
+
+//Authentication
+Route::post('checkEmailExist','Auth\AuthController@checkEmailExisted');
+Route::post('register','Auth\AuthController@postRegister');
+Route::post('login','Auth\AuthController@postLogin');
+Route::get('logout','Auth\AuthController@getLogout');

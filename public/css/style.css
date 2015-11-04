@@ -1,0 +1,26 @@
+.modal-content {
+    width: 520px;
+}
+.modal-header, h4, .close {
+    background-color: #5cb85c;
+    color:white !important;
+    text-align: center;
+    font-size: 30px;
+}
+.modal-body {
+    padding: 30px 30px;
+}
+.modal-footer {
+    background-color: #f9f9f9;
+}
+
+#modal-login, #modal-signup, #modal-forgotPwd {
+    display: none;
+}
+#modal-login.is-selected, #modal-signup.is-selected, #modal-forgotPwd.is-selected{
+    display: block;
+}
+
+.invisible {
+    display: none;
+}

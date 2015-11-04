@@ -7,6 +7,9 @@ use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Http\Request;
+use Input;
+use Response;
 
 class AuthController extends Controller
 {
@@ -20,6 +23,7 @@ class AuthController extends Controller
     | a simple trait to add these behaviors. Why don't you explore it?
     |
     */
+    protected $redirectPath = '/';
 
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
@@ -33,6 +37,22 @@ class AuthController extends Controller
         $this->middleware('guest', ['except' => 'getLogout']);
     }
 
+    public function checkEmailExisted(Request $request){
+
+        $input['email'] = $request->get('email');
+
+        if($request->ajax()){
+
+            $validator = Validator::make($input,[
+                            'email' => 'unique:users'
+                        ]);
+            if($validator->fails())
+                return Response::json(FALSE);
+            else 
+                return Response::json(TRUE);
+        }
+    }
+
     /**
      * Get a validator for an incoming registration request.
      *
@@ -42,7 +62,7 @@ class AuthController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
+            'fullname' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|confirmed|min:6',
         ]);
@@ -57,7 +77,7 @@ class AuthController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
+            'fullname' => $data['fullname'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
