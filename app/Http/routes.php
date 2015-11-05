@@ -24,3 +24,8 @@ Route::post('checkEmailExist','Auth\AuthController@checkEmailExisted');
 Route::post('register','Auth\AuthController@postRegister');
 Route::post('login','Auth\AuthController@postLogin');
 Route::get('logout','Auth\AuthController@getLogout');
+
+/*---------------------------------------master ----------------------------------------*/
+Route::get('master/getCates', "MasterController@getAllCategories");
+Route::get('master/regis-course',array('uses'=>'MasterController@index'));
+Route::post('master/regis-process',array('uses'=> 'MasterController@regisProcess'));
