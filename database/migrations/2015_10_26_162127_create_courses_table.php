@@ -28,7 +28,7 @@ class CreateCoursesTable extends Migration
             $table->timestamps();
             
             $table->foreign('cat_id')->references('id')->on('categories')->onDelete('set null');
-            $table->foreign('lang_id')->references('id')->on('programmingLangugages')->onDelete('set null');
+            $table->foreign('lang_id')->references('id')->on('programmingLanguages')->onDelete('set null');
             $table->foreign('level_id')->references('id')->on('learningLevels')->onDelete('set null');
         });
     }

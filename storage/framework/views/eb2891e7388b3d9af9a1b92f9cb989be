@@ -1,0 +1,79 @@
+<?php $__env->startSection('css'); ?>
+    <link href="<?php echo e(url('css/master/styles.css')); ?>" rel="stylesheet">
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('header-top'); ?>
+    <?php echo $__env->make('public.layouts.header.header-top', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('header-middle'); ?>
+    <?php echo $__env->make('public.layouts.header.header-middle', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+
+<!-- Main -->
+<div class="container main">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group" id="task-left">
+                <?php foreach($courseItems as  $key => $values): ?>
+                    <a href="#" class="list-group-item disabled">
+                        <?php echo e($key); ?>
+
+                    </a>
+                    <?php foreach($values as $id => $value): ?>
+                        <a href="#" class="list-group-item list-group-item-success <?php echo e($id); ?>" id="<?php echo e($id); ?>"><?php echo e($value); ?></a> 
+                    <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <?php echo $__env->make('master.panel.course-goals-panel', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+            <?php echo $__env->make('master.panel.curriculum-panel', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+            <?php echo $__env->make('master.panel.basics-panel', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+            <?php echo $__env->make('master.panel.course-summary-panel', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        </div>
+    </div>
+</div>
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('footer'); ?>
+    <?php echo $__env->make('public.layouts.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('script'); ?>
+    <script src="<?php echo e(url('js/master/scripts.js')); ?>"></script>
+    <script type="text/javascript">
+        // $('#task-left').find('.list-group-item-success').first().click(function(){ 
+        //     $(this).addClass('active');
+        //     $(this).addClass('wtf');
+        //     $('div.panel.'+this.id).removeClass('hide');
+        // });
+
+        
+        $('.list-group-item-success').click(function(){
+            if(!$(this).hasClass('course-goals')){
+                if($('#course_id').val()==''){
+                    alert('you have to create basic course first');
+                }else{
+                    $('.list-group-item-success').removeClass('active');
+                    $('div.panel').addClass('hide');    
+                    $(this).addClass('active');
+                    
+                    if($('div.panel').hasClass(this.id)){
+                        $('div.panel.'+this.id).removeClass('hide');
+                    }
+                }
+            }else{
+                $(this).addClass('active');
+                $(this).addClass('wtf');
+                $('div.panel.'+this.id).removeClass('hide');
+            }
+        });
+        
+    </script>
+<?php $__env->stopSection(); ?>
+
+
+<?php echo $__env->make('public.layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

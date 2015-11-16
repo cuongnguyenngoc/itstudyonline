@@ -12,7 +12,7 @@ class CreateProgrammingLanguagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('programmingLangugages', function (Blueprint $table) {
+        Schema::create('programmingLanguages', function (Blueprint $table) {
             $table->increments('id');
             $table->string('lang_name');
             $table->timestamps();
@@ -26,6 +26,6 @@ class CreateProgrammingLanguagesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('programmingLangugages');
+        Schema::drop('programmingLanguages');
     }
 }

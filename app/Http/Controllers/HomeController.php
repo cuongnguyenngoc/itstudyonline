@@ -24,9 +24,7 @@ class HomeController extends Controller
 
     public function test()
     {
-    	$user = User::findOrFail(7);
-    	$role = $user->role;
-    	return view('test',compact('role'));
+    	return view('test');
     }
     public function manage(){
         return View('admin.manage');

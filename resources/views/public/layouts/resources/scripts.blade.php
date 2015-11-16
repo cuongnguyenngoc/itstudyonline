@@ -1,0 +1,10 @@
+<script src="{{url('js/jquery-1.11.3.min.js')}}"></script>
+<script src="{{url('js/jquery.validate.min.js')}}"></script>
+<script src="{{url('js/jquery.validate.unobtrusive.min.js')}}"></script>
+<script src="{{url('js/bootstrap.min.js')}}"></script>
+<script src="{{url('js/jquery.scrollUp.min.js')}}"></script>
+<script src="{{url('js/price-range.js')}}"></script>
+<script src="{{url('js/jquery.prettyPhoto.js')}}"></script>
+<script src="{{url('js/main.js')}}"></script>
+<script src="{{url('js/custom.js')}}"></script>
+<script src="{{url('dropzone/min/dropzone.min.js')}}"></script>

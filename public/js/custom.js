@@ -5,6 +5,8 @@ $(document).ready(function(){
         }
 	});
 
+	// Begin of login, signup processing
+
 	var $formTabs = $('#main-nav');
 		$loginButton = $formTabs.find(".access").eq(0);
 		$signupButton = $formTabs.find(".access").eq(1);
@@ -14,14 +16,14 @@ $(document).ready(function(){
 		$modalPwd = $("#modal-forgotPwd");
 
 		$loginButton.click(function(){
-			$("#myModal").modal();
+			$("#authModal").modal();
 		});
 		$formTabs.click(function(e){
 			if($(e.target).is($loginButton)){
-				$("#myModal").modal();
+				$("#authModal").modal();
 				login_selected();
 			}else if($(e.target).is($signupButton)){
-				$("#myModal").modal();
+				$("#authModal").modal();
 				signup_selected();
 			}
 		});
@@ -151,4 +153,7 @@ $(document).ready(function(){
 			});
 		};
 
+		// End of login, signup processing
+
+		
 });

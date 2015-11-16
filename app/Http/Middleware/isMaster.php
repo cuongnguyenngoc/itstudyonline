@@ -34,8 +34,13 @@ class isMaster
      */
     public function handle($request, Closure $next)
     {
-        if($this->auth->check() && $this->auth->user()->role->role_name != 'master'){
+        if($this->auth->guest()){
+            
             return redirect('/');
+        }else{
+            if($this->auth->user()->role->role_name != 'master'){
+                return redirect('/');
+            }
         }
 
         return $next($request);
