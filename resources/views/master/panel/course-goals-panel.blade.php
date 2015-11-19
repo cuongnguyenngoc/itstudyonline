@@ -55,6 +55,10 @@
                 $('#course_id').val(response.course.id);
                 $('#message').removeClass('hide');
                 $('#message').find('p').text(response.message);
+                $('.list-group-item-success.course-goals').removeClass('active');
+                $('.list-group-item-success.curriculum').addClass('active');
+                $('div.course-goals').addClass('hide');
+                $('div.curriculum').removeClass('hide');
             }
         });
     });

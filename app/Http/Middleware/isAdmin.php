@@ -34,8 +34,11 @@ class isAdmin
      */
     public function handle($request, Closure $next)
     {
-        if($this->auth->check() && $this->auth->user()->role->role_name != 'admin'){
+        if($this->auth->guest()){
             return redirect('/');
+        }else{
+            if($this->auth->user()->role->role_name != 'admin')
+                return Redirect::back()->withErrors(['notice'=>'You dont have permission to access, buddy']);
         }
 
         return $next($request);

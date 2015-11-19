@@ -6,7 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProgrammingLanguage extends Model
 {
-    protected $table = 'programmingLanguages';
-
-    
+	protected $table = "programminglanguages";
 }

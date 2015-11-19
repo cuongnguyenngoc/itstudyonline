@@ -13,16 +13,37 @@
 
          	"<div id='toggleAddContentDetail"+count+"' class='hide'>"+
 	         	"<div class='panel-collapse panel-default col-md-12 hide' id='addContentDetail"+count+"'>"+
-		         	"<div class='panel-body'>"+
+	         		"<div class='panel-body hide' id='showVideo"+count+"'>"+
+			         	"<a href='#lec"+count+"' class='change-thumbnail' getId='"+count+"'>"+
+			         		"<img src='' alt='' class='img-thumbnail col-md-4' id='imgThumbnail"+count+"'/>"+
+			         	"</a>"+
+			         	"<div class='col-md-8 editContent'>"+
+			         		"<p></p>"+	
+			         		"<a href='#lec"+count+"' class='change-video' id='changeVideo"+count+"' getId='"+count+"'></a>"+
+			         		"<a href='#lec"+count+"' class='change-video' id='changeVideo"+count+"' getId='"+count+"'></a>"+	
+			         	"</div>"+
+					"</div>"+
+		         	"<div class='panel-body' id='uploadVideo"+count+"'>"+
 			         	"<ul class='nav nav-tabs' style='padding-left: 0px;'>"+
-			 				"<li class='active'><a data-toggle='tab' href='#video'></a></li>"+
+			 				"<li class='active'><a data-toggle='tab' href='#video"+count+"'></a></li>"+
 						"</ul>"+
 						"<div class='tab-content'>"+
-						    "<div id='video' class='tab-pane fade in active'>"+
-						      	"<form action='/video/do-upload' id='addVideo"+count+"' class='addVideo'>"+
+						    "<div id='video"+count+"' class='tab-pane fade in active'>"+
+						      	"<form action='/video/do-upload' id='addVideo"+count+"' class='addVideo' getId='"+count+"'>"+
 									"<input type='hidden' name='_token' value='{!! csrf_token() !!}'>"+
+									"<input type='hidden' name='video_id' id='video_id"+count+"' value=''>"+
 									
 						      	"</form>"+
+						    "</div>"+
+						"</div>"+
+					"</div>"+
+					"<div class='panel-body hide' id='chooseThumbnail"+count+"'>"+
+			         	"<ul class='nav nav-tabs' style='padding-left: 0px;'>"+
+			 				"<li class='active'><a data-toggle='tab' href='#thumbnails"+count+"'> Choose thumbnail</a></li>"+
+						"</ul>"+
+						"<div class='tab-content'>"+
+						    "<div id='thumbnails"+count+"' class='tab-pane fade in active'>"+
+
 						    "</div>"+
 						"</div>"+
 					"</div>"+
@@ -32,18 +53,18 @@
 	         		"<div class='panel-body'>"+       			
 						"<div class='row'>"+
 						  	"<div class='col-xs-6 col-md-4'>"+
-						    	"<a href='#' class='thumbnail' getId='"+count+"' getName='Video'>"+
-						      		"<img src='...' alt='...'>"+
+						    	"<a href='#lec"+count+"' class='type-content thumbnail' getId='"+count+"' getName='Video'>"+
+						      		"<img src='...' alt='...'/>"+
 						    	"</a>"+
 						  	"</div>"+
 						  	"<div class='col-xs-6 col-md-4'>"+
-						    	"<a href='#' class='thumbnail' getId='"+count+"' getName='Text'>"+
-						      		"<img src='...' alt='...'>"+
+						    	"<a href='#lec"+count+"' class='type-content thumbnail' getId='"+count+"' getName='Text'>"+
+						      		"<img src='...' alt='...'/>"+
 						    	"</a>"+
 						  	"</div>"+
 						  	"<div class='col-xs-6 col-md-4'>"+
-						    	"<a href='#' class='thumbnail' getId='"+count+"' getName='Document'>"+
-						      		"<img src='...' alt='...'>"+
+						    	"<a href='#lec"+count+"' class='type-content thumbnail' getId='"+count+"' getName='Document'>"+
+						      		"<img src='...' alt='...'/>"+
 						    	"</a>"+
 						  	"</div>"+
 						"</div>"+

@@ -16,6 +16,7 @@ Route::get('/','HomeController@index');
 // Test Area
 Route::get('test','HomeController@test');
 Route::get('admin/manage','HomeController@manage');
+Route::get('fuck','HomeController@fuck');
 
 
 
@@ -34,3 +35,5 @@ Route::post('master/course/update/{course}', ['as'=>'master.course.update','uses
 Route::post('create-course','MasterController@create_course');
 Route::get('course-manage/create-course-detail/{id}','MasterController@create_detail_course');
 Route::post('video/do-upload','MasterController@doVideoUpload');
+Route::post('video/choose-thumbnail','MasterController@chooseThumbnail');
+Route::post('video/update-thumbnail','MasterController@updateThumbnail');
