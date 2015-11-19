@@ -12,6 +12,7 @@ use App\ProgrammingLanguage;
 use App\Learninglevel;
 use App\Category;
 use App\Video;
+use App\Document;
 use App\Thumbnail;
 use Validator;
 use Response;
@@ -70,10 +71,11 @@ class MasterController extends Controller
                 //return Redirect::back()->withErrors($validator);
                 return Response::json(['message'=>'Error man','input'=>$request->input()]);
             }
-            if($request->input('id')==null)
-                $course = new Course;
-            else 
+            if($request->input('id') !=null && Course::find($request->input('id') != null))
+                
                 $course = Course::find($request->input('id'));
+            else 
+                $course = new Course;
 
             $course->cat_id = $request->input('cat_id');
             $course->lang_id = $request->input('lang_id');
@@ -97,9 +99,54 @@ class MasterController extends Controller
         return View('master.create-course-detail');
     }
 
+    public function doDocumentUpload(Request $request){
+        $file = $request->file('file');
+        //return Response::json(['doc' => $request->input('doc_id'), 'video' => $request->input('video_doc_id')]);
+        $filename = uniqid() . $file->getClientOriginalName();
+        $name = explode('.', $filename);     // seperate name by dot character
+        $ext = strtolower(end($name));       // get extention part of name
+        array_pop($name);                    // skip tail in name
+        $imgname = implode("_", $name);         // combine all parts of name by underscore
+        $name = str_replace(' ', '_', $imgname); // change space to uderscore _
+
+        $document_file = './uploads/documents/' . $name . '.' . $ext; // remember this is relative path to file index.php
+
+        // move file to uploads/videos folder
+        $file->move('uploads/documents',$document_file);
+
+        if($request->input('video_id') != null && Video::find($request->input('video_id')) != null){
+
+            $video = Video::find($request->input('video_id'));
+            File::delete($video->path);
+            $thumbnails = $video->thumbnails;
+            foreach($thumbnails as $thumbnail){
+                File::delete($thumbnail->path);
+                $thumbnail->delete();
+            }
+            $video->delete();
+        }
+
+        if($request->input('doc_id') != null && Document::find($request->input('doc_id')) != null){
+            
+            $document = Document::find($request->input('doc_id'));
+            //Checking if user change video, it will delete video and its thumbnails which have saved in folder
+            File::delete($document->path);
+        }else{
+            $document = new Document;
+            
+        }
+        
+        $document->doc_name = $imgname;
+        $document->path = 'uploads/documents/'. $name . '.' . $ext;
+        // $document->user_id = Auth::user()->id;
+        $document->save();
+
+        return Response::json(['doc' => $document]);
+    }
+
     public function doVideoUpload(Request $request){
         $file = $request->file('file');
-
+        //return Response::json(['doc' => $request->input('doc_video_id'), 'video' => $request->input('video_id')]);
         $filename = uniqid() . $file->getClientOriginalName();
         $name = explode('.', $filename);     // seperate name by dot character
         $ext = strtolower(end($name));       // get extention part of name
@@ -111,19 +158,29 @@ class MasterController extends Controller
 
         // move file to uploads/videos folder
         $file->move('uploads/videos',$video_file);
-        if($request->input('video_id') == null){
-            $video = new Video;
+
+        if($request->input('doc_id') != null && Document::find($request->input('doc_id')) != null){
+            $document = Document::find($request->input('doc_id'));
+            File::delete($document->path);
+            $document->delete();
         }else{
-            $video = Video::findOrFail($request->input('video_id'));
+            $document = new Document;
+        }
+
+        if($request->input('video_id') != null && Video::find($request->input('video_id')) != null){
+            
+            $video = Video::find($request->input('video_id'));
             //Checking if user change video, it will delete video and its thumbnails which have saved in folder
             File::delete($video->path);
-            $thumbnails = $video->thumbnails;
-            foreach($thumbnails as $thumbnail){
+            $thumbs = $video->thumbnails;
+            foreach($thumbs as $thumbnail){
                 File::delete($thumbnail->path);
             }
-            
+        }else{
+            $video = new Video;
         }
         
+        $thumbnails = $video->thumbnails;
         $video->video_name = $name;
         $video->path = 'uploads/videos/'. $name . '.' . $ext;
         $video->type = 'upload';
@@ -138,8 +195,8 @@ class MasterController extends Controller
             $cmd = "$ffmpeg -itsoffset -$second -i $video_file -vcodec mjpeg -vframes 1 -an -f rawvideo $image_file";
             exec($cmd);
 
-            if($request->input('video_id') == null){
-                $thumbnail = $video->thumbnails()->create([
+            if(sizeof($thumbnails) == 0){
+                $video->thumbnails()->create([
                     'video_id' => $video->id,
                     'img_name' => $imgname,
                     'path' => 'uploads/thumbnails/' . $name . $i . '.' . 'jpg'
@@ -152,11 +209,13 @@ class MasterController extends Controller
             }            
             
         }
+        $video = Video::find($video->id);
         //Set thumbnail default for video dont have thumb_id yet
-        if($video->thumb_id == null)
+        if($video->thumb_id == null && sizeof($video->thumbnails) != 0){
             $video->thumb_id = $video->thumbnails->first()->id;
+            $video->save();
+        }
 
-        $video->save();
         $thumbnail = $video->thumbnail;
 
         return Response::json(['thumbnail' => $thumbnail, 'video' => $video]);
@@ -166,8 +225,9 @@ class MasterController extends Controller
     public function chooseThumbnail(Request $request){
 
         if($request->ajax()){
-
-            $video = Video::findOrFail($request->get('id'));
+            if(Video::find($request->get('id')) != null){
+                $video = Video::find($request->get('id'));
+            }
             $thumbnails = $video->thumbnails;
 
             return Response::json(['thumbnails'=>$thumbnails]);
@@ -178,7 +238,7 @@ class MasterController extends Controller
 
         if($request->ajax()){
 
-            $thumbnail = Thumbnail::findOrFail($request->get('thumb_id'));
+            $thumbnail = Thumbnail::find($request->get('thumb_id'));
 
             $video = $thumbnail->video;
             $video->thumb_id = $thumbnail->id;

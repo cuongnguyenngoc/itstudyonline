@@ -3,36 +3,43 @@
          "<div class='panel-heading'>"+
          	"<div class='row'>"+
          		"<div id='lec_name' class='col-md-10'></div>"+
-         		"<button class='btn btn-primary addContentBtn btn-sm col-md-2' data-toggle='collapse' data-target='#addContent"+count+"' aria-expanded='false' getId='"+count+"'>"+
+         		"<button class='btn btn-primary addContentBtn btn-sm col-md-2' id='addContentBtn"+count+"' data-toggle='collapse' data-target='#addContent"+count+"' aria-expanded='false' getId='"+count+"'>"+
          		"<span class='glyphicon glyphicon glyphicon-plus' aria-hidden='true'></span>"+
          		"Add Content"+
          		"</button>"+
          	"</div>"+
          "</div>"+
-         "<div class='panel-body small-panel'>"+
+         "<div class='panel-body small-panel' id='collapseLecture"+count+"'>"+
 
          	"<div id='toggleAddContentDetail"+count+"' class='hide'>"+
 	         	"<div class='panel-collapse panel-default col-md-12 hide' id='addContentDetail"+count+"'>"+
 	         		"<div class='panel-body hide' id='showVideo"+count+"'>"+
-			         	"<a href='#lec"+count+"' class='change-thumbnail' getId='"+count+"'>"+
-			         		"<img src='' alt='' class='img-thumbnail col-md-4' id='imgThumbnail"+count+"'/>"+
-			         	"</a>"+
+	         			"<div class='show-content-preview col-md-4'>"+
+				         	
+				        "</div>"+
 			         	"<div class='col-md-8 editContent'>"+
 			         		"<p></p>"+	
 			         		"<a href='#lec"+count+"' class='change-video' id='changeVideo"+count+"' getId='"+count+"'></a>"+
-			         		"<a href='#lec"+count+"' class='change-video' id='changeVideo"+count+"' getId='"+count+"'></a>"+	
+			         		" Or <a href='#lec"+count+"' class='edit-content' id='editContent"+count+"' getId='"+count+"'> <span class='glyphicon glyphicon-edit'></span> Edit Content</a>"+	
 			         	"</div>"+
 					"</div>"+
 		         	"<div class='panel-body' id='uploadVideo"+count+"'>"+
 			         	"<ul class='nav nav-tabs' style='padding-left: 0px;'>"+
 			 				"<li class='active'><a data-toggle='tab' href='#video"+count+"'></a></li>"+
+			 				"<li class='cancel-addContent' getId='"+count+"'><a href='#lec"+count+"' id='cancel"+count+"'> Cancel</a></li>"+
 						"</ul>"+
 						"<div class='tab-content'>"+
 						    "<div id='video"+count+"' class='tab-pane fade in active'>"+
-						      	"<form action='/video/do-upload' id='addVideo"+count+"' class='addVideo' getId='"+count+"'>"+
+						      	"<form id='addVideo"+count+"' class='addVideo hide' getId='"+count+"'>"+
 									"<input type='hidden' name='_token' value='{!! csrf_token() !!}'>"+
 									"<input type='hidden' name='video_id' id='video_id"+count+"' value=''>"+
-									
+									"<input type='hidden' name='doc_id' id='doc_video_id"+count+"' value=''>"+
+
+						      	"</form>"+
+						      	"<form id='addDocument"+count+"' class='addVideo hide' getId='"+count+"'>"+
+									"<input type='hidden' name='_token' value='{!! csrf_token() !!}'>"+
+									"<input type='hidden' name='doc_id' id='doc_id"+count+"' value=''>"+
+									"<input type='hidden' name='video_id' id='video_doc_id"+count+"' value=''>"+
 						      	"</form>"+
 						    "</div>"+
 						"</div>"+
@@ -58,12 +65,12 @@
 						    	"</a>"+
 						  	"</div>"+
 						  	"<div class='col-xs-6 col-md-4'>"+
-						    	"<a href='#lec"+count+"' class='type-content thumbnail' getId='"+count+"' getName='Text'>"+
+						    	"<a href='#lec"+count+"' class='type-content thumbnail' getId='"+count+"' getName='Document'>"+
 						      		"<img src='...' alt='...'/>"+
 						    	"</a>"+
 						  	"</div>"+
 						  	"<div class='col-xs-6 col-md-4'>"+
-						    	"<a href='#lec"+count+"' class='type-content thumbnail' getId='"+count+"' getName='Document'>"+
+						    	"<a href='#lec"+count+"' class='type-contentText thumbnail' getId='"+count+"' getName='Text'>"+
 						      		"<img src='...' alt='...'/>"+
 						    	"</a>"+
 						  	"</div>"+

@@ -1,11 +1,10 @@
 <script>
-   	// $(document).ready(function(){
-        for(var i=1;i<=10;i++){
-            alert('fuck');
-        }
-        
-    //});
 </script>
+oh guy
+<?php foreach($thumbnails as $thumbnail): ?>
+	oh guy <?php echo e($thumbnail); ?>
+
+<?php endforeach; ?>
 
 <?php $__env->startSection('footer'); ?>
 	<?php echo $__env->make('public.layouts.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

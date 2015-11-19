@@ -1,13 +1,11 @@
 @extends('public.layouts.app')
 
 <script>
-   	// $(document).ready(function(){
-        for(var i=1;i<=10;i++){
-            alert('fuck');
-        }
-        
-    //});
 </script>
+oh guy
+@foreach($thumbnails as $thumbnail)
+	oh guy {{$thumbnail}}
+@endforeach
 
 @section('footer')
 	@include('public.layouts.footer')

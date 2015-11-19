@@ -37,3 +37,4 @@ Route::get('course-manage/create-course-detail/{id}','MasterController@create_de
 Route::post('video/do-upload','MasterController@doVideoUpload');
 Route::post('video/choose-thumbnail','MasterController@chooseThumbnail');
 Route::post('video/update-thumbnail','MasterController@updateThumbnail');
+Route::post('document/do-upload','MasterController@doDocumentUpload');

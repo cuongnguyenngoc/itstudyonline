@@ -57,6 +57,13 @@
             $(this).find("span").toggleClass("glyphicon-plus glyphicon-minus");
         });
 
+        /* swap triangle-bottom/up button icons when clicking to add more lecture */
+        $('#curriculumPanel').on('click','button.collapse-lecture',function(){
+            // toggle icon
+            $(this).find("span").toggleClass("glyphicon-triangle-bottom glyphicon-triangle-top");
+            $('#collapseLecture'+$(this).attr('getId')).toggleClass('hide');
+        });
+
         var count = 0;
         $("#addLecture").submit(function(e){
             
@@ -108,6 +115,23 @@
         });
 
 
+        // When u click on cancel tab, it will give you choose type of content again
+        $('#curriculumPanel').on('click','li.cancel-addContent',function(e){
+            var getId = $(this).attr('getId');
+
+            if($('#showVideo'+getId).find('p').text()===''){
+                $('#addContentDetail'+getId).addClass('hide');
+                $('#addContent'+getId).removeClass('hide');
+
+                //$('#uploadVideo'+this.getId).removeClass('hide');
+                //$('#showVideo'+getId).addClass('hide');
+            }else{
+                $('#uploadVideo'+getId).addClass('hide');
+                $('#showVideo'+getId).removeClass('hide');
+            }                    
+
+        });
+
         // When u click on save button, it will assign value of area to showDescription div
 
         $('#curriculumPanel').on('submit','#addDescription',function(e){
@@ -131,24 +155,39 @@
 
         //Add Content Detail like whether video, document, text...
         $('#curriculumPanel').on('click','a.type-content',function(){
-
-            $('#addContent'+$(this).attr('getId')).addClass('hide');
-            $('#addContentDetail'+$(this).attr('getId')).removeClass('hide');
-            $('#addContentDetail'+$(this).attr('getId')).find('#uploadVideo'+$(this).attr('getId')+' a').text('Add '+$(this).attr('getName'));
-
-            $('#addVideo'+$(this).attr('getId')).addClass('dropzone');
+            
             var getId = $(this).attr('getId');
-            $('#addVideo'+$(this).attr('getId')).dropzone({
+            var getName = $(this).attr('getName');
+
+            $('#addContent'+getId).addClass('hide');
+            $('#addContentDetail'+getId).removeClass('hide');
+            $('#addContentDetail'+getId).find('#uploadVideo'+getId+' a').first().text('Add '+getName);
+            $('#showVideo'+getId).addClass('hide');
+            $('#uploadVideo'+getId).removeClass('hide');
+
+            if(getName == 'Video'){
+                $('#addVideo'+getId).removeClass('hide');
+                $('#addDocument'+getId).addClass('hide');
+            }else{
+                $('#addDocument'+getId).removeClass('hide');
+                $('#addVideo'+getId).addClass('hide');
+            }
+
+            $('#add'+getName+getId).addClass('dropzone');
+            
+            $('#add'+getName+getId).dropzone({
                 
+                url: (getName=='Video') ? "/video/do-upload" : "/document/do-upload",
                 maxFilesize: 500,
                 maxFiles: 1,
-                acceptedFiles: '.mp4, .flv',
+                acceptedFiles: (getName=='Video') ? '.mp4, .flv' : '.pdf',
                 addRemoveLinks: 'dictCancelUpload',
                 init: function() {
                     this.getId = getId;
 
                     this.on("uploadprogress", function(file, progress) {
                         console.log("File progress", progress);
+                        $('#uploadVideo'+this.getId).find('li.cancel-addContent').remove();
                     });
                     this.on("maxfilesexceeded", function(file) {
                         this.hiddenFileInput.removeAttribute('multiple');
@@ -157,7 +196,7 @@
                     });
                     this.on("canceled", function(file) {
                         // check it out old upload or new upload to decide show or hide showVideo div.
-                        if($('#showVideo'+this.getId).find('a.change-thumbnail > img').attr('src')===''){
+                        if($('#showVideo'+this.getId).find('p').text()===''){
                             $('#uploadVideo'+this.getId).removeClass('hide');
                             $('#showVideo'+this.getId).addClass('hide');
                         }else{
@@ -171,6 +210,7 @@
                         console.log(file);
                         console.log(this);
                         this.removeFile(file);
+                        $('#uploadVideo'+this.getId+' > ul').append("<li class='cancel-addContent' getId='"+this.getId+"'><a href='#lec"+this.getId+"' id='cancel"+this.getId+"'> Cancel</a></li>");
                         if(file.status != 'error'){
                             
                             if(this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
@@ -198,11 +238,32 @@
                 success: function(file,response){
                     console.log(file);
                     console.log(response);
-                    $('#changeVideo'+this.getId).html("<span class='glyphicon glyphicon-edit'></span> Change Video");
-                    $('#imgThumbnail'+this.getId).attr('src','/'+response.thumbnail.path);
-                    $('#imgThumbnail'+this.getId).attr('alt',response.thumbnail.img_name);
-                    $('#showVideo'+this.getId).find('p').text(response.thumbnail.img_name);
-                    $('input#video_id'+this.getId).val(response.video.id);
+                    $('#addContentBtn'+this.getId).empty()
+                        .html("<span class='glyphicon glyphicon-triangle-bottom' aria-hidden='true'></span>")
+                        .addClass('collapse-lecture')
+                        .removeClass('col-md-2')
+                        .addClass('col-md-1 col-md-offset-1');
+                        
+                    if(getName=='Video'){
+                        $('#changeVideo'+this.getId).html("<span class='glyphicon glyphicon-edit'></span> Change Video");
+                        $('#showVideo'+this.getId).find('div.show-content-preview').html(
+                            "<a href='#lec"+this.getId+"' class='change-thumbnail' getId='"+this.getId+"'>"+
+                                "<img src='/"+response.thumbnail.path+"' alt='"+response.thumbnail.img_name+"' class='img-thumbnail' id='imgThumbnail"+this.getId+"'/>"+
+                            "</a>"
+                        );
+                        $('#showVideo'+this.getId).find('p').text(response.thumbnail.img_name);
+                        $('input#video_id'+this.getId).val(response.video.id);
+                        $('input#video_doc_id'+this.getId).val(response.video.id);
+                    }else{
+                        $('#changeVideo'+this.getId).html("<span class='glyphicon glyphicon-edit'></span> Change Document");
+                        $('#showVideo'+this.getId).find('p').text(response.doc.doc_name);
+                        $('#showVideo'+this.getId).find('div.show-content-preview').html(
+                            "<embed src='/"+response.doc.path+"' type='"+file.type+"' height='130' width='210'/>"
+                        );
+                        $('input#doc_id'+this.getId).val(response.doc.id);
+                        $('input#doc_video_id'+this.getId).val(response.doc.id);
+                    }
+                    
                 }
             });
         });
@@ -212,6 +273,14 @@
             $('#uploadVideo'+$(this).attr('getId')).removeClass('hide');
             $('#showVideo'+$(this).attr('getId')).addClass('hide');
             $('#chooseThumbnail'+$(this).attr('getId')).addClass('hide');
+        });
+
+        $('#curriculumPanel').on('click','a.edit-content',function(){
+
+            var getId = $(this).attr('getId');
+
+            $('#addContentDetail'+getId).addClass('hide');
+            $('#addContent'+getId).removeClass('hide');
         });
 
         $('#curriculumPanel').on('click','a.change-thumbnail',function(){

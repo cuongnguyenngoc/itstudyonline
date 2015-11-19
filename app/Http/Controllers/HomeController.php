@@ -7,6 +7,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\User;
+use App\Video;
+use Auth;
 
 class HomeController extends Controller
 {
@@ -24,7 +26,46 @@ class HomeController extends Controller
 
     public function test()
     {
-    	return view('test');
+        $video  = new Video;
+        $thumbnails = $video->thumbnails;
+        $video->video_name = 'wtf name';
+        $video->path = 'uploads/videos/';
+        $video->type = 'upload';
+        $video->user_id = Auth::user()->id;
+        $video->save();
+
+        echo sizeof($thumbnails);
+    	for($i = 1; $i <= 5; $i++){
+
+            if(sizeof($thumbnails) == 0){
+                $video->thumbnails()->create([
+                    'video_id' => $video->id,
+                    'img_name' => 'idiot'.$i,
+                    'path' => 'uploads/thumbnails/'. $i . '.' . 'jpg'
+                ]);
+                echo 'wtf'.$i;
+            }else{
+
+                $thumbnails[$i-1]->img_name = 'idiot1'.$i;
+                $thumbnails[$i-1]->path = 'uploads/thumbnails/' . $i . '.' . 'jpg';
+                $thumbnails[$i-1]->save();
+            }            
+            
+        }
+        echo "<br>";
+        $video = Video::find($video->id);
+        echo count($video->thumbnails);
+        if($video->thumb_id == null && sizeof($video->thumbnails) != 0){
+            $video->thumb_id = $video->thumbnails->first()->id;
+            $video->save();
+            echo $video->id;
+            echo "<br>";
+            echo $video->thumb_id;
+        }else{
+            $video->thumb_id = 1;
+        }
+
+        //return View('test',compact('thumbnails'));
     }
     public function manage(){
         return View('admin.manage');
