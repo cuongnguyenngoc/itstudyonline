@@ -19,6 +19,7 @@ class CreateLecturesTable extends Migration
             $table->string('lec_name');
             $table->mediumText('description');
             $table->longText('text');
+            $table->integer('order');
             $table->timestamps();
 
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');

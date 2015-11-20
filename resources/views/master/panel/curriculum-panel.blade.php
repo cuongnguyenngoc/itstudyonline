@@ -78,14 +78,23 @@
                     @include('master.panel.show-lecture-in-curriculum-panel') // In show file, it have had count variable already to recognize lecture own.
                 );
             }
-            $('#showLecture'+count).find('#lec_name').text($('#lec_title').val());   
+            $('#showLecture'+count).find('#lec_name'+count).text($('#lec_title').val());   
         });
 
         $('#curriculumPanel').on('click','button.addDescriptionBtn',function(){
 
             $('#addDescriptionArea'+this.id).removeClass('hide');
             // $.validator.unobtrusive.parse('#addDescription.'+this.id);
-            $("#addDescription."+this.id).validate({  
+            var getId = this.id;
+            tinymce.init({
+                selector: "#descriptionTextArea"+getId,
+                plugins: [
+                    "code"
+                ],
+                toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image"
+            });
+
+            $("#addDescription"+getId).validate({  
                 rules: {
                     description: {
                         required: true
@@ -100,17 +109,18 @@
             $(this).addClass('hide');
         });
 
-        $('#curriculumPanel').on('click','#cancelDescription',function(){
+        $('#curriculumPanel').on('click','a.cancel-description',function(){
             // $('#addDescriptionArea'+$(this).attr('class')).addClass('hide');
             //This will check if showDescription div is empty so it will show Add Description button
             // If not, it will show content of showDescription
-            if($('#showDescription'+$(this).attr('class')).text()==''){
-                $('#addDescriptionArea'+$(this).attr('class')).addClass('hide');
-                $('#'+$(this).attr('class')).removeClass('hide');  //Cái này là button addDescription
+            var getId = $(this).attr('getId');
+            if($('#showDescription'+getId).text()==''){
+                $('#addDescriptionArea'+getId).addClass('hide');
+                $('#'+getId).removeClass('hide');  //Cái này là button addDescription
 
             }else{
-                $('#addDescription.'+$(this).attr('class')).addClass('hide');
-                $('#showDescription'+$(this).attr('class')).removeClass('hide');
+                $('#addDescription'+getId).addClass('hide');
+                $('#showDescription'+getId).removeClass('hide');
             }
         });
 
@@ -134,16 +144,19 @@
 
         // When u click on save button, it will assign value of area to showDescription div
 
-        $('#curriculumPanel').on('submit','#addDescription',function(e){
+        $('#curriculumPanel').on('submit','form.add-description',function(e){
             e.preventDefault();
-            $('#showDescription'+$(this).attr('class')).removeClass('hide').text($(this).find('#lec_description').val());
+            $('#showDescription'+$(this).attr('getId'))
+                .removeClass('hide')
+                .html($(this).find('#descriptionTextArea'+$(this).attr('getId')).val());
             $(this).addClass('hide');
+            $('#publish'+$(this).attr('getId')).removeClass('hide');
         });
         
         // When you click on div showDescription, it will show form to edit description content.
         $('#curriculumPanel').on('click','div.showDesClass',function(){
             $(this).addClass('hide');
-            $('#addDescription.'+$(this).attr('getId')).removeClass('hide');
+            $('#addDescription'+$(this).attr('getId')).removeClass('hide');
         });
 
         $('#curriculumPanel').on('click','button.addContentBtn',function(){
@@ -164,6 +177,8 @@
             $('#addContentDetail'+getId).find('#uploadVideo'+getId+' a').first().text('Add '+getName);
             $('#showVideo'+getId).addClass('hide');
             $('#uploadVideo'+getId).removeClass('hide');
+            $('#textContent'+getId).addClass('hide');
+            $('#video'+getId).removeClass('hide');
 
             if(getName == 'Video'){
                 $('#addVideo'+getId).removeClass('hide');
@@ -225,7 +240,7 @@
                                     $('#'+this.getId).removeClass('hide');  //This is button AddDescription.
 
                                 }else{
-                                    $('#addDescription'+this.getId).addClass('hide');
+                                    //$('#addDescription'+this.getId).addClass('hide');
                                     $('#showDescription'+this.getId).removeClass('hide');
                                 }
                             }
@@ -238,12 +253,23 @@
                 success: function(file,response){
                     console.log(file);
                     console.log(response);
+                    if($('#publish'+this.getId).hasClass('published')){
+                        $('#publish'+this.getId).removeClass('hide');
+                        $('#showLecture'+this.getId)
+                            .removeClass('panel-primary')
+                            .addClass('panel-danger');
+                        $('#publish'+this.getId).removeClass('published');
+                    }
+
                     $('#addContentBtn'+this.getId).empty()
                         .html("<span class='glyphicon glyphicon-triangle-bottom' aria-hidden='true'></span>")
                         .addClass('collapse-lecture')
                         .removeClass('col-md-2')
                         .addClass('col-md-1 col-md-offset-1');
-                        
+
+                    // Set value of textarea = null 
+                    $('textarea#textarea'+getId).val(null);
+
                     if(getName=='Video'){
                         $('#changeVideo'+this.getId).html("<span class='glyphicon glyphicon-edit'></span> Change Video");
                         $('#showVideo'+this.getId).find('div.show-content-preview').html(
@@ -252,20 +278,95 @@
                             "</a>"
                         );
                         $('#showVideo'+this.getId).find('p').text(response.thumbnail.img_name);
+                        // Set value for corresponding id
                         $('input#video_id'+this.getId).val(response.video.id);
                         $('input#video_doc_id'+this.getId).val(response.video.id);
+                        $('input#doc_video_id'+this.getId).val(null);
+                        $('input#doc_id'+this.getId).val(null);
                     }else{
                         $('#changeVideo'+this.getId).html("<span class='glyphicon glyphicon-edit'></span> Change Document");
                         $('#showVideo'+this.getId).find('p').text(response.doc.doc_name);
                         $('#showVideo'+this.getId).find('div.show-content-preview').html(
                             "<embed src='/"+response.doc.path+"' type='"+file.type+"' height='130' width='210'/>"
                         );
+                        // Set value for corresponding id
                         $('input#doc_id'+this.getId).val(response.doc.id);
                         $('input#doc_video_id'+this.getId).val(response.doc.id);
+                        $('input#video_id'+this.getId).val(null);
+                        $('input#video_doc_id'+this.getId).val(null);
                     }
                     
                 }
             });
+        });
+        
+        $('#curriculumPanel').on('click','a.type-contentText',function(){
+
+            var getId = $(this).attr('getId');
+            var getName = $(this).attr('getName');
+
+            tinymce.init({
+                selector: "textarea.textContent",
+                plugins: [
+                    "advlist autolink lists link image charmap print preview anchor",
+                    "searchreplace visualblocks code fullscreen",
+                    "insertdatetime media table contextmenu paste jbimages"
+                ],
+                toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link jbimages"
+            });
+
+            $('#addContent'+getId).addClass('hide');
+            $('#addContentDetail'+getId).removeClass('hide');
+            $('#addContentDetail'+getId).find('#uploadVideo'+getId+' a').first().text('Add '+getName);
+            $('#showVideo'+getId).addClass('hide');
+            $('#uploadVideo'+getId).removeClass('hide');
+            $('#textContent'+getId).removeClass('hide');
+            $('#video'+getId).addClass('hide');
+
+        });
+
+        $('#curriculumPanel').on('submit','form.addText',function(e){
+
+            e.preventDefault();
+            var getId = $(this).attr('getId');
+            var getName = $(this).attr('getName');
+
+            //To show publish button when you edit something
+            if($('#publish'+getId).hasClass('published')){
+                $('#publish'+getId).removeClass('hide');
+                $('#publish'+getId).removeClass('published');
+                $('#showLecture'+getId).removeClass('panel-primary')
+                                       .addClass('panel-danger');
+            }
+
+            $('#uploadVideo'+getId).addClass('hide');
+            $('#showVideo'+getId).removeClass('hide');
+            $('#toggleDescription'+getId).removeClass('hide');
+            $('#addDescriptionArea'+getId).removeClass('hide');
+            $('div#chooseThumbnail'+getId).addClass('hide');
+            if($('#showDescription'+getId).text()==''){
+                $('#addDescriptionArea'+getId).addClass('hide');
+                $('#'+getId).removeClass('hide');  //This is button AddDescription.
+
+            }else{
+                $('#showDescription'+getId).removeClass('hide');
+            }
+
+            $('#addContentBtn'+getId).empty()
+                        .html("<span class='glyphicon glyphicon-triangle-bottom' aria-hidden='true'></span>")
+                        .addClass('collapse-lecture')
+                        .removeClass('col-md-2')
+                        .addClass('col-md-1 col-md-offset-1');
+
+            $('#changeVideo'+getId).html("<span class='glyphicon glyphicon-edit'></span> Change Text");
+            $('#showVideo'+getId).find('p').text('Text document');
+            $('#showVideo'+getId).find('div.show-content-preview').html(
+                "<img src='/images/course/text-icon.png' alt='text' class='img-thumbnail'/>"
+            );
+
+            // Set value null for corresponding id
+            $('input#doc_id'+this.getId).val(null);
+            $('input#video_id'+this.getId).val(null);
         });
 
         $('#curriculumPanel').on('click','div.editContent > a.change-video',function(){
@@ -330,6 +431,33 @@
             });
         });
 
+        $('#curriculumPanel').on('click','div.publish-lecture a.publish',function(){
+            
+            var getId = $(this).attr('getId');
+            var lecture = {};
+            lecture.lec_name = $('#lec_name'+getId).text();
+            lecture.course_id = $('#course_id').val();
+            lecture.description = $('#showDescription'+getId).text();
+            lecture.video_id = $('#video_id'+getId).val();
+            lecture.doc_id = $('#doc_id'+getId).val();
+            lecture.lec_id = $('input#lec_id'+getId).val();
+            lecture.text = $('textarea#textarea'+getId).val();
+            var itself = $(this);
+            $.ajax({
+                type: "POST",
+                url : "/master/update-course",
+                dataType: 'json',
+                data: lecture, // remember that be must to pass data object type
+                success : function(response){
+                    console.log(response);
+                    $('input#lec_id'+getId).val(response.lecture.id);
+                    itself.addClass('hide')
+                          .addClass('published');
+                    $('#showLecture'+getId).addClass('panel-primary')
+                                           .removeClass('panel-danger');
+                }
+            });
+        });
     });
 
 </script>

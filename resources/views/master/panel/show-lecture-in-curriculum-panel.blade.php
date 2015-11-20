@@ -1,8 +1,9 @@
 "<div class='row small-panel' id='lec"+count+"'>"+
-    "<div class='panel-collapse panel-primary col-md-12' id='showLecture"+count+"'>"+
+    "<div class='panel-collapse panel-danger col-md-12' id='showLecture"+count+"'>"+
          "<div class='panel-heading'>"+
          	"<div class='row'>"+
-         		"<div id='lec_name' class='col-md-10'></div>"+
+         		"<div id='lec_name"+count+"' class='col-md-10'></div>"+
+         		"<input type='hidden' value='' name='lec_id' id='lec_id"+count+"'/>"+
          		"<button class='btn btn-primary addContentBtn btn-sm col-md-2' id='addContentBtn"+count+"' data-toggle='collapse' data-target='#addContent"+count+"' aria-expanded='false' getId='"+count+"'>"+
          		"<span class='glyphicon glyphicon glyphicon-plus' aria-hidden='true'></span>"+
          		"Add Content"+
@@ -17,10 +18,13 @@
 	         			"<div class='show-content-preview col-md-4'>"+
 				         	
 				        "</div>"+
-			         	"<div class='col-md-8 editContent'>"+
+			         	"<div class='col-md-7 editContent'>"+
 			         		"<p></p>"+	
 			         		"<a href='#lec"+count+"' class='change-video' id='changeVideo"+count+"' getId='"+count+"'></a>"+
 			         		" Or <a href='#lec"+count+"' class='edit-content' id='editContent"+count+"' getId='"+count+"'> <span class='glyphicon glyphicon-edit'></span> Edit Content</a>"+	
+			         	"</div>"+
+			         	"<div class='col-md-1 publish-lecture'>"+
+			         		"<a href='#lec"+count+"' class='publish btn btn-success btn-sm hide' id='publish"+count+"' getId='"+count+"'> Publish</a>"+	
 			         	"</div>"+
 					"</div>"+
 		         	"<div class='panel-body' id='uploadVideo"+count+"'>"+
@@ -40,6 +44,14 @@
 									"<input type='hidden' name='_token' value='{!! csrf_token() !!}'>"+
 									"<input type='hidden' name='doc_id' id='doc_id"+count+"' value=''>"+
 									"<input type='hidden' name='video_id' id='video_doc_id"+count+"' value=''>"+
+						      	"</form>"+
+						    "</div>"+
+						    "<div id='textContent"+count+"' class='tab-pane fade in active'>"+
+						      	"<form id='addText"+count+"' class='addText' getId='"+count+"'>"+
+						      		"<div class='form-group'>"+
+										"<textarea name='content' class='form-control textContent' rows='10' id='textarea"+count+"' style='width:100%'></textarea>"+
+									"</div>"+
+									"<button type='submit' class='btn btn-primary col-md-1'>Save</button>"+
 						      	"</form>"+
 						    "</div>"+
 						"</div>"+
@@ -83,13 +95,13 @@
 	         	"<div class='panel-collapse panel-default col-md-12 hide' id='addDescriptionArea"+count+"'>"+
 	         		"<div class='panel-body'>"+
 	         			"<div id='showDescription"+count+"' class='hide showDesClass' getId='"+count+"'></div>"+
-	         			"<form id='addDescription' class='"+count+"'>"+
+	         			"<form class='add-description' id='addDescription"+count+"' getId='"+count+"'>"+
 	                        "<div class='form-group'>"+
 	                            "<label for='lec_description'>Lecture description</label>"+
-	                            "<textarea class='form-control' id='lec_description' name='description' placeholder='Enter lecture description'></textarea>"+
+	                            "<textarea class='form-control description-textarea' id='descriptionTextArea"+count+"' name='content' placeholder='Enter lecture description' style='width:100%'></textarea>"+
 	                        "</div>"+
 	                        "<button type='submit' class='btn btn-primary col-md-1'>Save</button>"+
-	                        "<p class='col-md-11'> or <a href='#lec"+count+"' id='cancelDescription' class='"+count+"'>Cancel</a></p>"+
+	                        "<p class='col-md-11'> or <a href='#lec"+count+"' id='cancelDescription"+count+"' class='cancel-description' getId='"+count+"'>Cancel</a></p>"+
 	                    "</form>"+
 	                "</div>"+
 	            "</div>"+

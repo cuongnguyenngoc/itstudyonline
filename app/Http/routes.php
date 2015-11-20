@@ -38,3 +38,4 @@ Route::post('video/do-upload','MasterController@doVideoUpload');
 Route::post('video/choose-thumbnail','MasterController@chooseThumbnail');
 Route::post('video/update-thumbnail','MasterController@updateThumbnail');
 Route::post('document/do-upload','MasterController@doDocumentUpload');
+Route::post('master/update-course','MasterController@doUpdateCourse');

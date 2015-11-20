@@ -32,8 +32,7 @@
             </div>
             <div class="form-group">
                 <label for="description">Description for your course</label>
-                <?php echo Form::textarea('description',$course->description,['id'=>'description','rows'=>'5','class'=>'form-control']); ?>
-
+                <textarea class='form-control' id='descriptionText' name='content' placeholder='Enter course description' style='width:100%'></textarea>
             </div>
             <button type="submit" class="btn btn-default">Submit</button>
         <?php echo Form::close(); ?>
@@ -44,29 +43,40 @@
 <!--/panel-->
 
 <script type="text/javascript">
-    $("#courseGoals").submit(function(e){
-        e.preventDefault();
-        var course = {};
-        course.id = $('#course_id').val();
-        course.cat_id = $('#cat_id').val();
-        course.lang_id = $('#lang_id').val();
-        course.level_id = $('#level_id').val();
-        course.course_name = $('#course_name').val();
-        course.description = $('#description').val();
-        $.ajax({
-            type: "POST",
-            url : "/master/create-course",
-            dataType: 'json',
-            data: course,
-            success : function(response){
-                $('#course_id').val(response.course.id);
-                $('#message').removeClass('hide');
-                $('#message').find('p').text(response.message);
-                $('.list-group-item-success.course-goals').removeClass('active');
-                $('.list-group-item-success.curriculum').addClass('active');
-                $('div.course-goals').addClass('hide');
-                $('div.curriculum').removeClass('hide');
-            }
+
+    $(document).ready(function(){
+        tinymce.init({
+            selector: "textarea#descriptionText",
+            plugins: [
+                "code"
+            ],
+            toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist"
+        });
+
+        $("#courseGoals").on('submit',function(e){
+            e.preventDefault();
+            var course = {};
+            course.id = $('#course_id').val();
+            course.cat_id = $('#cat_id').val();
+            course.lang_id = $('#lang_id').val();
+            course.level_id = $('#level_id').val();
+            course.course_name = $('#course_name').val();
+            course.describe = $('#descriptionText').val();
+            $.ajax({
+                type: "POST",
+                url : "/master/create-course",
+                dataType: 'json',
+                data: course,
+                success : function(response){
+                    $('#course_id').val(response.course.id);
+                    $('#message').removeClass('hide');
+                    $('#message').find('p').text(response.message);
+                    $('.list-group-item-success.course-goals').removeClass('active');
+                    $('.list-group-item-success.curriculum').addClass('active');
+                    $('div.course-goals').addClass('hide');
+                    $('div.curriculum').removeClass('hide');
+                }
+            });
         });
     });
 

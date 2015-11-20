@@ -8,3 +8,5 @@
 <script src="{{url('js/main.js')}}"></script>
 <script src="{{url('js/custom.js')}}"></script>
 <script src="{{url('dropzone/min/dropzone.min.js')}}"></script>
+<script src="{{url('tinymce/tinymce.min.js')}}"></script>
+<script src="//tinymce.cachefly.net/4.2/tinymce.min.js"></script>

@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Redirect;
 use App\Course;
+use App\Lecture;
 use App\ProgrammingLanguage;
 use App\Learninglevel;
 use App\Category;
@@ -64,7 +65,7 @@ class MasterController extends Controller
                 'lang_id' => 'required',
                 'level_id' => 'required',
                 'course_name' => 'required|min:10',
-                'description' => 'required|min:10'
+                'describe' => 'required|min:10'
             ]);
 
             if($validator->fails()){
@@ -81,8 +82,7 @@ class MasterController extends Controller
             $course->lang_id = $request->input('lang_id');
             $course->level_id = $request->input('level_id');
             $course->course_name = $request->input('course_name');
-            $course->description = $request->input('description');
-            $course->id = $request->input('id');
+            $course->description = $request->input('describe');
                 
             $course->save();
             return Response::json(['message'=>'You created successfully','course'=>$course]);
@@ -90,9 +90,6 @@ class MasterController extends Controller
         
     }
 
-    public function updateCourse(){
-        print_r($course);
-    }
 
     public function create_detail_course($id){
 
@@ -247,6 +244,57 @@ class MasterController extends Controller
             $thumbnail = $video->thumbnail;
 
             return Response::json(['thumbnail'=>$thumbnail]);
+        }
+    }
+
+    public function doUpdateCourse(Request $request){
+
+        if($request->ajax()){
+
+            if($request->input('course_id') != null && Course::find($request->input('course_id'))){
+                $course = Course::find($request->input('course_id'));
+                if($request->input('lec_id') != null && Lecture::find($request->input('lec_id')) != null){
+
+                    $lecture = Lecture::find($request->input('lec_id'));
+                }else{
+                    
+                    $lecture = $course->lectures()->create([
+                                'course_id' => $course->id,
+                                'user_id' => Auth::user()->id,
+                                'lec_name' => $request->input('lec_name'),
+                                'description' => $request->input('description')
+                            ]);
+                    $lecture = Lecture::find($lecture->id);
+                }
+                
+                if($request->input('video_id') != null 
+                        && $request->input('doc_id') == null 
+                        && $request->input('text') == null
+                        && Video::find($request->input('video_id')) != null){
+
+                    $video = Video::find($request->input('video_id'));
+                    $video->lec_id = $lecture->id;
+                    $video->save();
+                }elseif($request->input('video_id') == null 
+                        && $request->input('text') == null
+                        && $request->input('doc_id') != null 
+                        && Document::find($request->input('doc_id')) != null){
+                    $document = Document::find($request->input('doc_id'));
+                    $document->lec_id = $lecture->id;
+                    $document->save();
+                }elseif($request->input('text') != null
+                        && $request->input('doc_id') == null 
+                        && $request->input('video_id') == null){
+                    $lecture->text = $request->input('text');
+                    $lecture->save();
+                }else{
+                    return Response::json(['message'=>'It have get a problem']);
+                }
+
+                return Response::json(['lecture'=>$lecture, 'message'=>'Cool! You have created lecture successfully']);
+            }
+        }else{
+            return Response::json(['message'=>'I can not find course_id, you need create course first']);
         }
     }
 }
