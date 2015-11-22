@@ -16,6 +16,10 @@ class CreateUserscreatecoursesTable extends Migration
             $table->increments('id');
             $table->integer('course_id')->unsigned()->nullable();
             $table->integer('user_id')->unsigned()->nullable();
+            $table->boolean('isBoss');
+            $table->boolean('visible');
+            $table->boolean('can_edit');
+            $table->integer('revenue');
             $table->timestamps();
 
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');

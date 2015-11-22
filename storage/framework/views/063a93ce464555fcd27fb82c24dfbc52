@@ -1,4 +1,4 @@
- <div class="panel panel-info curriculum hide">
+ <div class="panel panel-info curriculum panel-right hide">
     <div class="panel-heading">
         Curriculum
     </div>
@@ -91,7 +91,13 @@
                 plugins: [
                     "code"
                 ],
-                toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image"
+                toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image",
+                setup: function(editor) {
+                    editor.on('keyup', function(e) {
+                        console.log(e);
+                        $('#descriptionTextArea'+getId).val(e.target.innerText);
+                    });
+                }
             });
 
             $("#addDescription"+getId).validate({  
@@ -312,7 +318,29 @@
                     "searchreplace visualblocks code fullscreen",
                     "insertdatetime media table contextmenu paste jbimages"
                 ],
-                toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link jbimages"
+                toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link jbimages",
+                setup: function(editor) {
+                    editor.on('keyup', function(e) {
+                        console.log(e);
+                        $('#textarea'+getId).val(e.target.innerText);
+                        console.log($('#textarea'+getId).val() + ' length '+$('#textarea'+getId).val().length);
+                    });
+                }
+            });
+
+            $("form.addText").validate({  
+                rules: {
+                    textContent: {
+                        required: true,
+                        minlength: 37
+                    }
+                },
+                messages: {
+                    textContent: {
+                        required: "Please enter your description",
+                        minlength: "Text content should be minimax 500 characters"
+                    }
+                }        
             });
 
             $('#addContent'+getId).addClass('hide');

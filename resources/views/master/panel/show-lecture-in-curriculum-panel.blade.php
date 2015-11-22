@@ -49,7 +49,7 @@
 						    "<div id='textContent"+count+"' class='tab-pane fade in active'>"+
 						      	"<form id='addText"+count+"' class='addText' getId='"+count+"'>"+
 						      		"<div class='form-group'>"+
-										"<textarea name='content' class='form-control textContent' rows='10' id='textarea"+count+"' style='width:100%'></textarea>"+
+										"<textarea name='textContent' class='form-control textContent' rows='10' id='textarea"+count+"' style='width:100%'></textarea>"+
 									"</div>"+
 									"<button type='submit' class='btn btn-primary col-md-1'>Save</button>"+
 						      	"</form>"+
@@ -98,7 +98,7 @@
 	         			"<form class='add-description' id='addDescription"+count+"' getId='"+count+"'>"+
 	                        "<div class='form-group'>"+
 	                            "<label for='lec_description'>Lecture description</label>"+
-	                            "<textarea class='form-control description-textarea' id='descriptionTextArea"+count+"' name='content' placeholder='Enter lecture description' style='width:100%'></textarea>"+
+	                            "<textarea class='form-control description-textarea' id='descriptionTextArea"+count+"' name='description' placeholder='Enter lecture description' style='width:100%'></textarea>"+
 	                        "</div>"+
 	                        "<button type='submit' class='btn btn-primary col-md-1'>Save</button>"+
 	                        "<p class='col-md-11'> or <a href='#lec"+count+"' id='cancelDescription"+count+"' class='cancel-description' getId='"+count+"'>Cancel</a></p>"+

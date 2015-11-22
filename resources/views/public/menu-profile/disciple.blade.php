@@ -1,4 +1,4 @@
-<ul class="dropdown-menu" role="menu">
+<ul class="dropdown-menu profile-arrow" role="menu" style="margin-top: 10px;"> 
 	<li><a href="logout">Disciple</a></li>
 	<li><a href="logout">Something disciple</a></li>
 	<li><a href="logout">I dont know disciple</a></li>

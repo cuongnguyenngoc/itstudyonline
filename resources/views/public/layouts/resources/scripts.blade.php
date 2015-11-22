@@ -9,4 +9,8 @@
 <script src="{{url('js/custom.js')}}"></script>
 <script src="{{url('dropzone/min/dropzone.min.js')}}"></script>
 <script src="{{url('tinymce/tinymce.min.js')}}"></script>
-<script src="//tinymce.cachefly.net/4.2/tinymce.min.js"></script>
+<script src="{{url('js/jquery.qtip.min.js')}}"></script>
+<script src="{{url('js/fileinput.min.js')}}"></script>
+<script src="{{url('js/jquery.ui.widget.js')}}"></script>
+<script src="{{url('js/jquery.iframe-transport.js')}}"></script>
+<script src="{{url('js/jquery.fileupload.js')}}"></script>

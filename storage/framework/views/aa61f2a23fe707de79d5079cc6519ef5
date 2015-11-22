@@ -1,4 +1,4 @@
- <div class="panel panel-info course-summary hide">
+ <div class="panel panel-info course-summary panel-right hide">
     <div class="panel-heading">
         Course summary
     </div>

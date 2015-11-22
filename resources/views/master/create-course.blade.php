@@ -15,10 +15,20 @@
 
 <!-- Main -->
 <div class="container main">
-    @if(Session::has('message'))
-        {{print_r(Session::get('message'))}}
-    @endif
     <div class="row">
+        <div class="col-md-12 hide" id="headCourse">
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <div class="col-md-6">
+                        <img src="/images/itstudyonline/course-image.png" alt='This is course image' class='img-thumbnail col-md-4'/>
+                        <div class="caption">
+                            <h3 id='courseName' class='col-md-8'></h3>
+                            <h5 class='col-md-8'>{{Auth::user()->fullname}}</h5>
+                        </div>      
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-md-3">
             <div class="list-group" id="task-left">
                 @foreach($courseItems as  $key => $values)
@@ -26,16 +36,17 @@
                         {{$key}}
                     </a>
                     @foreach($values as $id => $value)
-                        <a href="#" class="list-group-item list-group-item-success {{$id}}" id="{{$id}}">{{$value}}</a> 
+                        <a href="#" class="list-group-item list-group-item-success {{$id}} list-arrow" id="{{$id}}">{{$value}}</a> 
                     @endforeach
                 @endforeach
             </div>
         </div>
         <div class="col-md-9">
             @include('master.panel.course-goals-panel')
-            @include('master.panel.curriculum-panel')
-            @include('master.panel.basics-panel')
-            @include('master.panel.course-summary-panel')
+            @include('master.panel.curriculum-panel')        
+            @include('master.panel.image-panel')
+            @include('master.panel.price-coupons-panel')
+            @include('master.panel.manage-masters-panel')
         </div>
     </div>
 </div>
@@ -50,29 +61,37 @@
     <script src="{{url('js/master/scripts.js')}}"></script>
     <script type="text/javascript">
         $('.list-group-item-success.course-goals').addClass('active');
-        $('div.panel.course-goals').removeClass('hide');
+        $('div.panel-right.course-goals').removeClass('hide');
 
+        // $('.list-group-item-success').click(function(){
+        //     $('.list-group-item-success').removeClass('active');
+        //     $('div.panel-right').addClass('hide'); 
+            
+        //     if(!$(this).hasClass('course-goals')){
+        //         if($('#course_id').val()==''){
+        //             $('.list-group-item-success.course-goals').addClass('active');
+        //             $('div.panel-right.course-goals').removeClass('hide');
+        //             alert('you have to create basic course first');
+        //         }else{    
+        //             $(this).addClass('active');
+                    
+        //             if($('div.panel').hasClass(this.id)){
+        //                 $('div.panel-right.'+this.id).removeClass('hide');
+        //             }
+        //         }
+        //     }else{
+
+        //         $(this).addClass('active');
+        //         $('div.panel-right.'+this.id).removeClass('hide');
+        //     }
+        // });
         $('.list-group-item-success').click(function(){
             $('.list-group-item-success').removeClass('active');
-            $('div.panel').addClass('hide'); 
-            
-            if(!$(this).hasClass('course-goals')){
-                if($('#course_id').val()==''){
-                    $('.list-group-item-success.course-goals').addClass('active');
-                    $('div.panel.course-goals').removeClass('hide');
-                    alert('you have to create basic course first');
-                }else{    
-                    $(this).addClass('active');
-                    
-                    if($('div.panel').hasClass(this.id)){
-                        $('div.panel.'+this.id).removeClass('hide');
-                    }
-                }
-            }else{
-
-                $(this).addClass('active');
-                $('div.panel.'+this.id).removeClass('hide');
+            $('div.panel-right').addClass('hide'); 
+            if($('div.panel').hasClass(this.id)){
+                $('div.panel-right.'+this.id).removeClass('hide');
             }
+            
         });
         
     </script>

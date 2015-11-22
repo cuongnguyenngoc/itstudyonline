@@ -9,4 +9,8 @@
 <script src="<?php echo e(url('js/custom.js')); ?>"></script>
 <script src="<?php echo e(url('dropzone/min/dropzone.min.js')); ?>"></script>
 <script src="<?php echo e(url('tinymce/tinymce.min.js')); ?>"></script>
-<script src="//tinymce.cachefly.net/4.2/tinymce.min.js"></script>
+<script src="<?php echo e(url('js/jquery.qtip.min.js')); ?>"></script>
+<script src="<?php echo e(url('js/fileinput.min.js')); ?>"></script>
+<script src="<?php echo e(url('js/jquery.ui.widget.js')); ?>"></script>
+<script src="<?php echo e(url('js/jquery.iframe-transport.js')); ?>"></script>
+<script src="<?php echo e(url('js/jquery.fileupload.js')); ?>"></script>

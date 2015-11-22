@@ -1,0 +1,96 @@
+ <div class="panel panel-info price-coupons panel-right hide">
+    <div class="panel-heading">
+        Price & Coupons
+    </div>
+    <form id="formPrice">
+        <div class="panel-body" style="background-color: #F1F3F6;">
+            <div class="row" id="showPrice">
+                <div class="col-md-3 col-md-offset-4" style="padding: 10px; border: 1px solid #EEEEEE; background: #fff;">
+                    <div class="col-md-5">Current price of the course</div>
+                    <div class="col-md-7"><h2 style="color: #378D39;">FREE</h2></div>
+                </div>
+                <div class="col-md-4 col-md-offset-4" style="padding-left: 1px; padding-top: 10px;">
+                    <p style="font-size: 15px;"> Click <a href="#priceSetting" id="show_hide_price">here</a> to change the pricing</p> 
+                </div>
+            </div>
+            <div class="row" id="priceSetting" style="display:none">
+                <div class="col-md-8 col-md-offset-2" style="padding: 10px; border: 1px solid #EEEEEE;">
+                    <div class="col-md-12">Price Settings:</div>
+                    <div class="col-md-12" id="divPrice">
+                        
+                        <input type="text" name="price" class="form-control col-md-8" id="priceCourse" value="" placeholder=" Type course's price"/>
+                        
+                    </div>
+                </div>
+                <div class="col-md-8 col-md-offset-2 hide" style="padding-left: 1px; padding-top: 10px;" id="tipPrice">
+                    <p><b> TIP:</b> Remember that by switching your course from free to paid you will be automatically 
+                    entered into Udemy's Re-Review process. See more information on the Re-Review process here.</p> 
+                    <p> Please keep in mind that courses cannot be offered as paid on Udemy if you are offering them for free elsewhere (e.g. Youtube).</p>
+                </div>
+            </div>
+        </div>
+        <!--/panel-body-->
+        <div class="panel-footer hide">
+            <div class="row">
+                <p class="col-md-2 col-md-offset-5"><button type="submit" class="btn btn-primary btn-sm" style="margin-top: 0px;"> Save</button></p>
+            </div>       
+        </div>
+    </form>
+</div>
+<!--/panel-->
+
+<script>
+$(document).on('ready', function() {
+
+    $('div#divPrice').qtip({
+        content: $('#tipPrice').html(),
+        position: {
+            my: "top center",
+            at: "bottom center"
+        }
+    });
+
+    $("#show_hide_price").click(function(){
+        $('#priceSetting').fadeIn(1000);
+        $('.price-coupons').find('div.panel-footer').removeClass('hide');
+    });
+
+    $('#formPrice').validate({
+        rules: {
+            price: {
+                required: true,
+                number: true
+            }
+        },
+        messages: {
+            price: {
+                required: "Please enter your price",
+                number: "Please enter a valid number"
+            }
+        }
+    });
+    
+    $('#formPrice').submit(function(e){
+        e.preventDefault();
+        var course = {};
+        course.course_id = $('#course_id').val();
+        course.price = $('#priceCourse').val();
+        if ($("#formPrice").valid()){
+            $.ajax({
+                type: "POST",
+                url : "/master/update-price-course",
+                dataType: 'json',
+                data: course,
+                success : function(response){
+                    console.log(response);
+                    if(response.status){
+                        $('#priceSetting').fadeOut(1000);
+                        $('#showPrice').find('h2').text(response.course.cost+'VND');
+                        $('.price-coupons').find('div.panel-footer').addClass('hide');
+                    }
+                }
+            });
+        }
+    });
+});
+</script>

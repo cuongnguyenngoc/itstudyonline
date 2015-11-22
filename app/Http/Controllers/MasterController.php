@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Redirect;
+use App\User;
 use App\Course;
 use App\Lecture;
 use App\ProgrammingLanguage;
@@ -15,6 +16,7 @@ use App\Category;
 use App\Video;
 use App\Document;
 use App\Thumbnail;
+use App\Image;
 use Validator;
 use Response;
 use File;
@@ -37,15 +39,11 @@ class MasterController extends Controller
                 'curriculum'=>'Curriculum'
             ),
             'COURSE INFO' => array(
-                'basics'=>'Basics',
-                'course-summary'=>'Course Summary', 
-                'image'=>'Image',
-                'promo-video'=>'Promo Video'
+                'image'=>'Image'
             ),
             'COURSE SETTINGS' => array(
                 'price-coupons'=>'Price & Coupons',
-                'manage-masters'=>'Manage Masters',
-                'danger-zone'=>'Danger Zone'
+                'manage-masters'=>'Manage Masters'
             )
         );
         $course = new Course;
@@ -65,12 +63,12 @@ class MasterController extends Controller
                 'lang_id' => 'required',
                 'level_id' => 'required',
                 'course_name' => 'required|min:10',
-                'describe' => 'required|min:10'
+                'description' => 'required|min:10'
             ]);
 
             if($validator->fails()){
                 //return Redirect::back()->withErrors($validator);
-                return Response::json(['message'=>'Error man','input'=>$request->input()]);
+                return Response::json(['status'=>false, 'message'=>'Error man','input'=>$request->input()]);
             }
             if($request->input('id') !=null && Course::find($request->input('id') != null))
                 
@@ -82,10 +80,10 @@ class MasterController extends Controller
             $course->lang_id = $request->input('lang_id');
             $course->level_id = $request->input('level_id');
             $course->course_name = $request->input('course_name');
-            $course->description = $request->input('describe');
+            $course->description = $request->input('description');
                 
             $course->save();
-            return Response::json(['message'=>'You created successfully','course'=>$course]);
+            return Response::json(['status'=>true, 'message'=>'You created successfully','course'=>$course]);
         }
         
     }
@@ -292,9 +290,89 @@ class MasterController extends Controller
                 }
 
                 return Response::json(['lecture'=>$lecture, 'message'=>'Cool! You have created lecture successfully']);
+            }else{
+                return Response::json(['message'=>'I can not find course_id, you need create course first']);
             }
+        }
+    }
+
+    public function doUploadImage(Request $request){
+
+        if($request->input('course_id') != null && Course::find($request->input('course_id'))){
+            $course = Course::find($request->input('course_id'));
+
+            $file = $request->file('file');
+            //return Response::json(['doc' => $request->input('doc_id'), 'video' => $request->input('video_doc_id')]);
+            $filename = uniqid() . $file->getClientOriginalName();
+            $name = explode('.', $filename);     // seperate name by dot character
+            $ext = strtolower(end($name));       // get extention part of name
+            array_pop($name);                    // skip tail in name
+            $imgname = implode("_", $name);         // combine all parts of name by underscore
+            $name = str_replace(' ', '_', $imgname); // change space to uderscore _
+
+            $img_file = './uploads/images/' . $name . '.' . $ext; // remember this is relative path to file index.php
+            // move file to uploads/videos folder
+            $file->move('uploads/images',$img_file);
+
+            if($request->input('img_id') != null && Image::find($request->input('img_id')) != null){
+
+                $image = Image::find($request->input('img_id'));
+                //Checking if user change image, it will delete image hich have saved in folder
+                File::delete($image->path);
+
+                $image->img_name = $imgname;
+                $image->path = 'uploads/images/'. $name . '.' . $ext;
+                $image->save();
+            }else{
+
+                $image = $course->image()->create([
+                            'course_id' => $course->id,
+                            'img_name' => $imgname,
+                            'path' => 'uploads/images/'. $name . '.' . $ext
+                        ]);
+                $image = Image::find($image->id);
+            }
+
+            return Response::json(['status' => true, 'image'=>$image, 'message'=>'Cool! You have uploaded image successfully']);
         }else{
-            return Response::json(['message'=>'I can not find course_id, you need create course first']);
+            return Response::json(['status' => false, 'message'=>'I can not find course_id, you need create course first']);
+        }
+    }
+
+    public function doUpdatePrice(Request $request){
+
+        if($request->ajax()){
+
+            if($request->input('course_id') != null && Course::find($request->input('course_id'))){
+
+                $course = Course::find($request->input('course_id'));
+                $course->cost = $request->input('price');
+                $course->save();
+
+                return Response::json(['status' => true, 'course'=>$course, 'message'=>'Cool! You have updated price of course successfully']);
+            }else{
+                return Response::json(['status' => false, 'message'=>'I can not find course_id, you need create course first']);
+            }
+        }
+    }
+
+    public function doAddMasterCourse(Request $request){
+
+        if($request->ajax()){
+            if($request->input('email') != null && User::where('email',$request->input('email'))->first() != null){
+                $user = User::where('email',$request->input('email'))->first();
+                if($user->id != Auth::user()->id){
+                    if($user->role->role_name == 'master'){
+                        return Response::json(['status' => true, 'user'=>$user, 'message'=>'Cool! You have find master successfully']);
+                    }else{
+                        return Response::json(['status' => false, 'user'=>$user, 'message'=>'This user is not master, please try again']);
+                    }
+                }else{
+                    return Response::json(['status' => false, 'message'=>'Dont add yourself']);
+                }
+            }else{
+                return Response::json(['status' => false, 'message'=>'Something went wrong, buddy']);
+            }
         }
     }
 }

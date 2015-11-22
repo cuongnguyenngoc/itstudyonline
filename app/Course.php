@@ -18,8 +18,8 @@ class Course extends Model
     	return $this->belongsTo('App\Learninglevel');
     }
 
-    public function images(){
-    	return $this->hasOne('App\Image');
+    public function image(){
+    	return $this->hasOne('App\Image','id','course_id');
     }
 
     public function lectures(){

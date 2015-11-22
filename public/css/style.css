@@ -24,3 +24,30 @@
 .invisible {
     display: none;
 }
+
+.nice-arrow {
+    
+}
+ul.profile-arrow:after {
+    content: ' ';
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    border: 7px solid transparent;
+    border-bottom: 10px solid #F0F0E9;
+    top: 0%;
+    left: 92%;
+    margin-top: -17px;
+}
+
+.active.list-arrow:after {
+    content: ' ';
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    border: 21px solid transparent;
+    border-left: 32px solid #3C763D;
+    top: 50%;
+    left: 100%;
+    margin-top: -21px;
+}
