@@ -27,6 +27,7 @@
                     </tr>
                     <tr>
                         <td>{{Auth::user()->fullname}}</td>
+                        <input type="hidden"
                         <td><input type="checkbox" checked="checked" disabled="true"/></td>
                         <td><input type="checkbox" checked="checked" disabled="true"/></td>
                         <td class="col-md-2">

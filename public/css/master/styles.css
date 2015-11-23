@@ -37,3 +37,8 @@ i {
 #addLecture > p{
 	margin-top: 6px;
 }
+
+.disableBtn {
+	pointer-events: none;
+   	cursor: default;
+}

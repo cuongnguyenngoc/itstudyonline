@@ -66,7 +66,6 @@
             toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist",
             setup: function(editor) {
                 editor.on('keyup', function(e) {
-                    console.log(e);
                     $('#descriptionText').val(e.target.innerText);
                 });
             }     
@@ -123,43 +122,38 @@
       
         $("#courseGoals").on('submit',function(e){
             e.preventDefault();
-            console.log("length "+$('#descriptionText').val().length + " value "+$('#descriptionText').val());
             if($("#courseGoals").valid()){
-                if($('#descriptionText').val().length >= 15){
-                    var course = {};
-                    course.id = $('#course_id').val();
-                    course.cat_id = $('#cat_id').val();
-                    course.lang_id = $('#lang_id').val();
-                    course.level_id = $('#level_id').val();
-                    course.course_name = $('#course_name').val();
-                    course.description = tinyMCE.activeEditor.getContent({
-                                            format: 'html'
-                                         });
-                    $.ajax({
-                        type: "POST",
-                        url : "/master/create-course",
-                        dataType: 'json',
-                        data: course,
-                        success : function(response){
-                            console.log(response);
-                            if(response.status){
-                                $('#headCourse').removeClass('hide');
-                                $('#course_id').val(response.course.id);
-                                $('#course_id_img').val(response.course.id); // To assign value for image when upload image of course
-                                $('#message').removeClass('hide');
-                                $('#message').find('p').text(response.message);
-                                $('.list-group-item-success.course-goals').removeClass('active');
-                                $('.list-group-item-success.curriculum').addClass('active');
-                                $('div.course-goals').addClass('hide');
-                                $('div.curriculum').removeClass('hide');
+                var course = {};
+                course.id = $('#course_id').val();
+                course.cat_id = $('#cat_id').val();
+                course.lang_id = $('#lang_id').val();
+                course.level_id = $('#level_id').val();
+                course.course_name = $('#course_name').val();
+                course.description = tinyMCE.activeEditor.getContent({
+                                        format: 'html'
+                                     });
+                $.ajax({
+                    type: "POST",
+                    url : "/master/create-course",
+                    dataType: 'json',
+                    data: course,
+                    success : function(response){
+                        console.log(response);
+                        if(response.status){
+                            $('#headCourse').removeClass('hide');
+                            $('#course_id').val(response.course.id);
+                            $('#course_id_img').val(response.course.id); // To assign value for image when upload image of course
+                            $('#message').removeClass('hide');
+                            $('#message').find('p').text(response.message);
+                            $('.list-group-item-success.course-goals').removeClass('active');
+                            $('.list-group-item-success.curriculum').addClass('active');
+                            $('div.course-goals').addClass('hide');
+                            $('div.curriculum').removeClass('hide');
 
-                                $('#courseName').text(response.course.course_name);
-                            }
+                            $('#courseName').text(response.course.course_name);
                         }
-                    });
-                }else{
-                    alert("Course Summary should minimax be 300 characters");
-                }
+                    }
+                });
             }
         });
     });

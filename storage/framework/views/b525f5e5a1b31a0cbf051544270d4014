@@ -1,11 +1,11 @@
 <?php if(Auth::guest()): ?>
 	
-<?php elseif(Auth::user()->role->role_name == 'admin'): ?>
+<?php elseif(strcmp(Auth::user()->role->role_name, "admin")): ?>
 	<?php echo $__env->make('public.menu-profile.admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif(Auth::user()->role->role_name == 'master'): ?>
+<?php elseif(strcmp(Auth::user()->role->role_name, "master")): ?>
 	<?php echo $__env->make('public.menu-profile.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif(Auth::user()->role->role_name == 'disciple'): ?>
+<?php elseif(strcmp(Auth::user()->role->role_name, "disciple")): ?>
 	<?php echo $__env->make('public.menu-profile.disciple', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php else: ?>
-	<p>What's wrong</p>
+	<p><?php echo e(Auth::user()->role->role_name); ?></p>
 <?php endif; ?>

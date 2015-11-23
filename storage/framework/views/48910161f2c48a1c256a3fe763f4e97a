@@ -10,7 +10,7 @@
                     <div class="col-md-7"><h2 style="color: #378D39;">FREE</h2></div>
                 </div>
                 <div class="col-md-4 col-md-offset-4" style="padding-left: 1px; padding-top: 10px;">
-                    <p style="font-size: 15px;"> Click <a href="#priceSetting" id="show_hide_price">here</a> to change the pricing</p> 
+                    <p style="font-size: 15px;"> Click <a href="#" id="show_hide_price">here</a> to change the pricing</p> 
                 </div>
             </div>
             <div class="row" id="priceSetting" style="display:none">
@@ -53,13 +53,19 @@ $(document).on('ready', function() {
     $("#show_hide_price").click(function(){
         $('#priceSetting').fadeIn(1000);
         $('.price-coupons').find('div.panel-footer').removeClass('hide');
+        $('#priceCourse').focus();
     });
+
+    $.validator.addMethod('nonezero',function(value,element){
+        return value != 0;
+    },'Price is none zero');
 
     $('#formPrice').validate({
         rules: {
             price: {
                 required: true,
-                number: true
+                number: true,
+                nonezero: true
             }
         },
         messages: {

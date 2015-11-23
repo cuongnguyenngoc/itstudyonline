@@ -25,4 +25,8 @@ class Course extends Model
     public function lectures(){
     	return $this->hasMany('App\Lecture');
     }
+
+    public function usercreatecourse(){
+        return $this->hasMany('App\UserCreateCourse','id','course_id');
+    }
 }

@@ -28,7 +28,7 @@ class HomeController extends Controller
     {
         $user = User::where('email','ngoccuongbka94@gmail.com')->first();
 
-        echo $user->role->role_name;
+        echo $user->role->id;
         //return View('test',compact('thumbnails'));
     }
     public function manage(){

@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Redirect;
 use App\User;
 use App\Course;
+use App\UserCreateCourse;
 use App\Lecture;
 use App\ProgrammingLanguage;
 use App\Learninglevel;
@@ -43,7 +44,7 @@ class MasterController extends Controller
             ),
             'COURSE SETTINGS' => array(
                 'price-coupons'=>'Price & Coupons',
-                'manage-masters'=>'Manage Masters'
+                // 'manage-masters'=>'Manage Masters'
             )
         );
         $course = new Course;
@@ -260,7 +261,8 @@ class MasterController extends Controller
                                 'course_id' => $course->id,
                                 'user_id' => Auth::user()->id,
                                 'lec_name' => $request->input('lec_name'),
-                                'description' => $request->input('description')
+                                'description' => $request->input('description'),
+                                'order' => $request->input('order')
                             ]);
                     $lecture = Lecture::find($lecture->id);
                 }
@@ -370,6 +372,30 @@ class MasterController extends Controller
                 }else{
                     return Response::json(['status' => false, 'message'=>'Dont add yourself']);
                 }
+            }else{
+                return Response::json(['status' => false, 'message'=>'Something went wrong, buddy']);
+            }
+        }
+    }
+
+    public function doSubmitCourse(Request $request){
+
+        if($request->ajax()){
+            if($request->input('course_id') != null && Auth::user() != null){
+                if($request->input('id') != null && UserCreateCourse::find($request->input('id')) != null){
+                    $usercreatecourse = UserCreateCourse::find($request->input('id'));
+                    $usercreatecourse->user_id = Auth::user()->id;
+                    $usercreatecourse->course_id = $request->input('course_id');
+                    $usercreatecourse->save();
+                }else{
+                    $usercreatecourse = Auth::user()->usercreatecourse()->create([
+                        'user_id' => Auth::user()->id,
+                        'course_id' => $request->input('course_id'),
+                        'isBoss' => true
+                    ]);
+                }
+
+                return Response::json(['status' => true, 'usercreatecourse'=>$usercreatecourse, 'message'=>'Cool! you have submited course successfully']);
             }else{
                 return Response::json(['status' => false, 'message'=>'Something went wrong, buddy']);
             }

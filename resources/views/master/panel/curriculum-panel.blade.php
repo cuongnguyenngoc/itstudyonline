@@ -64,7 +64,7 @@
             $('#collapseLecture'+$(this).attr('getId')).toggleClass('hide');
         });
 
-        var count = 0;
+        var count = 0; //this variable was declared global
         $("#addLecture").submit(function(e){
             
             e.preventDefault();
@@ -79,6 +79,7 @@
                 );
             }
             $('#showLecture'+count).find('#lec_name'+count).text($('#lec_title').val());   
+            $('#countLectures').text(count).attr('countLectures',count);
         });
 
         $('#curriculumPanel').on('click','button.addDescriptionBtn',function(){
@@ -94,7 +95,6 @@
                 toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image",
                 setup: function(editor) {
                     editor.on('keyup', function(e) {
-                        console.log(e);
                         $('#descriptionTextArea'+getId).val(e.target.innerText);
                     });
                 }
@@ -228,8 +228,6 @@
                     });
 
                     this.on("complete", function (file) {
-                        console.log(file);
-                        console.log(this);
                         this.removeFile(file);
                         $('#uploadVideo'+this.getId+' > ul').append("<li class='cancel-addContent' getId='"+this.getId+"'><a href='#lec"+this.getId+"' id='cancel"+this.getId+"'> Cancel</a></li>");
                         if(file.status != 'error'){
@@ -257,7 +255,7 @@
                     });
                 },
                 success: function(file,response){
-                    console.log(file);
+
                     console.log(response);
                     if($('#publish'+this.getId).hasClass('published')){
                         $('#publish'+this.getId).removeClass('hide');
@@ -321,14 +319,12 @@
                 toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link jbimages",
                 setup: function(editor) {
                     editor.on('keyup', function(e) {
-                        console.log(e);
                         $('#textarea'+getId).val(e.target.innerText);
-                        console.log($('#textarea'+getId).val() + ' length '+$('#textarea'+getId).val().length);
                     });
                 }
             });
 
-            $("form.addText").validate({  
+            $("form#addText"+getId).validate({  
                 rules: {
                     textContent: {
                         required: true,
@@ -459,16 +455,22 @@
             });
         });
 
+        var countLecsPublished = 0; //this variable was declared global
+
         $('#curriculumPanel').on('click','div.publish-lecture a.publish',function(){
             
             var getId = $(this).attr('getId');
             var lecture = {};
+
+            $('#publish'+getId).addClass('disableBtn'); // Avoid to the second click 
+
             lecture.lec_name = $('#lec_name'+getId).text();
             lecture.course_id = $('#course_id').val();
             lecture.description = $('#showDescription'+getId).text();
             lecture.video_id = $('#video_id'+getId).val();
             lecture.doc_id = $('#doc_id'+getId).val();
             lecture.lec_id = $('input#lec_id'+getId).val();
+            lecture.order = getId;
             lecture.text = $('textarea#textarea'+getId).val();
             var itself = $(this);
             $.ajax({
@@ -483,6 +485,8 @@
                           .addClass('published');
                     $('#showLecture'+getId).addClass('panel-primary')
                                            .removeClass('panel-danger');
+                    countLecsPublished++; // this variable was declared global in file create-course.blade.php
+                    $('#lecturesPublished').text(countLecsPublished).attr('lecturesPublished',countLecsPublished);
                 }
             });
         });

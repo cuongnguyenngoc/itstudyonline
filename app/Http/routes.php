@@ -41,4 +41,5 @@ Route::post('document/do-upload','MasterController@doDocumentUpload');
 Route::post('master/update-course','MasterController@doUpdateCourse');
 Route::post('master/upload-image','MasterController@doUploadImage');
 Route::post('master/update-price-course','MasterController@doUpdatePrice');
+Route::post('master/submit-course','MasterController@doSubmitCourse');
 Route::post('master/add-master-course','MasterController@doAddMasterCourse');
