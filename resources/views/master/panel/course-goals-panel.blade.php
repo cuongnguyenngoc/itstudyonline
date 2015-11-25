@@ -26,7 +26,7 @@
                 {!! Form::text('course_name',$course->course_name,['id'=>'course_name','placeholder'=>'Enter course name','class'=>'form-control']) !!}
             </div>
             <div class="form-group showTip">
-                <label for="description">Description for your course</label>
+                <label for="description">Course Summary</label>
                 <textarea class='form-control' id='descriptionText' name='descriptionText' placeholder='Enter course description' style='width:100%'></textarea>
             </div>
             <button type="submit" class="btn btn-default">Submit</button>
@@ -137,6 +137,7 @@
                             $('#headCourse').removeClass('hide');
                             $('#course_id').val(response.course.id);
                             $('#course_id_img').val(response.course.id); // To assign value for image when upload image of course
+                            $('#course_id_video').val(response.course.id); // To assign value for video when upload video introduction of course
                             $('#message').removeClass('hide');
                             $('#message').find('p').text(response.message);
                             $('.list-group-item-success.course-goals').removeClass('active');

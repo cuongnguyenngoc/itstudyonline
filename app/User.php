@@ -40,7 +40,7 @@ class User extends Model implements AuthenticatableContract,
 
     public function role(){
 
-        return $this->belongsTo('App\UserRole');
+        return $this->belongsTo('App\UserRole','role_id','id');
     }
 
     public function usercreatecourse(){

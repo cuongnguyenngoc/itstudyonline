@@ -7,19 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     public function language(){
-    	return $this->belongsTo('App\ProgrammingLanguage');
+    	return $this->belongsTo('App\ProgrammingLanguage','lang_id','id');
     }
 
     public function category(){
-    	return $this->belongsTo('App\Category');
+    	return $this->belongsTo('App\Category','cat_id','id');
     }
 
     public function level(){
-    	return $this->belongsTo('App\Learninglevel');
+    	return $this->belongsTo('App\Learninglevel','level_id','id');
     }
 
     public function image(){
-    	return $this->hasOne('App\Image','id','course_id');
+    	return $this->hasOne('App\Image');
+    }
+
+    public function videointro(){
+        return $this->hasOne('App\Introvideo');
     }
 
     public function lectures(){
@@ -27,6 +31,14 @@ class Course extends Model
     }
 
     public function usercreatecourse(){
-        return $this->hasMany('App\UserCreateCourse','id','course_id');
+        return $this->hasOne('App\UserCreateCourse');
+    }
+
+    public function ratings(){
+        return $this->hasMany('App\Rating');
+    }
+
+    public function enrolls(){
+        return $this->hasMany('App\Enroll');
     }
 }

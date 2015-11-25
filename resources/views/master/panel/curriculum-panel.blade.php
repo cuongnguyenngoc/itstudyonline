@@ -480,13 +480,19 @@
                 data: lecture, // remember that be must to pass data object type
                 success : function(response){
                     console.log(response);
-                    $('input#lec_id'+getId).val(response.lecture.id);
-                    itself.addClass('hide')
-                          .addClass('published');
-                    $('#showLecture'+getId).addClass('panel-primary')
-                                           .removeClass('panel-danger');
-                    countLecsPublished++; // this variable was declared global in file create-course.blade.php
-                    $('#lecturesPublished').text(countLecsPublished).attr('lecturesPublished',countLecsPublished);
+                    if(response.status){
+                        $('input#lec_id'+getId).val(response.lecture.id);
+                        itself.addClass('hide')
+                              .addClass('published');
+                        $('#showLecture'+getId).addClass('panel-primary')
+                                               .removeClass('panel-danger');
+                        countLecsPublished++; // this variable was declared global in file create-course.blade.php
+                        $('#lecturesPublished').text(countLecsPublished).attr('lecturesPublished',countLecsPublished);
+                    }
+                },
+                error: function(response){
+                    console.log(response);
+                    $('#publish'+getId).removeClass('disableBtn');
                 }
             });
         });

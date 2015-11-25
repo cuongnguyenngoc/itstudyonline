@@ -46,8 +46,8 @@ ul.profile-arrow:after {
     width: 0px;
     height: 0px;
     border: 21px solid transparent;
-    border-left: 32px solid #3C763D;
+    border-right: 32px solid #BACED8;
     top: 50%;
-    left: 100%;
+    left: 81%;
     margin-top: -21px;
 }

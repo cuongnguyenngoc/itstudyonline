@@ -16,6 +16,7 @@ class CreateRatingsTable extends Migration
             $table->increments('id');
             $table->integer('course_id')->unsigned()->nullable();
             $table->integer('user_id')->unsigned()->nullable();
+            $table->integer('num_stars');
             $table->timestamps();
 
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');

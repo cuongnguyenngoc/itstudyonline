@@ -14,6 +14,7 @@ return array(
     'CreateDocumentsTable' => $baseDir . '/database/migrations/2015_10_26_162136_create_documents_table.php',
     'CreateEnrollsTable' => $baseDir . '/database/migrations/2015_10_26_162129_create_enrolls_table.php',
     'CreateImagesTable' => $baseDir . '/database/migrations/2015_10_27_162610_create_images_table.php',
+    'CreateIntrovideosTable' => $baseDir . '/database/migrations/2015_11_24_151807_create_introvideos_table.php',
     'CreateLearningLevelsTable' => $baseDir . '/database/migrations/2015_10_26_162123_create_learningLevels_table.php',
     'CreateLecturesTable' => $baseDir . '/database/migrations/2015_10_26_162132_create_lectures_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',

@@ -154,6 +154,24 @@ $(document).ready(function(){
 		};
 
 		// End of login, signup processing
-
-		
+		var $sidebar   = $("#sidebar"), 
+	        $window    = $(window),
+	        offset     = $sidebar.offset(),
+	        topPadding = 15,
+	    	footer = $('#footer').offset(),
+	    	sidebarDelta = footer.top - $("#header").offset().top - $("#header").outerHeight() - $("#slider").outerHeight() - $sidebar.outerHeight() - $('.recommended_items').outerHeight();
+	    
+	    $window.scroll(function() {
+	    	console.log($window.scrollTop()+" - "+offset.top+" - "+footer.top);
+	    	console.log(sidebarDelta +" = "+ Math.min($window.scrollTop() - offset.top + topPadding, sidebarDelta));
+	        if ($window.scrollTop() > offset.top) {
+	            $sidebar.stop().animate({
+	                marginTop: Math.min($window.scrollTop() - offset.top + topPadding, sidebarDelta)
+	            });
+	        }else{
+	        	$sidebar.stop().animate({
+	                marginTop: 0
+	            });
+	        }
+	    });
 });

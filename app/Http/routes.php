@@ -16,9 +16,11 @@ Route::get('/','HomeController@index');
 // Test Area
 Route::get('test','HomeController@test');
 Route::get('admin/manage','HomeController@manage');
-Route::get('fuck','HomeController@fuck');
+Route::get('awe','HomeController@awe');
+// End of Test
 
-
+// Home route
+Route::get('course/{id}','HomeController@getCourse');
 
 // Authentication Area
 Route::post('checkEmailExist','Auth\AuthController@checkEmailExisted');
@@ -30,7 +32,7 @@ Route::get('logout','Auth\AuthController@getLogout');
 Route::get('master/manage','MasterController@manage');
 Route::get('master/create-course/','MasterController@getCreateCourse');
 Route::post('master/create-course', ['as'=>'master.course.create','uses'=>'MasterController@postCreateCourse']);
-Route::model('id','App\Course');
+// Route::model('id','App\Course');
 Route::post('master/course/update/{course}', ['as'=>'master.course.update','uses'=>'MasterController@updateCourse']);
 Route::post('create-course','MasterController@create_course');
 Route::get('course-manage/create-course-detail/{id}','MasterController@create_detail_course');
@@ -40,6 +42,7 @@ Route::post('video/update-thumbnail','MasterController@updateThumbnail');
 Route::post('document/do-upload','MasterController@doDocumentUpload');
 Route::post('master/update-course','MasterController@doUpdateCourse');
 Route::post('master/upload-image','MasterController@doUploadImage');
+Route::post('master/upload-video-intro','MasterController@doUploadVideoIntro');
 Route::post('master/update-price-course','MasterController@doUpdatePrice');
 Route::post('master/submit-course','MasterController@doSubmitCourse');
 Route::post('master/add-master-course','MasterController@doAddMasterCourse');

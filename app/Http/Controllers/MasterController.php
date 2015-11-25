@@ -18,6 +18,7 @@ use App\Video;
 use App\Document;
 use App\Thumbnail;
 use App\Image;
+use App\Introvideo;
 use Validator;
 use Response;
 use File;
@@ -40,7 +41,8 @@ class MasterController extends Controller
                 'curriculum'=>'Curriculum'
             ),
             'COURSE INFO' => array(
-                'image'=>'Image'
+                'image'=>'Image',
+                'intro-video' => 'Introduction video'
             ),
             'COURSE SETTINGS' => array(
                 'price-coupons'=>'Price & Coupons',
@@ -288,12 +290,12 @@ class MasterController extends Controller
                     $lecture->text = $request->input('text');
                     $lecture->save();
                 }else{
-                    return Response::json(['message'=>'It have get a problem']);
+                    return Response::json(['status'=>false,'message'=>'It have get a problem']);
                 }
 
-                return Response::json(['lecture'=>$lecture, 'message'=>'Cool! You have created lecture successfully']);
+                return Response::json(['status'=>true,'lecture'=>$lecture, 'message'=>'Cool! You have created lecture successfully']);
             }else{
-                return Response::json(['message'=>'I can not find course_id, you need create course first']);
+                return Response::json(['status'=>false,'message'=>'I can not find course_id, you need create course first']);
             }
         }
     }
@@ -336,6 +338,48 @@ class MasterController extends Controller
             }
 
             return Response::json(['status' => true, 'image'=>$image, 'message'=>'Cool! You have uploaded image successfully']);
+        }else{
+            return Response::json(['status' => false, 'message'=>'I can not find course_id, you need create course first']);
+        }
+    }
+
+    public function doUploadVideoIntro(Request $request){
+        if($request->input('course_id') != null && Course::find($request->input('course_id'))){
+            $course = Course::find($request->input('course_id'));
+
+            $file = $request->file('file');
+            //return Response::json(['doc' => $request->input('doc_id'), 'video' => $request->input('video_doc_id')]);
+            $filename = uniqid() . $file->getClientOriginalName();
+            $name = explode('.', $filename);     // seperate name by dot character
+            $ext = strtolower(end($name));       // get extention part of name
+            array_pop($name);                    // skip tail in name
+            $imgname = implode("_", $name);         // combine all parts of name by underscore
+            $name = str_replace(' ', '_', $imgname); // change space to uderscore _
+
+            $video_file = './uploads/videos/' . $name . '.' . $ext; // remember this is relative path to file index.php
+            // move file to uploads/videos folder
+            $file->move('uploads/videos',$video_file);
+
+            if($request->input('videointro_id') != null && Introvideo::find($request->input('videointro_id')) != null){
+
+                $introvideo = Introvideo::find($request->input('videointro_id'));
+                //Checking if user change video, it will delete video which have saved in folder
+                File::delete($introvideo->path);
+
+                $videointro->video_name = $imgname;
+                $videointro->path = 'uploads/videos/'. $name . '.' . $ext;
+                $videointro->save();
+            }else{
+
+                $videointro = $course->videointro()->create([
+                            'course_id' => $course->id,
+                            'video_name' => $imgname,
+                            'path' => 'uploads/videos/'. $name . '.' . $ext
+                        ]);
+                $videointro = Introvideo::find($videointro->id);
+            }
+
+            return Response::json(['status' => true, 'videointro'=>$videointro, 'message'=>'Cool! You have uploaded Video successfully']);
         }else{
             return Response::json(['status' => false, 'message'=>'I can not find course_id, you need create course first']);
         }

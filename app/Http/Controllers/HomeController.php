@@ -8,6 +8,12 @@ use App\Http\Controllers\Controller;
 
 use App\User;
 use App\Video;
+use App\Category;
+use App\ProgrammingLanguage;
+use App\Learninglevel;
+use App\UserCreateCourse;
+use App\Course;
+use App\Rating;
 use Auth;
 
 class HomeController extends Controller
@@ -21,20 +27,34 @@ class HomeController extends Controller
 
     public function index()
     {
-        return view('home.index');
+        $categories = Category::all();
+        $languages = ProgrammingLanguage::all();
+        $levels = Learninglevel::all();
+        $usercreatecourses = UserCreateCourse::all();
+        return view('home.index',compact('categories','languages','levels','usercreatecourses'));
+    }
+
+    public function getCourse($id){
+
+        $course = Course::find($id);
+        return view('home.course',compact('course'));
     }
 
     public function test()
     {
-        $user = User::where('email','ngoccuongbka94@gmail.com')->first();
-
-        echo $user->role->id;
+        $categorie = Category::find(1);
+        foreach ($categorie->usercreatecourses as $key) {
+            echo $key->course->image->path;
+            echo "<br>";
+        }
+        
+        echo "<br>";
         //return View('test',compact('thumbnails'));
     }
     public function manage(){
         return View('admin.manage');
     }
-    public function fuck(){
+    public function awe(){
         $upload_dir = './uploads/videos/';
         // chuyển file về thư mục $upload_dir
         $video_file = "./uploads/videos/564b7796933eaBoa_Hancock_hugs_Luffy(One_Piece_3D2Y).mp4";

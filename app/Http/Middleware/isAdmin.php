@@ -38,7 +38,7 @@ class isAdmin
         if($this->auth->guest()){
             return redirect('/');
         }else{
-            if(!strcmp($this->auth->user()->role->role_name, 'admin'))
+            if($this->auth->user()->role->role_name != 'admin')
                 return Redirect::back()->withErrors(['notice'=>'You dont have permission to access, buddy']);
         }
 

@@ -43,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3" style="padding-right: 0px;">
             <div class="list-group" id="task-left">
                 @foreach($courseItems as  $key => $values)
                     <a href="#" class="list-group-item disabled">
@@ -55,11 +55,12 @@
                 @endforeach
             </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-9" style="padding-left: 0px;">
             @include('master.panel.course-goals-panel')
             @include('master.panel.curriculum-panel')        
             @include('master.panel.image-panel')
             @include('master.panel.price-coupons-panel')
+            @include('master.panel.intro-video-panel')
         </div>
     </div>
 </div>
@@ -78,7 +79,8 @@
             $('.list-group-item-success.course-goals').addClass('active');
             $('div.panel-right.course-goals').removeClass('hide');
 
-            $('.list-group-item-success').click(function(){
+            $('.list-group-item-success').click(function(e){
+                e.stopImmediatePropagation(); // Prevent duplicated click
                 $('.list-group-item-success').removeClass('active');
                 $('div.panel-right').addClass('hide'); 
                 
@@ -114,26 +116,34 @@
                 e.stopImmediatePropagation();
                 if($('#lecturesPublished').attr('lecturesPublished') >= 3){
                     if($('#img_preview').attr('src')!='nothing'){
-
-                        $.ajax({
-                            type: "POST",
-                            url : "/master/submit-course",
-                            dataType: 'json',
-                            data: {'course_id' : $('#course_id').val(), 'id' : $('#submitCourseId').val()}, // remember that be must to pass data object type
-                            success : function(response){
-                                console.log(response);
-                                if(response.status){
-                                    $('#submitCourseId').val(response.usercreatecourse.id);
-                                    alert('You submit course successfully');
+                        if($('#video_preview').attr('src') != null){
+                            $.ajax({
+                                type: "POST",
+                                url : "/master/submit-course",
+                                dataType: 'json',
+                                data: {'course_id' : $('#course_id').val(), 'id' : $('#submitCourseId').val()}, // remember that be must to pass data object type
+                                success : function(response){
+                                    console.log(response);
+                                    if(response.status){
+                                        $('#submitCourseId').val(response.usercreatecourse.id);
+                                        alert('You submit course successfully');
+                                        $(window).off('beforeunload');
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }else{
+                            alert('You should upload video introduction for course');
+                        }                      
                     }else{
                         alert('You should upload avatar for course');
                     }
                 }else{
                     alert('Number of lectures is minimax 6');
                 }           
+            });
+
+            $(window).on("beforeunload", function() {
+                return "Are you sure? You didn't finish the form!";
             });
         });      
     </script>
