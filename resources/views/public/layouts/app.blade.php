@@ -4,7 +4,7 @@
     @include('public.layouts.resources.link-css')
     @yield('css')
     @include('public.layouts.resources.scripts')
-    @yield('script')
+    <!-- @yield('script') -->
 </head><!--/head-->
 
 <body>
@@ -26,7 +26,8 @@
 	</header>
 
 	@yield('content')
-  	@yield('footer')
+  	@yield('footer-top')
+  	@yield('footer-bottom')
 
     <!-- @include('public.layouts.resources.scripts') -->
     @yield('script')

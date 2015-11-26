@@ -84,7 +84,8 @@ trait AuthenticatesUsers
             return $this->authenticated($request, Auth::user());
         }
 
-        return redirect()->intended($this->redirectPath());
+        // return redirect()->intended($this->redirectPath());
+        return back();
     }
 
     /**
@@ -119,7 +120,8 @@ trait AuthenticatesUsers
     {
         Auth::logout();
 
-        return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
+        // return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
+        return back();
     }
 
     /**

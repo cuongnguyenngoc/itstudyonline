@@ -18,6 +18,7 @@ class CreateEnrollsTable extends Migration
             $table->integer('user_id')->unsigned()->nullable();
             $table->bigInteger('tuition')->nullable();
             $table->bigInteger('earning')->nullable();
+            $table->integer('process');
             $table->timestamps();
 
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');

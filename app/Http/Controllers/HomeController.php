@@ -14,6 +14,7 @@ use App\Learninglevel;
 use App\UserCreateCourse;
 use App\Course;
 use App\Rating;
+use App\Lecture;
 use Auth;
 
 class HomeController extends Controller
@@ -47,8 +48,18 @@ class HomeController extends Controller
             echo $key->course->image->path;
             echo "<br>";
         }
-        
+
+        $course = Course::find(5);
+        echo $course->lectures->count();
         echo "<br>";
+        echo ($course->usercreatecourse->user->image) ;
+        echo "<br>";
+
+        $lecture = Lecture::find(5);
+        var_dump($lecture->document);
+
+        $lecture = $course->lectures()->where('order',1)->first();
+        echo $lecture->type;
         //return View('test',compact('thumbnails'));
     }
     public function manage(){

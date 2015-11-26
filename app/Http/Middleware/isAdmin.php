@@ -39,7 +39,7 @@ class isAdmin
             return redirect('/');
         }else{
             if($this->auth->user()->role->role_name != 'admin')
-                return Redirect::back()->withErrors(['notice'=>'You dont have permission to access, buddy']);
+                return Redirect::back()->withErrors(['notice'=> $this->auth->user()->role->role_name.', You dont have permission to access, buddy']);
         }
 
         return $next($request);

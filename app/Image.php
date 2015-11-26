@@ -12,4 +12,8 @@ class Image extends Model
 
         return $this->belongsTo('App\Course');
     }
+
+    public function user(){
+    	return $this->belongsTo('App\User');
+    }
 }

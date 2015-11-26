@@ -3,5 +3,5 @@
 	<li><a href="logout">Something disciple</a></li>
 	<li><a href="logout">I dont know disciple</a></li>
 	<li><a href="logout">Custom disciple</a></li>
-	<li><a href="logout">Logout</a></li>
+	<li><a href="<?php echo e(url('logout')); ?>">Logout</a></li>
 </ul>

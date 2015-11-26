@@ -16,8 +16,9 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="col-md-3">
+                <input type="hidden" name="hide_id" id="course_id_hide" value="<?php echo e($course->id); ?>">
                 <a href="<?php echo e(url('course/'.$course->id)); ?>" class="thumbnail">
-                    <img src="/<?php echo e($course->image->path); ?>" alt="<?php echo e($course->image->img_name); ?>" height="150px" />
+                    <img src="/<?php echo e($course->image->path); ?>" alt="<?php echo e($course->image->img_name); ?>" height="200px" />
                 </a>
             </div>
             <div class="col-md-9">
@@ -47,7 +48,7 @@
             </div>
             <div class="col-md-4" style="padding-bottom: 15px; border-bottom: 1px solid #F0F0E9;">
                 <h3 style="margin-top: 0px;"> <?php echo e($course->cost); ?>k VND</h3>
-                <a href="#" class="btn btn-primary btn-lg" style="margin-top: 0px;"> Enroll This Course</a>
+                <a href="#" class="btn btn-primary btn-lg" style="margin-top: 0px;" id="enrollCourseBtn"> Enroll This Course</a>
                 <div style="margin-top: 10px;">
                     <a href="#"><span class="glyphicon glyphicon-flag"></span> Report Abuse</a>
                 </div>            
@@ -73,15 +74,18 @@
                 <div>
                     <?php foreach($course->lectures as $lecture): ?>
                         <div class="lecture row" getId="<?php echo e($lecture->order); ?>">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <span class="glyphicon glyphicon-play"></span> 
                                 Lecture <?php echo e($lecture->order); ?>
 
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <?php echo e($lecture->lec_name); ?> 
                                 <span class="toggle glyphicon glyphicon-triangle-bottom"></span>
-                            </div>      
+                            </div> 
+                            <div class="col-md-4">
+                                <?php echo e($lecture->type); ?> 
+                            </div>     
                             <div id="lecture<?php echo e($lecture->order); ?>" class="col-md-12 hide" style="margin: 15px;margin-bottom: 0px; margin-top: 10px;">
                                 <?php echo $lecture->description; ?>
 
@@ -89,6 +93,34 @@
                         </div>
                     <?php endforeach; ?>
                 </div>
+                <h3>Master Information</h3>
+                <div>
+                    <a href="<?php echo e(url('user/'.$course->usercreatecourse->user->id)); ?>" class="thumbnail col-md-3">
+                        <img src="<?php echo e(($course->usercreatecourse->user->image)?url($course->usercreatecourse->user->image->path):''); ?>" height="100px" />
+                    </a>
+                    <a href="#" class="col-md-9">
+                        <?php echo e($course->usercreatecourse->user->fullname); ?>
+
+                    </a>
+                    <div class="social-icons">
+                        <ul class="nav navbar-nav">
+                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-12" style="padding-left: 0px;">
+                        Hi, I'm Cuong! I'm a cool guy. I'm here to teach you something new and insteresting about IT
+                    </div>           
+                </div>
+                <div class="col-md-12" style="padding-left: 0px;">
+                    <h3>Reviews</h3>
+                    <div class="btn btn-primary"> I will do this later</div>
+
+                    <div class="comments">
+                        Comments will be showed below, buddy
+                    </div>
+                </div>         
             </div>
             <div class="col-md-4">
                           
@@ -102,25 +134,44 @@
         padding-left: 0px;
         border-bottom: 1px solid #F0F0E9;   
         background: #0C9A14;
+        margin-left: 0px;
     }
 </style>
 
-<script type="text/javascript">
-    $('div.lecture').click(function(){
-        var getId = $(this).attr('getId');
-        $('#lecture'+getId).toggleClass('hide');
-        $(this).find('span.toggle').toggleClass('glyphicon-triangle-bottom glyphicon-triangle-top');
-    });   
-</script>
-
 <?php $__env->stopSection(); ?>
 
-<?php $__env->startSection('footer'); ?>
-    <?php echo $__env->make('public.layouts.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->startSection('footer-bottom'); ?>
+    <?php echo $__env->make('public.layouts.footer.footer-bottom', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php $__env->stopSection(); ?>
+
+
 
 <?php $__env->startSection('script'); ?>
-    
+    <?php if(Auth::check()): ?>
+        <script><?php echo e('var logged = true;'); ?></script>
+    <?php else: ?>
+        <script><?php echo e('var logged = false;'); ?></script>
+    <?php endif; ?>
+    <script type="text/javascript">
+        //$(document).ready(function(){
+            $('div.lecture').click(function(){
+                var getId = $(this).attr('getId');
+                $('#lecture'+getId).toggleClass('hide');
+                $(this).find('span.toggle').toggleClass('glyphicon-triangle-bottom glyphicon-triangle-top');
+            });   
+
+            $('#enrollCourseBtn').click(function(e){
+                e.stopImmediatePropagation();
+                if(!logged){
+                    $("#authModal").modal();
+                    login_selected();
+                }else{
+                    window.location.href = "/course/learning/" + $('#course_id_hide').val();
+                }
+            });
+        //});
+        
+    </script>
 <?php $__env->stopSection(); ?>
 
 

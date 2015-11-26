@@ -389,8 +389,8 @@
             );
 
             // Set value null for corresponding id
-            $('input#doc_id'+this.getId).val(null);
-            $('input#video_id'+this.getId).val(null);
+            $('input#doc_id'+getId).val(null);
+            $('input#video_id'+getId).val(null);
         });
 
         $('#curriculumPanel').on('click','div.editContent > a.change-video',function(){
@@ -455,14 +455,12 @@
             });
         });
 
-        var countLecsPublished = 0; //this variable was declared global
-
         $('#curriculumPanel').on('click','div.publish-lecture a.publish',function(){
             
             var getId = $(this).attr('getId');
             var lecture = {};
 
-            $('#publish'+getId).addClass('disableBtn'); // Avoid to the second click 
+            // $('#publish'+getId).addClass('disableBtn'); // Avoid to the second click 
 
             lecture.lec_name = $('#lec_name'+getId).text();
             lecture.course_id = $('#course_id').val();
@@ -486,8 +484,7 @@
                               .addClass('published');
                         $('#showLecture'+getId).addClass('panel-primary')
                                                .removeClass('panel-danger');
-                        countLecsPublished++; // this variable was declared global in file create-course.blade.php
-                        $('#lecturesPublished').text(countLecsPublished).attr('lecturesPublished',countLecsPublished);
+                        $('#lecturesPublished').text(response.course.lectures.length).attr('lecturesPublished',response.course.lectures.length);
                     }
                 },
                 error: function(response){

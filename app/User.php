@@ -43,9 +43,15 @@ class User extends Model implements AuthenticatableContract,
         return $this->belongsTo('App\UserRole','role_id','id');
     }
 
-    public function usercreatecourse(){
-        return $this->hasMany('App\UserCreateCourse','id','user_id');
+    public function usercreatecourses(){
+        return $this->hasMany('App\UserCreateCourse','user_id','id');
     }
 
-    
+    public function enrolls(){
+        return $this->hasMany('App\Enroll');
+    }
+
+    public function image(){
+        return $this->hasOne('App\Image','user_id','id');
+    }
 }

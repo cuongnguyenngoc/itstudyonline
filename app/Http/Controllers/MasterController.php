@@ -277,6 +277,8 @@ class MasterController extends Controller
                     $video = Video::find($request->input('video_id'));
                     $video->lec_id = $lecture->id;
                     $video->save();
+                    $lecture->type = "Video";
+                    $lecture->save();
                 }elseif($request->input('video_id') == null 
                         && $request->input('text') == null
                         && $request->input('doc_id') != null 
@@ -284,16 +286,19 @@ class MasterController extends Controller
                     $document = Document::find($request->input('doc_id'));
                     $document->lec_id = $lecture->id;
                     $document->save();
+                    $lecture->type = "Document";
+                    $lecture->save();
                 }elseif($request->input('text') != null
                         && $request->input('doc_id') == null 
                         && $request->input('video_id') == null){
                     $lecture->text = $request->input('text');
+                    $lecture->type = "Text";
                     $lecture->save();
                 }else{
                     return Response::json(['status'=>false,'message'=>'It have get a problem']);
                 }
-
-                return Response::json(['status'=>true,'lecture'=>$lecture, 'message'=>'Cool! You have created lecture successfully']);
+                $course->lectures;
+                return Response::json(['status'=>true,'lecture'=>$lecture, 'course' => $course, 'message'=>'Cool! You have created lecture successfully']);
             }else{
                 return Response::json(['status'=>false,'message'=>'I can not find course_id, you need create course first']);
             }

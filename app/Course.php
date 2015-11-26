@@ -31,7 +31,7 @@ class Course extends Model
     }
 
     public function usercreatecourse(){
-        return $this->hasOne('App\UserCreateCourse');
+        return $this->hasOne('App\UserCreateCourse','course_id','id');
     }
 
     public function ratings(){

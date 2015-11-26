@@ -228,8 +228,11 @@
 	</section>
 @stop
 
-@section('footer')
-	@include('public.layouts.footer')
+@section('footer-top')
+	@include('public.layouts.footer.footer-top')
+@stop
+@section('footer-bottom')
+	@include('public.layouts.footer.footer-bottom')
 @stop
 
 @section('script')

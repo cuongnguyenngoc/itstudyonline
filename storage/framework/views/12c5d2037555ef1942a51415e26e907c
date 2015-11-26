@@ -226,8 +226,11 @@
 	</section>
 <?php $__env->stopSection(); ?>
 
-<?php $__env->startSection('footer'); ?>
-	<?php echo $__env->make('public.layouts.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->startSection('footer-top'); ?>
+	<?php echo $__env->make('public.layouts.footer.footer-top', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('footer-bottom'); ?>
+	<?php echo $__env->make('public.layouts.footer.footer-bottom', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('script'); ?>

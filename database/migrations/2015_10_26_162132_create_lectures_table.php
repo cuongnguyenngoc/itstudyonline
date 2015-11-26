@@ -19,6 +19,7 @@ class CreateLecturesTable extends Migration
             $table->string('lec_name');
             $table->mediumText('description');
             $table->longText('text');
+            $table->string('type');
             $table->integer('order');
             $table->timestamps();
 

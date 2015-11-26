@@ -91,7 +91,7 @@ $(document).ready(function(){
 						required: true,
 						email: true,
 						remote: {
-							url: 'checkEmailExist',
+							url: '/checkEmailExist',
 							type: 'post',
 							dataType: 'json'
 						}
