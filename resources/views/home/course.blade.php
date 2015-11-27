@@ -1,3 +1,4 @@
+
 @extends('public.layouts.app')
 
 @section('css')
@@ -134,6 +135,9 @@
         border-bottom: 1px solid #F0F0E9;   
         background: #0C9A14;
         margin-left: 0px;
+    }
+    ul li{
+        list-style: disc;
     }
 </style>
 

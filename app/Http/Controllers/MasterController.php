@@ -437,7 +437,7 @@ class MasterController extends Controller
                     $usercreatecourse->course_id = $request->input('course_id');
                     $usercreatecourse->save();
                 }else{
-                    $usercreatecourse = Auth::user()->usercreatecourse()->create([
+                    $usercreatecourse = Auth::user()->usercreatecourses()->create([
                         'user_id' => Auth::user()->id,
                         'course_id' => $request->input('course_id'),
                         'isBoss' => true

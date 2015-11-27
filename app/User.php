@@ -54,4 +54,8 @@ class User extends Model implements AuthenticatableContract,
     public function image(){
         return $this->hasOne('App\Image','user_id','id');
     }
+
+    public function enroll($course_id){
+        return $this->enrolls->where('course_id',$course_id)->first();
+    }
 }

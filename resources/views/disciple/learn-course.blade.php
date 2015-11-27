@@ -4,11 +4,8 @@
     <link href="{{url('css/master/styles.css')}}" rel="stylesheet">
 @stop
 
-@section('header-top')
-    @include('public.layouts.header.header-top')
-@stop
 @section('header-middle')
-    @include('public.layouts.header.header-middle')
+    @include('disciple.course-learning-header')
 @stop
 
 @section('content')
@@ -16,18 +13,12 @@
 <!-- Main -->
 <div class="container main">
     <div class="row">
-        <div class="col-md-3 col-md-offset-9">
-            <div class="col-md-6">
-                <h5> Master</h5>
-                <a href="#">
-                    {{$course->usercreatecourse->user->fullname}}
-                </a>
+        <div class="col-md-3" style="padding-right: 0px;">
+            <div class="progress">
+                <div class="progress-bar" id="progress" role="progressbar" aria-valuenow="{{$enroll->process}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$enroll->process}}%;">
+                    {{$enroll->process}}%
+                </div>
             </div>
-            <a href="{{url('user/'.$course->usercreatecourse->user->id)}}" class="col-md-6">
-                <img class="img-circle" src="{{($course->usercreatecourse->user->image)?url($course->usercreatecourse->user->image->path):'/images/it_me.jpg'}}" height="100px" />
-            </a>   
-        </div>
-        <div class="col-md-3">
             <div class="category-tab"><!--category-tab-->
                 <div class="col-sm-12">
                     <ul class="nav nav-tabs" style="margin-bottom: 0px;">
@@ -36,11 +27,12 @@
                         <li><a href="#discussion" data-toggle="tab"><span class="glyphicon glyphicon-comment"></span></a></li>
                     </ul>
                 </div>
+                <input type="hidden" name="course_id" id="course_id" value="{{$enroll->course->id}}">
                 <div class="tab-content">
                     <div class="tab-pane fade active in" id="listlectures">
                         <div class="col-sm-12">
-                            <ul class="nav nav-pills nav-stacked" style="overflow-y: scroll">
-                                @foreach($course->lectures as $lecture)
+                            <ul class="nav nav-pills nav-stacked" style="overflow-y: scroll; height: 607px;">
+                                @foreach($enroll->course->lectures()->orderBy('order','asc')->get() as $lecture)
                                     <li role="presentation">
                                         <a href="#" style="text-transform: none;" getId="{{$lecture->id}}" id="lecture{{$lecture->id}}">
                                             <span class="glyphicon glyphicon-adjust"></span> Lecture {{$lecture->order}}: {{$lecture->lec_name}}
@@ -56,8 +48,8 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="discussion">
-                        <div class="col-sm-12">
-                            <div style="overflow-y: scroll">
+                        <div class="col-sm-12" style="margin-bottom: 30px;">
+                            <div style="overflow-y: scroll; height: 607px;">
                                 <div class="form-add-comment col-md-12" style="padding: 0px; margin-top: 15px;">
                                     <img src="/{{(Auth::user()->image)? Auth::user()->image->path:'images/it_me.jpg'}}" class="col-md-1 img-circle" style="padding: 0px;">
                                     <form id="addComment{{$lecture1->id}}" getId="{{$lecture1->id}}" class="col-md-11 add-comment" style="padding: 0px;">
@@ -70,7 +62,7 @@
                                     @if($lecture1->comments->count() != 0)
                                         @foreach($lecture1->comments as $comment)
                                             @if($comment->user->id == Auth::user()->id)
-                                                <div class="col-md-12" style="padding: 0px;margin-top: 10px; padding-bottom: 20px; border-bottom: 1px solid #F0F0E9;">
+                                                <div class="col-md-12" style="padding: 0px;margin-top: 10px; padding-bottom: 20px; border-bottom: 1px solid #F0F0E9;"  id="commentCover{{$comment->id}}">
                                                     <img src="/{{($comment->user->image)? $comment->user->image->path:'images/it_me.jpg'}}" class="col-md-1 img-circle" style="padding: 0px;">
                                                     <div class="col-md-11" style="padding: 0px;">
                                                         <a href="#" class="col-md-8">
@@ -115,9 +107,12 @@
                 </div>
             </div><!--/category-tab-->
         </div>
-        <div class="col-md-8" id="contentLearning">
+        <div class="col-md-9" id="contentLearning" style="padding-left: 0px;">
+            <h2 style="text-align: center;" id="lec_name">{{$lecture1->lec_name}}</h2>
             @if($lecture1->type == 'Text')
-                {{$lecture1->text}}
+                <div style="overflow-y: scroll; height: 561px;">
+                    {!!$lecture1->text!!}
+                </div>
             @elseif($lecture1->type == 'Video')
                 <div class="embed-responsive embed-responsive-16by9">
                     <video class="embed-responsive-item" controls="controls" preload="auto">
@@ -131,6 +126,29 @@
                 </div>
             @endif
         </div>
+        <div class="col-md-9" id="forward" style="padding-left: 0px; margin-top: 20px;">
+            <div class="col-md-12" style="padding-left: 0px; border: 1px solid #F0F0E9; background: #52D449; padding-bottom: 15px;">
+                <div class="col-md-4">
+                    <a href="#" class="btn btn-primary btn-md {{($previousLecture1) ? null : 'hide'}}" id="previousLecture" getId="{{($previousLecture1)?$previousLecture1->id:null}}">
+                        <span class="glyphicon glyphicon-fast-backward"></span> Previous Lecture
+                    </a>
+                </div>
+                <div class="col-md-3 col-md-offset-1" style="padding-left: 0px;">
+                    <a href="#forward" class="btn btn-primary btn-md" id="markLecture" getId="{{$lecture1->id}}">
+                        @if($lecture1->isMarked)
+                            <span class='glyphicon glyphicon-ok'></span>
+                        @else
+                            Mark to complete this lecture
+                        @endif
+                    </a>
+                </div>
+                <div class="col-md-2 col-md-offset-2">
+                    <a href="#" class="btn btn-primary btn-md {{($nextLecture1) ? null : 'hide'}}" id="nextLecture" getId="{{($nextLecture1)?$nextLecture1->id:null}}">
+                        Next Lecture <span class="glyphicon glyphicon-fast-forward"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <style type="text/css">
@@ -141,25 +159,55 @@
         background: #0C9A14;
         margin-left: 0px;
     }
+    ul li{
+        list-style: disc;
+    }
 </style>
 
 @stop
 
 @section('footer-bottom')
+    <footer>
     @include('public.layouts.footer.footer-bottom')
 @stop
 
 @section('script')
     <script type="text/javascript">
         $('.container').addClass('container-fluid').removeClass('container');
+        $('#listlectures').find('#lecture{{$lecture1->id}}').parent().addClass('active');
+        // $('#listlectures').find('ul li').first().addClass('active');
 
         $('#listlectures').on('click','li a',function(){
             var getId = $(this).attr('getId');
+
+            $('#listlectures').find('ul li').removeClass('active');
+            $(this).parent().addClass('active');
+
+            changeLectureByAjax(getId);
+            
+        });
+
+        var changeLectureByAjax = function(getId){
+
             $.ajax({
                 type: "POST",
                 url : "/course/get-lecture",
                 dataType: 'json',
-                data: {'lec_id' : getId}, // remember that be must to pass data object type
+                data: {
+                    'course_id': $('#course_id').val(),
+                    'lec_id' : getId,
+                    'enroll_id' : {{$enroll->id}}
+                }, // remember that be must to pass data object type
+                beforeSend: function(){
+                    NProgress.start();
+                },
+                complete: function(){
+                    NProgress.done();
+                },
+                error: function(response){
+                    NProgress.inc();
+                    var n = noty({text: 'Something went wrong??', layout: 'top', type: 'error', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
+                },
                 success : function(response){
                     console.log(response);
                     if(response.status){
@@ -169,13 +217,33 @@
                         $('#discussion').find('textarea')     
                                         .attr('id','contentComment'+response.lecture.id)
                                         .val(null);
+                        
+                        (response.previousLecture) ? $('#previousLecture').attr('getId',response.previousLecture.id) : $('#previousLecture').attr('getId',null);
+                        $('#markLecture').attr('getId',response.lecture.id);
+                        if(response.lecture.isMarked)
+                            $('#markLecture').html("<span class='glyphicon glyphicon-ok'></span>");
+                        else
+                            $('#markLecture').html("Mark to complete this lecture");
+
+                        (response.nextLecture)?$('#nextLecture').attr('getId',response.nextLecture.id):$('#nextLecture').attr('getId',null);
+
+                        if(response.lecture.order == 1){
+                            $('#previousLecture').addClass('hide');
+                        }else{
+                            $('#previousLecture').removeClass('hide');
+                        }
+                        if(response.lecture.order == {{$enroll->course->lectures->count()}}){
+                            $('#nextLecture').addClass('hide')
+                        }else{
+                            $('#nextLecture').removeClass('hide');
+                        }
 
                         if(response.lecture.comments.length > 0){
                             $('#discussion').find('#cmtArea').html("");
                             for(var i = 0; i < response.lecture.comments.length; i++){
                                 if(response.lecture.comments[i].user.id == response.user.id){
                                     $('#discussion').find('#cmtArea').append(
-                                        "<div class='col-md-12' style='padding: 0px;margin-top: 10px; padding-bottom: 20px; border-bottom: 1px solid #F0F0E9;'>"+
+                                        "<div class='col-md-12' style='padding: 0px;margin-top: 10px; padding-bottom: 20px; border-bottom: 1px solid #F0F0E9;' id='commentCover"+response.lecture.comments[i].id+"'>"+
                                             "<img src='/"+response.lecture.comments[i].user.image.path+"' class='col-md-1 img-circle' style='padding: 0px;'>"+
                                             "<div class='col-md-11' style='padding: 0px;'>"+
                                                 "<a href='#' class='col-md-8'>"
@@ -222,7 +290,7 @@
                         }
                         
                         if(response.lecture.type == 'Text'){
-                            $('#contentLearning').html(response.lecture.text);
+                            $('#contentLearning').html("<h2 style='text-align: center;' id='lec_name'>"+response.lecture.lec_name+"</h2><div style='overflow-y: scroll; height: 607px;'>"+response.lecture.text+"</div>");
                         }else if(response.lecture.type == 'Video'){
                             $('#contentLearning').html(
                                 "<div class='embed-responsive embed-responsive-16by9'>"+
@@ -242,10 +310,11 @@
                     }
                 }
             });
-        });
-
+        }
         $('#discussion').on('submit','form.add-comment',function(e){
             e.preventDefault();
+            $(this).find('button').prepend('<i class="fa fa-refresh fa-spin"></i> ');
+            var itself = $(this);
             var getId = $(this).attr('getId');
             var comment = {};
             comment.lec_id = getId;
@@ -285,6 +354,8 @@
                             "</div>"   
                         );
                     }
+                    itself.find('button').children('i').remove();
+
                 }
             });
         });
@@ -332,6 +403,7 @@
                         console.log(response);
                         if(response.status){
                             $('#commentCover'+getId).remove();
+                            var n = noty({text: 'delete success', layout: 'top', type: 'success', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
                         }
                     }
                 });
@@ -341,6 +413,7 @@
         $('#discussion').on('submit','form.form-edit-comment',function(e){
 
             e.preventDefault();
+            $(this).find('button').prepend('<i class="fa fa-refresh fa-spin"></i> ');
             var getId = $(this).attr('getId');
             var getLecId = $(this).attr('getLecId');
 
@@ -363,6 +436,67 @@
                         $('#editComment'+getLecId+getId).removeClass('hide');
                         $('#delComment'+getLecId+getId).removeClass('hide');
                     }
+                    itself.find('button').children('i').remove();
+
+                }
+            });
+        });
+
+        $('a#previousLecture').on('click',function(){
+
+            var getId = $(this).attr('getId');
+            if(getId){
+                changeLectureByAjax(getId);
+                $('#listlectures').find('ul li').removeClass('active');
+                $('#lecture'+getId).parent().addClass('active');
+                
+            }else{
+                $(this).addClass('hide');
+            }
+        });
+
+        $('a#nextLecture').on('click',function(){
+
+            var getId = $(this).attr('getId');
+            if(getId){
+                changeLectureByAjax(getId);
+                $('#listlectures').find('ul li').removeClass('active');
+                $('#lecture'+getId).parent().addClass('active');
+                
+            }
+            else{
+                $(this).addClass('hide');
+            }
+        });
+
+        $('a#markLecture').on('click',function(){
+            var getId = $(this).attr('getId');
+            var itself = $(this);
+            var enroll = {};
+            enroll.lec_id = getId;
+            enroll.enroll_id = {{$enroll->id}};
+
+            $(this).prepend('<i class="fa fa-refresh fa-spin"></i> ');
+            $.ajax({
+                type: "POST",
+                url : "/lecture/mark-lecture",
+                dataType: 'json',
+                data: enroll, // remember that be must to pass data object type
+                success : function(response){
+                    console.log(response);
+                    if(response.status){
+                        setTimeout(function(){
+                            itself.children('i').remove();
+                            itself.empty();
+                            itself.prepend("<span class='glyphicon glyphicon-ok'></span>");
+                        },1000);
+                        $('#progress').attr('aria-valuenow',response.enroll.process)
+                                      .attr('style','width:'+response.enroll.process+'%')
+                                      .text(response.enroll.process+'%');
+                        // ;.empty().prepend("<span class='glyphicon glyphicon-ok'></span>");
+                    }
+                    itself.find('button').children('i').remove();
+
                 }
             });
         });

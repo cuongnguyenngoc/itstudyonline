@@ -15,6 +15,7 @@ use App\UserCreateCourse;
 use App\Course;
 use App\Rating;
 use App\Lecture;
+use App\Enroll;
 use Auth;
 
 class HomeController extends Controller
@@ -43,23 +44,27 @@ class HomeController extends Controller
 
     public function test()
     {
-        $categorie = Category::find(1);
-        foreach ($categorie->usercreatecourses as $key) {
-            echo $key->course->image->path;
-            echo "<br>";
-        }
+        
+        $enroll = Enroll::find(1);
 
-        $course = Course::find(5);
-        echo $course->lectures->count();
+        //Mark Lecture which has been user marked
+        $lecture = $enroll->course->lectures->where('id',2)->first();
+        $lecture->isMarked = true;
+        $lecture->save();
+
+        // Save learning process
+        $numberLectures = $enroll->course->lectures()->count();
+        $numberLectureMarked = $enroll->course->lectures()->where('isMarked',1)->count();
+        $percentProcess = ($numberLectureMarked / $numberLectures) * 100;
+        echo $numberLectures;
         echo "<br>";
-        echo ($course->usercreatecourse->user->image) ;
+        echo $numberLectureMarked;
         echo "<br>";
+        echo $percentProcess;
 
-        $lecture = Lecture::find(5);
-        var_dump($lecture->document);
+        // $enroll->process = $percentProcess;
+        // $enroll->save();
 
-        $lecture = $course->lectures()->where('order',1)->first();
-        echo $lecture->type;
         //return View('test',compact('thumbnails'));
     }
     public function manage(){

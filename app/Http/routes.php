@@ -52,3 +52,4 @@ Route::get('course/learning/{id}','DiscipleController@learnCourse');
 Route::post('course/get-lecture','DiscipleController@getLecture');
 Route::post('lecture/add-comment','DiscipleController@addComment');
 Route::post('lecture/delete-comment','DiscipleController@deleteComment');
+Route::post('lecture/mark-lecture','DiscipleController@markLecture');

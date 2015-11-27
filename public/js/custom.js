@@ -5,6 +5,30 @@ $(document).ready(function(){
         }
 	});
 
+	NProgress.start();
+
+	// Trigger finish when page fully loaded
+	$(window).load(function () {
+        NProgress.done();
+    });
+    
+	$(document).ajaxStart(function(){
+        NProgress.start();
+    });
+
+    $(document).ajaxError(function(){
+        NProgress.inc();
+    });
+
+    $(document).ajaxComplete(function(){
+        NProgress.done();
+    });
+
+    // Trigger bar when exiting the page
+    $(window).unload(function () {
+        NProgress.start();
+    });
+
 	// Begin of login, signup processing
 
 	var $formTabs = $('#main-nav');

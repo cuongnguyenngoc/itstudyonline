@@ -5,6 +5,21 @@
     @yield('css')
     @include('public.layouts.resources.scripts')
     <!-- @yield('script') -->
+    <style type="text/css">
+		#nprogress .bar {
+		    background:#58D550;
+		    padding: 2px;
+		}
+		#nprogress .spinner-icon {
+		    border-top-color:#58D550;
+		    border-left-color:#58D550;
+		    padding: 15px;
+		    left: 500px;
+		}
+		#nprogress .peg {
+		    box-shadow: 0 0 10px #58D550, 0 0 5px #58D550;
+		}
+    </style>
 </head><!--/head-->
 
 <body>

@@ -17,6 +17,7 @@
 <link href="<?php echo e(url('dropzone/min/dropzone.min.css')); ?>" rel="stylesheet">
 <link href="<?php echo e(url('css/jquery.qtip.min.css')); ?>" rel="stylesheet">
 <link href="<?php echo e(url('css/fileinput.min.css')); ?>" rel="stylesheet">
+<link href="<?php echo e(url('css/nprogress.css')); ?>" rel="stylesheet">
 <link rel="shortcut icon" href="<?php echo e(url('images/ico/favicon.ico')); ?>">
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="<?php echo e(url('images/ico/apple-touch-icon-144-precomposed.png')); ?>">
 <link rel="apple-touch-icon-precomposed" sizes="114x114" href="<?php echo e(url('images/ico/apple-touch-icon-114-precomposed.png')); ?>">

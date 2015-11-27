@@ -51,3 +51,27 @@ ul.profile-arrow:after {
     left: 81%;
     margin-top: -21px;
 }
+
+
+/********** NOTY CSS TOP NOTIFCATION BAR **********/
+#noty_top_layout_container li {
+    border-width: 0!important;
+}
+#noty_top_layout_container {
+    left: 0!important;
+    width: 100%!important;
+}
+.noty_close {
+    display: block;
+    background: url(../img/close.png) no-repeat!important;
+    width: 20px!important;
+    height: 20px!important;
+    top: 10px!important;
+    right: 12px!important;
+    position: relative;
+}
+.noty_close:hover {
+    background-position: 0 -20px!important;
+}
+
+/********** END NOTY CSS TOP NOTIFICATION BAR **********/

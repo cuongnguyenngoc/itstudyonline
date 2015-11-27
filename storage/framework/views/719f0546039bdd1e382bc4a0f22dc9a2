@@ -136,6 +136,9 @@
         background: #0C9A14;
         margin-left: 0px;
     }
+    ul li{
+        list-style: disc;
+    }
 </style>
 
 <?php $__env->stopSection(); ?>

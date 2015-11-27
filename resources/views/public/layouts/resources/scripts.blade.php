@@ -14,3 +14,7 @@
 <script src="{{url('js/jquery.ui.widget.js')}}"></script>
 <script src="{{url('js/jquery.iframe-transport.js')}}"></script>
 <script src="{{url('js/jquery.fileupload.js')}}"></script>
+<script src="{{url('js/noty/packaged/jquery.noty.packaged.min.js')}}"></script>
+<script src="{{url('js/noty/themes/default.js')}}"></script>
+<script src="{{url('js/noty/layouts/top.js')}}"></script>
+<script src="{{url('js/nprogress.js')}}"></script>

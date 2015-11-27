@@ -455,8 +455,6 @@
             });
         });
 
-        var countLecsPublished = 0; //this variable was declared global
-
         $('#curriculumPanel').on('click','div.publish-lecture a.publish',function(){
             
             var getId = $(this).attr('getId');
@@ -468,7 +466,6 @@
             lecture.course_id = $('#course_id').val();
             lecture.description = $('#showDescription'+getId).text();
             lecture.video_id = $('#video_id'+getId).val();
-            alert($('#video_id'+getId).val());
             lecture.doc_id = $('#doc_id'+getId).val();
             lecture.lec_id = $('input#lec_id'+getId).val();
             lecture.order = getId;
@@ -487,7 +484,6 @@
                               .addClass('published');
                         $('#showLecture'+getId).addClass('panel-primary')
                                                .removeClass('panel-danger');
-                        countLecsPublished++; // this variable was declared global in file create-course.blade.php
                         $('#lecturesPublished').text(response.course.lectures.length).attr('lecturesPublished',response.course.lectures.length);
                     }
                 },
