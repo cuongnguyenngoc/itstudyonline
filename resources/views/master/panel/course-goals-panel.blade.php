@@ -27,7 +27,7 @@
             </div>
             <div class="form-group showTip">
                 <label for="description">Course Summary</label>
-                <textarea class='form-control' id='descriptionText' name='descriptionText' placeholder='Enter course description' style='width:100%'></textarea>
+                <textarea class='form-control' id='descriptionText' name='descriptionText' placeholder='Enter course description' style='width:100%'>{{$course->description}}</textarea>
             </div>
             <button type="submit" class="btn btn-default">Submit</button>
         {!! Form::close() !!}

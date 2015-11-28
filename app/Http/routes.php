@@ -46,6 +46,8 @@ Route::post('master/upload-video-intro','MasterController@doUploadVideoIntro');
 Route::post('master/update-price-course','MasterController@doUpdatePrice');
 Route::post('master/submit-course','MasterController@doSubmitCourse');
 Route::post('master/add-master-course','MasterController@doAddMasterCourse');
+Route::post('master/delete-course','MasterController@doDeleteCourse');
+Route::get('master/edit-course/{id}','MasterController@doEditCourse');
 
 // Disciple Area
 Route::get('course/learning/{id}','DiscipleController@learnCourse');

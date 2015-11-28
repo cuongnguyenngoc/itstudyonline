@@ -20,7 +20,7 @@
 				        "</div>"+
 			         	"<div class='col-md-7 editContent'>"+
 			         		"<p></p>"+	
-			         		"<a href='#lec"+count+"' class='change-video' id='changeVideo"+count+"' getId='"+count+"'></a>"+
+			         		"<a href='#lec"+count+"' class='change-video' id='changeVideo"+count+"' getId='"+count+"' getName=''></a>"+
 			         		" Or <a href='#lec"+count+"' class='edit-content' id='editContent"+count+"' getId='"+count+"'> <span class='glyphicon glyphicon-edit'></span> Edit Content</a>"+	
 			         	"</div>"+
 			         	"<div class='col-md-1 publish-lecture'>"+

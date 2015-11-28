@@ -15,4 +15,12 @@ class Enroll extends Model
     public function user(){
     	return $this->belongsTo('App\User');
     }
+
+    public function marks(){
+        return $this->hasMany('App\Mark','enroll_id','id');
+    }
+
+    public function mark($lec_id){
+        return $this->marks()->where('lec_id',$lec_id)->first();
+    }
 }

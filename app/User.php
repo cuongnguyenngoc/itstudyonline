@@ -58,4 +58,8 @@ class User extends Model implements AuthenticatableContract,
     public function enroll($course_id){
         return $this->enrolls->where('course_id',$course_id)->first();
     }
+
+    public function comments(){
+        return $this->hasMany('App\Comment','user_id','id');
+    }
 }

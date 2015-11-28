@@ -29,6 +29,7 @@ return array(
     'CreateUserRolesTable' => $baseDir . '/database/migrations/2015_10_26_162125_create_userRoles_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2015_10_26_162126_create_users_table.php',
     'CreateUserscreatecoursesTable' => $baseDir . '/database/migrations/2015_11_19_075918_create_userscreatecourses_table.php',
+    'CreateUsersmarklecturesTable' => $baseDir . '/database/migrations/2015_11_27_191218_create_usersmarklectures_table.php',
     'CreateVideosTable' => $baseDir . '/database/migrations/2015_10_26_162137_create_videos_table.php',
     'DatabaseSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
     'File_Iterator' => $vendorDir . '/phpunit/php-file-iterator/src/Iterator.php',

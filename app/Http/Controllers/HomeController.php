@@ -39,7 +39,12 @@ class HomeController extends Controller
     public function getCourse($id){
 
         $course = Course::find($id);
-        return view('home.course',compact('course'));
+        if(Auth::user()->enroll(intval($id)) != null){
+            $enroll = Auth::user()->enroll(intval($id));
+        }else{
+            $enroll = null;
+        }
+        return view('home.course',compact('course','enroll'));
     }
 
     public function test()
@@ -47,14 +52,9 @@ class HomeController extends Controller
         
         $enroll = Enroll::find(1);
 
-        //Mark Lecture which has been user marked
-        $lecture = $enroll->course->lectures->where('id',2)->first();
-        $lecture->isMarked = true;
-        $lecture->save();
-
         // Save learning process
         $numberLectures = $enroll->course->lectures()->count();
-        $numberLectureMarked = $enroll->course->lectures()->where('isMarked',1)->count();
+        $numberLectureMarked = $enroll->marks()->count();
         $percentProcess = ($numberLectureMarked / $numberLectures) * 100;
         echo $numberLectures;
         echo "<br>";

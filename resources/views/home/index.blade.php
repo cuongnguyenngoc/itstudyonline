@@ -74,7 +74,6 @@
 											</a>
 											<h2>{{$usercreatecourse->course->course_name}}</h2>
 											<p>By {{$usercreatecourse->user->fullname}}</p>
-											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Enroll</a>
 										</div>
 										<div class="product-overlay">
 											<div class="overlay-content">
@@ -86,7 +85,7 @@
 									</div>
 									<div class="choose">
 										<ul class="nav nav-pills nav-justified">
-											<li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
+											<li><h5><a href="#"><i class="glyphicon glyphicon-user"></i>{{$usercreatecourse->course->enrolls()->count()}} students enrolled</a></h5></li>
 											<li><h5><i class="glyphicon glyphicon-usd"></i>{{($usercreatecourse->course->cost == 0) ? "FREE" : $usercreatecourse->course->cost." VND"}}</h5></li>
 										</ul>
 									</div>
@@ -238,6 +237,6 @@
 @section('script')
 	<script type="text/javascript">
 		$('div.category-tab ul.nav-tabs').find('li').first().addClass('active');
-		$('div#Database').addClass('active in');
+		$('div#{{str_replace(' ','_',$category->cat_name)}}').addClass('active in');
 	</script>
 @stop

@@ -30,7 +30,10 @@ class MasterController extends Controller
     }
 
     public function manage(){
-        return View('master.manage');
+
+        $usercreatecourses = Auth::user()->usercreatecourses;
+        $url = "master/manage";
+        return View('master.manage',compact('usercreatecourses','url'));
     }
 
     public function getCreateCourse(){
@@ -49,12 +52,13 @@ class MasterController extends Controller
                 // 'manage-masters'=>'Manage Masters'
             )
         );
+        $url = "master/create-course";
         $course = new Course;
         $languages = ProgrammingLanguage::lists('lang_name','id')->all();
         $categories = Category::lists('cat_name','id')->all();
         $levels = Learninglevel::lists('level_name','id')->all();
 
-        return View('master.create-course', compact('courseItems','languages','categories','levels','course'));
+        return View('master.create-course', compact('courseItems','languages','categories','levels','course','url'));
     }
 
     public function postCreateCourse(Request $request){
@@ -278,6 +282,7 @@ class MasterController extends Controller
                     $video->lec_id = $lecture->id;
                     $video->save();
                     $lecture->type = "Video";
+                    $lecture->text = null;
                     $lecture->save();
                 }elseif($request->input('video_id') == null 
                         && $request->input('text') == null
@@ -287,12 +292,20 @@ class MasterController extends Controller
                     $document->lec_id = $lecture->id;
                     $document->save();
                     $lecture->type = "Document";
+                    $lecture->text = null;
                     $lecture->save();
                 }elseif($request->input('text') != null
                         && $request->input('doc_id') == null 
                         && $request->input('video_id') == null){
                     $lecture->text = $request->input('text');
                     $lecture->type = "Text";
+                    if($lecture->video){
+                        $lecture->video->delete();
+                    }
+                    if($lecture->document){
+                        $lecture->document->delete();
+                    }
+                    
                     $lecture->save();
                 }else{
                     return Response::json(['status'=>false,'message'=>'It have get a problem']);
@@ -367,9 +380,9 @@ class MasterController extends Controller
 
             if($request->input('videointro_id') != null && Introvideo::find($request->input('videointro_id')) != null){
 
-                $introvideo = Introvideo::find($request->input('videointro_id'));
+                $videointro = Introvideo::find($request->input('videointro_id'));
                 //Checking if user change video, it will delete video which have saved in folder
-                File::delete($introvideo->path);
+                File::delete($videointro->path);
 
                 $videointro->video_name = $imgname;
                 $videointro->path = 'uploads/videos/'. $name . '.' . $ext;
@@ -450,4 +463,54 @@ class MasterController extends Controller
             }
         }
     }
+
+    public function doDeleteCourse(Request $request){
+
+        if($request->ajax()){
+            if($request->input('course_id') != null && Course::find($request->input('course_id'))){
+                
+                $course = Course::find($request->input('course_id'));
+                $course->delete();
+                $usercreatecourses = Auth::user()->usercreatecourses;
+                foreach ($usercreatecourses as $value) {
+                    $value->course;
+                    $value->course->image;
+                    $value->course->enrolls;
+                }
+                return Response::json(['status' => true,'usercreatecourses'=>$usercreatecourses, 'message'=>'Cool! you have deleted course successfully']);
+            }else{
+                return Response::json(['status' => false, 'message'=>'Something went wrong, buddy']);
+            }
+        }
+    }
+
+    public function doEditCourse($course_id){
+
+        if(Course::find($course_id) != null){
+
+            $course = Course::find($course_id);
+            $courseItems = array(
+                'COURSE CONTENT' => array(
+                    'course-goals'=>'Course goals',
+                    'curriculum'=>'Curriculum'
+                ),
+                'COURSE INFO' => array(
+                    'image'=>'Image',
+                    'intro-video' => 'Introduction video'
+                ),
+                'COURSE SETTINGS' => array(
+                    'price-coupons'=>'Price & Coupons',
+                    'manage-masters'=>'Manage Masters'
+                )
+            );
+            $url = "master/edit-course";
+
+            $languages = ProgrammingLanguage::lists('lang_name','id')->all();
+            $categories = Category::lists('cat_name','id')->all();
+            $levels = Learninglevel::lists('level_name','id')->all();
+
+            return View('master.create-course', compact('courseItems','languages','categories','levels','course','url'));
+        }
+    }
+
 }

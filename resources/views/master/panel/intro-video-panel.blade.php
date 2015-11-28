@@ -9,12 +9,12 @@
                     <div class="row">
                         <div class="embed-responsive embed-responsive-16by9">
                             <video class="embed-responsive-item" controls="controls" preload="auto">
-                                <source src="" type="" id='video_preview'>
+                                <source src="{{($course && $course->videointro)?'/'.$course->videointro->path:''}}" type="{{($course)?'video/mp4':''}}" id='video_preview'>
                                 Your browser does not support HTML5 video.
                             </video>
                         </div>                     
                         <div class="col-md-12" style="margin-top: 10px;">
-                            <p>A good course image is critical to a course's success. It should grab the attention 
+                            <p>A good course video is critical to a course's success. It should grab the attention 
                             of the viewer and help them understand the essence of what the course has to offer.</p>
                             <p>All images will be reviewed to make sure they meet the requirements for publication,
                             please review the guidelines before you create your image.</p>
@@ -28,12 +28,12 @@
         <div class="row small-panel">
             <div class="panel panel-info col-md-12" id="videoPanel">
                 <div class="panel-body">
-                    <form class='dropzone' action="/master/upload-video-intro" id="uploadVideoCourse">
+                    <form class="dropzone {{($course) ? 'hide' : ''}}" action="/master/upload-video-intro" id="uploadVideoCourse">
                         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
-                        <input type="hidden" name="course_id" id="course_id_video" value="">
-                        <input type="hidden" name="video_id" id="videointro_id" value="">
+                        <input type="hidden" name="course_id" id="course_id_video" value="{{($course) ? $course->id : null}}">
+                        <input type="hidden" name="videointro_id" id="videointro_id" value="{{($course && $course->videointro) ? $course->videointro->id : null}}">
                     </form>
-                    <button class="btn btn-primary col-md-offset-5 hide" id="changeVideoCourse"> Change</button>
+                    <button class="btn btn-primary col-md-offset-5 {{($course) ? '' : 'hide'}}" id="changeVideoCourse"> Change</button>
                 </div>
             </div>
         </div> <!-- End of add info lecture -->

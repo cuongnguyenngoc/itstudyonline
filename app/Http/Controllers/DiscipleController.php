@@ -20,25 +20,25 @@ class DiscipleController extends Controller
         // cái này là để phân quyền. nghĩa là khi thêm cái này vào constructor của Controller thì khi sử dụng các function duwoi thì người dùng phải có quyền admin.
     }
 
-    public function getCourse($id){
-
-        $course = Course::find($id);
-        return view('home.course',compact('course'));
-    }
-
     public function learnCourse($id)
     {
 
         $course = Course::find($id);
 
-        if(Auth::user()->enrolls->count() == 0){
-            
-            $enroll = $course->enrolls()->create([
-                'user_id' => Auth::user()->id,
+        if(Auth::user()->enroll(intval($id)) == null){
+
+            $enroll = Auth::user()->enrolls()->create([
+                'course_id' => $course->id,
                 'tution' => $course->cost
             ]);
 
             $enroll = Enroll::find($enroll->id);
+            // if new user enroll course, it need reset isMarked for lecture which belong to that course
+            // foreach($enroll->course->lectures as $lecture){
+            //     $lecture->isMarked = 0;
+            //     $lecture->save();
+            // }
+
         }else{
             $enroll = Auth::user()->enroll(intval($id));
         }
@@ -82,9 +82,13 @@ class DiscipleController extends Controller
                     	$lecture->comments[$i]->user;
                     	$lecture->comments[$i]->user->image;
                     }
+
+                    $mark = $enroll->mark($lecture->id); // To check this lecture have been user marked yet?
+
                     return Response::json([
                             'status' => true, 
                             'user' => Auth::user(), 
+                            'mark' => $mark,
                             'lecture'=> $lecture, 
                             'previousLecture' => $previousLecture, 
                             'nextLecture' => $nextLecture,
@@ -110,8 +114,8 @@ class DiscipleController extends Controller
                 	$comment->content = $request->input('content');
                 	$comment->save();
                 }else{
-                	$comment = $lecture->comments()->create([
-                		'user_id' => Auth::user()->id,
+                	$comment = Auth::user()->comments()->create([
+                		'lec_id' => $lecture->id,
                 		'content' => $request->input('content')
                 	]);
                 	$comment = Comment::find($comment->id);
@@ -145,12 +149,16 @@ class DiscipleController extends Controller
 
                 // Mark Lecture which has been user marked
                 $lecture = $enroll->course->lectures()->where('id',intval($request->input('lec_id')))->first();
-                $lecture->isMarked = true;
-                $lecture->save();
+                // $lecture->isMarked = true;
+                // $lecture->save();
+                $mark = $enroll->marks()->create([
+                    'lec_id' => $lecture->id,
+                    'isMarked' => true
+                ]);
 
                 // Save learning process
                 $numberLectures = $enroll->course->lectures()->count(); // Remember we use $enroll->course->lectures() instead of using ...->lectures when call other func such as count, where...
-                $numberLectureMarked = $enroll->course->lectures()->where('isMarked',1)->count();
+                $numberLectureMarked = $enroll->marks()->count();
                 $percentProcess = ($numberLectureMarked / $numberLectures) * 100;
                 $enroll->process = $percentProcess;
                 $enroll->save();

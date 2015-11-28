@@ -7,7 +7,7 @@
             <div class="row" id="showPrice">
                 <div class="col-md-3 col-md-offset-4" style="padding: 10px; border: 1px solid #EEEEEE; background: #fff;">
                     <div class="col-md-5">Current price of the course</div>
-                    <div class="col-md-7"><h2 style="color: #378D39;">FREE</h2></div>
+                    <div class="col-md-7"><h2 style="color: #378D39;">{{($course) ? $course->cost.'VND' : 'FREE'}}</h2></div>
                 </div>
                 <div class="col-md-4 col-md-offset-4" style="padding-left: 1px; padding-top: 10px;">
                     <p style="font-size: 15px;"> Click <a href="#" id="show_hide_price">here</a> to change the pricing</p> 

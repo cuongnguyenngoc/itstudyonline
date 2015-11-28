@@ -3,5 +3,5 @@
 	<li><a href="#">Something admin</a></li>
 	<li><a href="#">I dont know admin</a></li>
 	<li><a href="#">Custom admin</a></li>
-	<li><a href="logout">Logout</a></li>
+	<li><a href="<?php echo e(url('logout')); ?>">Logout</a></li>
 </ul>

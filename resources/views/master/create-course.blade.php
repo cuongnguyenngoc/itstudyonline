@@ -16,7 +16,13 @@
 <!-- Main -->
 <div class="container main">
     <div class="row">
-        <div class="col-md-12 hide" id="headCourse">
+        <ul class="nav nav-tabs">
+            <li role="presentation"><a href="{{url('master/manage')}}">Manage Course</a></li>
+            <li role="presentation" class="{{($url='master/create-course')?'active':''}}"><a href="{{url('master/create-course')}}">Create Course</a></li>
+            <li role="presentation" class="{{($url='master/edit-course')?'active':''}}"><a href="#">Edit Course</a></li>
+            <li role="presentation"><a href="#">Profile</a></li>
+        </ul>
+        <div class="col-md-12 hide" id="headCourse" style="margin-top: 20px;">
             <div class="panel panel-info">
                 <div class="panel-body">
                     <div class="col-md-8">
@@ -43,7 +49,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3" style="padding-right: 0px;">
+        <div class="col-md-3" style="padding-right: 0px; padding-left: 0px;margin-top: 20px;">
             <div class="list-group" id="task-left">
                 @foreach($courseItems as  $key => $values)
                     <a href="#" class="list-group-item disabled">
@@ -55,7 +61,7 @@
                 @endforeach
             </div>
         </div>
-        <div class="col-md-9" style="padding-left: 0px;">
+        <div class="col-md-9" style="padding-left: 0px;margin-top: 20px;">
             @include('master.panel.course-goals-panel')
             @include('master.panel.curriculum-panel')        
             @include('master.panel.image-panel')
@@ -124,7 +130,7 @@
                                 type: "POST",
                                 url : "/master/submit-course",
                                 dataType: 'json',
-                                data: {'course_id' : $('#course_id').val(), 'id' : $('#submitCourseId').val()}, // remember that be must to pass data object type
+                                data: {'course_id' : $('#course_id').val(), 'id' : $('#submitCourseId').val(), '_token' : '{{ csrf_token() }}'}, // remember that be must to pass data object type
                                 success : function(response){
                                     console.log(response);
                                     if(response.status){

@@ -14,8 +14,9 @@
 <div class="container main">
     <div class="row">
         <div class="col-md-3" style="padding-right: 0px;">
+            <div class="col-md-3">Progress</div>
             <div class="progress">
-                <div class="progress-bar" id="progress" role="progressbar" aria-valuenow="{{$enroll->process}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$enroll->process}}%;">
+                <div class="progress-bar col-md-6" id="progress" role="progressbar" aria-valuenow="{{$enroll->process}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$enroll->process}}%;">
                     {{$enroll->process}}%
                 </div>
             </div>
@@ -31,7 +32,7 @@
                 <div class="tab-content">
                     <div class="tab-pane fade active in" id="listlectures">
                         <div class="col-sm-12">
-                            <ul class="nav nav-pills nav-stacked" style="overflow-y: scroll; height: 607px;">
+                            <ul class="nav nav-pills nav-stacked" style="overflow-y: scroll; height: 629px;">
                                 @foreach($enroll->course->lectures()->orderBy('order','asc')->get() as $lecture)
                                     <li role="presentation">
                                         <a href="#" style="text-transform: none;" getId="{{$lecture->id}}" id="lecture{{$lecture->id}}">
@@ -43,13 +44,15 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="downloadable">
-                        <div class="col-sm-12">
-                            this is download
+                        <div class="col-sm-12" style="margin-bottom: 30px;">
+                            <div style="overflow-y: scroll; height: 629px;">
+                                This is download
+                            </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="discussion">
                         <div class="col-sm-12" style="margin-bottom: 30px;">
-                            <div style="overflow-y: scroll; height: 607px;">
+                            <div style="overflow-y: scroll; height: 629px;">
                                 <div class="form-add-comment col-md-12" style="padding: 0px; margin-top: 15px;">
                                     <img src="/{{(Auth::user()->image)? Auth::user()->image->path:'images/it_me.jpg'}}" class="col-md-1 img-circle" style="padding: 0px;">
                                     <form id="addComment{{$lecture1->id}}" getId="{{$lecture1->id}}" class="col-md-11 add-comment" style="padding: 0px;">
@@ -107,8 +110,32 @@
                 </div>
             </div><!--/category-tab-->
         </div>
-        <div class="col-md-9" id="contentLearning" style="padding-left: 0px;">
+        <div class="col-md-9" id="forward" style="padding-left: 0px; margin-top: 20px;">
             <h2 style="text-align: center;" id="lec_name">{{$lecture1->lec_name}}</h2>
+            <div class="col-md-12" style="padding-left: 0px; border: 1px solid #F0F0E9; background: #52D449; padding-bottom: 15px;">
+                <div class="col-md-4">
+                    <a href="#" class="btn btn-primary btn-md {{($previousLecture1) ? null : 'hide'}}" id="previousLecture" getId="{{($previousLecture1)?$previousLecture1->id:null}}">
+                        <span class="glyphicon glyphicon-fast-backward"></span> Previous Lecture
+                    </a>
+                </div>
+                <div class="col-md-3 col-md-offset-1" style="padding-left: 0px;">
+                    <a href="#forward" class="btn btn-primary btn-md" id="markLecture" getId="{{$lecture1->id}}">
+                        @if($enroll->mark($lecture1->id))
+                            <span class='glyphicon glyphicon-ok'></span>
+                        @else
+                            Mark to complete this lecture
+                        @endif
+                    </a>
+                </div>
+                <div class="col-md-2 col-md-offset-2">
+                    <a href="#" class="btn btn-primary btn-md {{($nextLecture1) ? null : 'hide'}}" id="nextLecture" getId="{{($nextLecture1)?$nextLecture1->id:null}}">
+                        Next Lecture <span class="glyphicon glyphicon-fast-forward"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9" id="contentLearning" style="padding-left: 0px;">
+            
             @if($lecture1->type == 'Text')
                 <div style="overflow-y: scroll; height: 561px;">
                     {!!$lecture1->text!!}
@@ -125,29 +152,6 @@
                     <embed src='/{{$lecture1->document->path}}' type='application/pdf'/>
                 </div>
             @endif
-        </div>
-        <div class="col-md-9" id="forward" style="padding-left: 0px; margin-top: 20px;">
-            <div class="col-md-12" style="padding-left: 0px; border: 1px solid #F0F0E9; background: #52D449; padding-bottom: 15px;">
-                <div class="col-md-4">
-                    <a href="#" class="btn btn-primary btn-md {{($previousLecture1) ? null : 'hide'}}" id="previousLecture" getId="{{($previousLecture1)?$previousLecture1->id:null}}">
-                        <span class="glyphicon glyphicon-fast-backward"></span> Previous Lecture
-                    </a>
-                </div>
-                <div class="col-md-3 col-md-offset-1" style="padding-left: 0px;">
-                    <a href="#forward" class="btn btn-primary btn-md" id="markLecture" getId="{{$lecture1->id}}">
-                        @if($lecture1->isMarked)
-                            <span class='glyphicon glyphicon-ok'></span>
-                        @else
-                            Mark to complete this lecture
-                        @endif
-                    </a>
-                </div>
-                <div class="col-md-2 col-md-offset-2">
-                    <a href="#" class="btn btn-primary btn-md {{($nextLecture1) ? null : 'hide'}}" id="nextLecture" getId="{{($nextLecture1)?$nextLecture1->id:null}}">
-                        Next Lecture <span class="glyphicon glyphicon-fast-forward"></span>
-                    </a>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -196,7 +200,8 @@
                 data: {
                     'course_id': $('#course_id').val(),
                     'lec_id' : getId,
-                    'enroll_id' : {{$enroll->id}}
+                    'enroll_id' : {{$enroll->id}},
+                    '_token' : '{{ csrf_token() }}'
                 }, // remember that be must to pass data object type
                 beforeSend: function(){
                     NProgress.start();
@@ -220,7 +225,7 @@
                         
                         (response.previousLecture) ? $('#previousLecture').attr('getId',response.previousLecture.id) : $('#previousLecture').attr('getId',null);
                         $('#markLecture').attr('getId',response.lecture.id);
-                        if(response.lecture.isMarked)
+                        if(response.mark)
                             $('#markLecture').html("<span class='glyphicon glyphicon-ok'></span>");
                         else
                             $('#markLecture').html("Mark to complete this lecture");
@@ -241,7 +246,7 @@
                         if(response.lecture.comments.length > 0){
                             $('#discussion').find('#cmtArea').html("");
                             for(var i = 0; i < response.lecture.comments.length; i++){
-                                if(response.lecture.comments[i].user.id == response.user.id){
+                                if(response.lecture.comments[i].user.id == {{Auth::user()->id}}){
                                     $('#discussion').find('#cmtArea').append(
                                         "<div class='col-md-12' style='padding: 0px;margin-top: 10px; padding-bottom: 20px; border-bottom: 1px solid #F0F0E9;' id='commentCover"+response.lecture.comments[i].id+"'>"+
                                             "<img src='/"+response.lecture.comments[i].user.image.path+"' class='col-md-1 img-circle' style='padding: 0px;'>"+
@@ -289,8 +294,9 @@
                             );
                         }
                         
+                        $('#lec_name').text(response.lecture.lec_name);
                         if(response.lecture.type == 'Text'){
-                            $('#contentLearning').html("<h2 style='text-align: center;' id='lec_name'>"+response.lecture.lec_name+"</h2><div style='overflow-y: scroll; height: 607px;'>"+response.lecture.text+"</div>");
+                            $('#contentLearning').html("<div style='overflow-y: scroll; height: 561px;'>"+response.lecture.text+"</div>");
                         }else if(response.lecture.type == 'Video'){
                             $('#contentLearning').html(
                                 "<div class='embed-responsive embed-responsive-16by9'>"+
@@ -320,6 +326,8 @@
             comment.lec_id = getId;
             comment.comment_id = $('#comment_id'+getId).val();
             comment.content = $('#contentComment'+getId).val();
+            comment._token = '{{ csrf_token() }}';
+
             $.ajax({
                 type: "POST",
                 url : "/lecture/add-comment",
@@ -391,6 +399,8 @@
             var getLecId = $(this).attr('getLecId');
             var comment = {};
             comment.comment_id = getId;
+            comment._token = '{{ csrf_token() }}';
+
             var r = confirm('Do you wanna delete this comment?');
             if (r == true) {
 
@@ -421,6 +431,8 @@
             comment.lec_id = getLecId;
             comment.comment_id = $('#comment_id'+getLecId+getId).val();
             comment.content = $('#editContentComment'+getLecId+getId).val();
+            comment._token = '{{ csrf_token() }}';
+
             var itself = $(this);
             $.ajax({
                 type: "POST",
@@ -475,6 +487,7 @@
             var enroll = {};
             enroll.lec_id = getId;
             enroll.enroll_id = {{$enroll->id}};
+            enroll._token = '{{ csrf_token() }}';
 
             $(this).prepend('<i class="fa fa-refresh fa-spin"></i> ');
             $.ajax({

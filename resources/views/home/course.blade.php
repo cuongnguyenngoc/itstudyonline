@@ -51,7 +51,7 @@
             </div>
             <div class="col-md-4" style="padding-bottom: 15px; border-bottom: 1px solid #F0F0E9;">
                 <h3 style="margin-top: 0px;"> {{$course->cost}}k VND</h3>
-                <a href="#" class="btn btn-primary btn-lg" style="margin-top: 0px;" id="enrollCourseBtn"> Enroll This Course</a>
+                <a href="#" class="btn btn-primary btn-lg" style="margin-top: 0px;" id="enrollCourseBtn"> {{($enroll)?"Continue":"Enroll This Course"}}</a>
                 <div style="margin-top: 10px;">
                     <a href="#"><span class="glyphicon glyphicon-flag"></span> Report Abuse</a>
                 </div>            
@@ -155,8 +155,16 @@
     @else
         <script>{{ 'var logged = false;' }}</script>
     @endif
+    @if($enroll)
+        <script>{{ "var enroll = true" }}</script>
+    @else
+        <script>{{ 'var enroll = false;' }}</script>
+    @endif
     <script type="text/javascript">
         //$(document).ready(function(){
+            if(enroll)
+                var n = noty({text: 'Welcome back, {{$enroll->user->fullname}}. How do you do, buddy', layout: 'top', type: 'success', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
+
             $('div.lecture').click(function(){
                 var getId = $(this).attr('getId');
                 $('#lecture'+getId).toggleClass('hide');
