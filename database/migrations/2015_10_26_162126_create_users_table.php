@@ -23,7 +23,6 @@ class CreateUsersTable extends Migration
             $table->string('links')->nullable();
             $table->string('expert')->nullable();
             $table->date('birth')->nullable();
-            $table->rememberToken();
             $table->timestamps();
 
             $table->foreign('role_id')->references('id')->on('userRoles')->onDelete('set null');

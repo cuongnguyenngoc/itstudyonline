@@ -11,19 +11,10 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('home.index');
-// });
+ Route::get('/app', function() {
+     return view('app');
+ });
 Route::get('/','HomeController@index');
-Route::get('test','HomeController@test');
-Route::get('manage','HomeController@manage');
-
-
-//Authentication
-Route::post('checkEmailExist','Auth\AuthController@checkEmailExisted');
-Route::post('register','Auth\AuthController@postRegister');
-Route::post('login','Auth\AuthController@postLogin');
-Route::get('logout','Auth\AuthController@getLogout');
 
 /*---------------------------------------master ----------------------------------------*/
 Route::get('master/getCates', "MasterController@getAllCategories");

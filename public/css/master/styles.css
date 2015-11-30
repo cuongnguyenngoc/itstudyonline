@@ -1,0 +1,39 @@
+.main{
+  padding-top: 20px;
+}
+
+.navbar-static-top {
+  margin-bottom:20px;
+}
+
+i {
+  font-size:16px;
+}
+
+.nav > li > a {
+  color:#787878;
+}
+
+.left-sidebar{
+  margin-top: 20px;
+  background: #000;
+}
+
+.visible{
+	display: block;
+}
+.small-panel{
+	padding: 16px;
+}
+
+.small-panel .panel-collapse{
+	padding: 0px;
+	border: 1px solid #bce8f1;
+}
+
+#curriculumPanel button{
+	margin-top: 0px;
+}
+#addLecture > p{
+	margin-top: 6px;
+}
