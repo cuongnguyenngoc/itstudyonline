@@ -53,14 +53,8 @@ class HomeController extends Controller
         $enroll = Enroll::find(1);
 
         // Save learning process
-        $numberLectures = $enroll->course->lectures()->count();
-        $numberLectureMarked = $enroll->marks()->count();
-        $percentProcess = ($numberLectureMarked / $numberLectures) * 100;
-        echo $numberLectures;
-        echo "<br>";
-        echo $numberLectureMarked;
-        echo "<br>";
-        echo $percentProcess;
+        $course = Course::find(1);
+        echo $course->lectures()->orderBy('order','asc')->get()->last()->oldOrder;
 
         // $enroll->process = $percentProcess;
         // $enroll->save();

@@ -16,11 +16,11 @@
     <div class="row">
         <ul class="nav nav-tabs">
             <li role="presentation"><a href="<?php echo e(url('master/manage')); ?>">Manage Course</a></li>
-            <li role="presentation" class="<?php echo e(($url='master/create-course')?'active':''); ?>"><a href="<?php echo e(url('master/create-course')); ?>">Create Course</a></li>
-            <li role="presentation" class="<?php echo e(($url='master/edit-course')?'active':''); ?>"><a href="#">Edit Course</a></li>
+            <li role="presentation" class="<?php echo e(($url=='master/create-course')?'active':''); ?>"><a href="<?php echo e(url('master/create-course')); ?>">Create Course</a></li>
+            <li role="presentation" class="<?php echo e(($url=='master/edit-course')?'active':''); ?>"><a href="#">Edit Course</a></li>
             <li role="presentation"><a href="#">Profile</a></li>
         </ul>
-        <div class="col-md-12 hide" id="headCourse" style="margin-top: 20px;">
+        <div class="col-md-12 <?php echo e(($course->id)?'':'hide'); ?>" id="headCourse" style="margin-top: 20px;">
             <div class="panel panel-info">
                 <div class="panel-body">
                     <div class="col-md-8">
@@ -34,14 +34,14 @@
                         <div class="col-md-6">
                             <p style="margin-top:24px;"> Number of lectures was published 
                                 <h3 id="numLectures"> 
-                                    <span id="lecturesPublished" lecturesPublished="">0</span> | 
-                                    <span id="countLectures" countLectures="">0</span>
+                                    <span id="lecturesPublished" lecturesPublished="<?php echo e(($course->lectures)?$course->lectures()->count():"0"); ?>"><?php echo e(($course->lectures)?$course->lectures()->count():"0"); ?></span> | 
+                                    <span id="countLectures" countLectures="<?php echo e(($course->lectures)?$course->lectures()->count():"0"); ?>"><?php echo e(($course->lectures)?$course->lectures()->count():"0"); ?></span>
                                 </h3>
                             </p>
                         </div>
                         <div>
-                            <input type="hidden" value="" id="submitCourseId"/>
-                            <button class="btn btn-primary col-md-6" style="margin-top: 31px;" id="submitCourse">Submit your course</button>
+                            <input type="hidden" value="<?php echo e(($course->usercreatecourse)?$course->usercreatecourse->id:''); ?>" id="submitCourseId"/>
+                            <button class="btn btn-primary col-md-6" style="margin-top: 31px;" id="submitCourse"><?php echo e(($course->id)?"Update your course":"Submit your course"); ?></button>
                         </div>      
                     </div>
                 </div>
@@ -55,7 +55,7 @@
 
                     </a>
                     <?php foreach($values as $id => $value): ?>
-                        <a href="#" class="list-group-item list-group-item-success <?php echo e($id); ?> list-arrow" id="<?php echo e($id); ?>"><?php echo e($value); ?></a> 
+                        <a href="javascript:void(0)" class="list-group-item list-group-item-success <?php echo e($id); ?> list-arrow" id="<?php echo e($id); ?>"><?php echo e($value); ?></a> 
                     <?php endforeach; ?>
                 <?php endforeach; ?>
             </div>
@@ -122,36 +122,65 @@
 
             $('#submitCourse').on('click',function(e){
                 e.stopImmediatePropagation();
-                if($('#lecturesPublished').attr('lecturesPublished') >= 3){
-                    if($('#img_preview').attr('src')!='nothing'){
-                        if($('#video_preview').attr('src') != null){
-                            $.ajax({
-                                type: "POST",
-                                url : "/master/submit-course",
-                                dataType: 'json',
-                                data: {'course_id' : $('#course_id').val(), 'id' : $('#submitCourseId').val(), '_token' : '<?php echo e(csrf_token()); ?>'}, // remember that be must to pass data object type
-                                success : function(response){
-                                    console.log(response);
-                                    if(response.status){
-                                        $('#submitCourseId').val(response.usercreatecourse.id);
-                                        alert('You submit course successfully');
-                                        $(window).off('beforeunload');
-                                    }
-                                }
-                            });
-                        }else{
-                            alert('You should upload video introduction for course');
-                        }                      
+                var check = false;
+                $('#curriculumPanel').find('div.small-panel').each(function(index){
+                    if($(this).find('div.panel-collapse').first().hasClass('panel-danger')){
+                        var r = confirm('Seem be some course havent published yet. So do you wanna dismiss it?');
+                        if (r == true) {
+                            check = true;
+                        }
                     }else{
-                        alert('You should upload avatar for course');
+                        check = true;
                     }
-                }else{
-                    alert('Number of lectures is minimax 6');
-                }           
+                });
+                if(check){
+                    if($('#lecturesPublished').attr('lecturesPublished') >= 3){
+                        if($('#img_preview').attr('src')!='nothing'){
+                            if($('#video_preview').attr('src') != null){
+                                $.ajax({
+                                    type: "POST",
+                                    url : "/master/submit-course",
+                                    dataType: 'json',
+                                    data: {'course_id' : $('#course_id').val(), 'id' : $('#submitCourseId').val(), '_token' : '<?php echo e(csrf_token()); ?>'}, // remember that be must to pass data object type
+                                    success : function(response){
+                                        console.log(response);
+                                        if(response.status){
+                                            $('#submitCourseId').val(response.usercreatecourse.id);
+                                            var n = noty({text: response.message, layout: 'top', type: 'success', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
+                                            $(window).off('beforeunload');
+                                        }else{
+                                            var n = noty({text: response.message, layout: 'top', type: 'error', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
+                                        }
+                                    }
+                                });
+                            }else{
+                                var n = noty({text: 'You should upload avatar for course', layout: 'top', type: 'error', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
+
+                            }                      
+                        }else{
+                            var n = noty({text: 'You should upload avatar for course', layout: 'top', type: 'error', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
+
+                        }
+                    }else{
+                        var n = noty({text: 'Number of lectures is minimax 6', layout: 'top', type: 'error', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
+
+                    }
+                }
+                           
             });
 
             $(window).on("beforeunload", function() {
                 return "Are you sure? You didn't finish the form!";
+            });
+
+
+            $('#curriculumPanel').find('div.small-panel').each(function(index){
+                if($(this).find('div.panel-collapse').first().hasClass('panel-danger')){
+                    $(window).on("beforeunload", function() {
+                        return "Are you sure? You didn't finish the form! Please click submit course to complete";
+                    });
+                    alert('wtf');
+                }
             });
         });      
     </script>

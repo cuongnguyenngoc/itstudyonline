@@ -28,12 +28,12 @@
         <div class="row small-panel">
             <div class="panel panel-info col-md-12" id="videoPanel">
                 <div class="panel-body">
-                    <form class="dropzone {{($course) ? 'hide' : ''}}" action="/master/upload-video-intro" id="uploadVideoCourse">
+                    <form class="dropzone {{($course->videointro) ? 'hide' : ''}}" action="/master/upload-video-intro" id="uploadVideoCourse">
                         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
                         <input type="hidden" name="course_id" id="course_id_video" value="{{($course) ? $course->id : null}}">
                         <input type="hidden" name="videointro_id" id="videointro_id" value="{{($course && $course->videointro) ? $course->videointro->id : null}}">
                     </form>
-                    <button class="btn btn-primary col-md-offset-5 {{($course) ? '' : 'hide'}}" id="changeVideoCourse"> Change</button>
+                    <button class="btn btn-primary col-md-offset-5 {{($course->videointro) ? '' : 'hide'}}" id="changeVideoCourse"> Change</button>
                 </div>
             </div>
         </div> <!-- End of add info lecture -->

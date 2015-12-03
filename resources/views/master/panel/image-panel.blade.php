@@ -23,12 +23,12 @@
         <div class="row small-panel">
             <div class="panel panel-info col-md-12" id="imagePanel">
                 <div class="panel-body">
-                    <form class="dropzone {{($course) ? 'hide' : ''}}" action="/master/upload-image" id="uploadImageCourse">
+                    <form class="dropzone {{($course->image) ? 'hide' : ''}}" action="/master/upload-image" id="uploadImageCourse">
                         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
                         <input type="hidden" name="course_id" id="course_id_img" value="{{($course) ? $course->id : null}}">
                         <input type="hidden" name="img_id" id="img_id" value="{{($course && $course->image) ? $course->image->id : null}}">
                     </form>
-                    <button class="btn btn-primary col-md-offset-5 {{($course) ? '' : 'hide'}}" id="changeImageCourse"> Change</button>
+                    <button class="btn btn-primary col-md-offset-5 {{($course->image) ? '' : 'hide'}}" id="changeImageCourse"> Change</button>
                 </div>
             </div>
         </div> <!-- End of add info lecture -->

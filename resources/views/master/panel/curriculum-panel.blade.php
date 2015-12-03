@@ -7,26 +7,35 @@
         <div id="curriculumPanel">
             @if($course && $course->lectures()->count() > 0)
                 @foreach($course->lectures()->orderBy('order','asc')->get() as $lecture)
-                    <div class='row small-panel' id='lec{{$lecture->order}}'>
-                        <div class='panel-collapse panel-primary col-md-12' id='showLecture{{$lecture->order}}'>
+                    <div class='row small-panel' id='lec{{$lecture->oldOrder}}'>
+                        <div class='panel-collapse panel-primary col-md-12' id='showLecture{{$lecture->oldOrder}}'>
                              <div class='panel-heading'>
                                 <div class='row'>
-                                    <div id='lec_name{{$lecture->order}}' class='col-md-10'>{{$lecture->lec_name}}</div>
-                                    <input type='hidden' value='{{$lecture->id}}' name='lec_id' id='lec_id{{$lecture->order}}'>
-                                    <button class='btn btn-primary addContentBtn btn-sm col-md-1 col-md-offset-1 collapse-lecture' id='addContentBtn{{$lecture->order}}' data-toggle='collapse' data-target='#addContent{{$lecture->order}}' aria-expanded='false' getId='{{$lecture->order}}'>
+                                    <div id='lec_name{{$lecture->oldOrder}}' class='col-md-10 lec-name' getId='{{$lecture->oldOrder}}'>
+                                        <span>boo {{$lecture->lec_name}}</span>
+                                        <a href='javascript:void(0)' id='editLecture{{$lecture->oldOrder}}' getId='{{$lecture->oldOrder}}' style='margin-left: 20px; color: #fff;' class='edit-lecture hide'><span class='glyphicon glyphicon-edit'></span></a>
+                                        <a href='javascript:void(0)' id='delLecture{{$lecture->oldOrder}}' getId='{{$lecture->oldOrder}}' style='margin-left: 10px; color: #fff;' class='del-lecture hide'><span class='glyphicon glyphicon-trash'></span></a>
+                                    </div>
+                                    <input type='hidden' value='{{$lecture->id}}' name='lec_id' id='lec_id{{$lecture->oldOrder}}'>
+                                    <button class='btn btn-primary addContentBtn btn-sm col-md-1 col-md-offset-1 collapse-lecture' id='addContentBtn{{$lecture->oldOrder}}' data-toggle='collapse' data-target='#addContent{{$lecture->oldOrder}}' aria-expanded='false' getId='{{$lecture->oldOrder}}'>
                                         <span class='glyphicon glyphicon-triangle-bottom' aria-hidden='true'></span>
                                     </button>
                                 </div>
                              </div>
-                             <div class='panel-body small-panel' id='collapseLecture{{$lecture->order}}'>
-
-                                <div id='toggleAddContentDetail{{$lecture->order}}' class=''>
-                                    <div class='panel-collapse panel-default col-md-12' id='addContentDetail{{$lecture->order}}'>
-                                        <div class='panel-body' id='showVideo{{$lecture->order}}'>
+                             <div class='panel-body small-panel' id='collapseLecture{{$lecture->oldOrder}}'>
+                                <div id='divEditLecture{{$lecture->oldOrder}}' style='display:none;'>
+                                    <form getId='{{$lecture->oldOrder}}' class='form-editLecture'>
+                                        <input type='text' class='form-control' id='inputLecName{{$lecture->oldOrder}}' placeholder=' Type your lecture name'/>
+                                        <button type='submit' class='btn btn-primary btn-md' style='margin-top: 10px; margin-bottom: 20px;'> Update</button>
+                                    </form>
+                                </div>
+                                <div id='toggleAddContentDetail{{$lecture->oldOrder}}' class=''>
+                                    <div class='panel-collapse panel-default col-md-12' id='addContentDetail{{$lecture->oldOrder}}'>
+                                        <div class='panel-body' id='showVideo{{$lecture->oldOrder}}'>
                                             <div class='show-content-preview col-md-4'>
                                                 @if($lecture->type == 'Video')
-                                                    <a href='#lec{{$lecture->order}}' class='change-thumbnail' getId='"+this.getId+"'>
-                                                        <img src='/{{$lecture->video->thumbnail->path}}' alt='{{$lecture->video->thumbnail->img_name}}' class='img-thumbnail' id='imgThumbnail{{$lecture->order}}'/>
+                                                    <a href='javascript:void(0)' class='change-thumbnail' getId='"+this.getId+"'>
+                                                        <img src='/{{$lecture->video->thumbnail->path}}' alt='{{$lecture->video->thumbnail->img_name}}' class='img-thumbnail' id='imgThumbnail{{$lecture->oldOrder}}'/>
                                                     </a>
                                                 @elseif($lecture->type == 'Document')
                                                     <embed src='/{{$lecture->document->path}}' type='application/pdf' height='130' width='210'/>
@@ -37,102 +46,102 @@
                                             <div class='col-md-7 editContent'>
                                                 @if($lecture->type == 'Video')
                                                     <p>{{$lecture->video->video_name}}</p>
-                                                    <a href='#lec{{$lecture->order}}' class='change-video' id='changeVideo{{$lecture->order}}' getId='{{$lecture->order}}' getName="Video">
+                                                    <a href='javascript:void(0)' class='change-video' id='changeVideo{{$lecture->oldOrder}}' getId='{{$lecture->oldOrder}}' getName="Video">
                                                         <span class='glyphicon glyphicon-edit'></span> Change Video
                                                     </a>
                                                 @elseif($lecture->type == 'Document')
                                                     <p>{{$lecture->document->doc_name}}</p>
-                                                    <a href='#lec{{$lecture->order}}' class='change-video' id='changeVideo{{$lecture->order}}' getId='{{$lecture->order}}' getName="Document">
+                                                    <a href='javascript:void(0)' class='change-video' id='changeVideo{{$lecture->oldOrder}}' getId='{{$lecture->oldOrder}}' getName="Document">
                                                         <span class='glyphicon glyphicon-edit'></span> Change Document
                                                     </a>
                                                 @else
                                                     <p>Text document</p>
-                                                    <a href='#lec{{$lecture->order}}' class='change-video' id='changeVideo{{$lecture->order}}' getId='{{$lecture->order}}' getName="Text">
+                                                    <a href='javascript:void(0)' class='change-video' id='changeVideo{{$lecture->oldOrder}}' getId='{{$lecture->oldOrder}}' getName="Text">
                                                         <span class='glyphicon glyphicon-edit'></span> Change Text
                                                     </a>
                                                 @endif
-                                                Or <a href='#lec{{$lecture->order}}' class='edit-content' id='editContent{{$lecture->order}}' getId='{{$lecture->order}}'> <span class='glyphicon glyphicon-edit'></span> Edit Content</a>   
+                                                Or <a href='javascript:void(0)' class='edit-content' id='editContent{{$lecture->oldOrder}}' getId='{{$lecture->oldOrder}}'> <span class='glyphicon glyphicon-edit'></span> Edit Content</a>   
                                             </div>
                                             <div class='col-md-1 publish-lecture'>
-                                                <a href='#lec{{$lecture->order}}' class='publish btn btn-success btn-sm hide published' id='publish{{$lecture->order}}' getId='{{$lecture->order}}'> Publish</a>
+                                                <a href='javascript:void(0)' class='publish btn btn-success btn-sm hide published' id='publish{{$lecture->oldOrder}}' getId='{{$lecture->oldOrder}}'> Publish</a>
                                             </div>
                                        </div>
-                                        <div class='panel-body hide' id='uploadVideo{{$lecture->order}}'>
+                                        <div class='panel-body hide' id='uploadVideo{{$lecture->oldOrder}}'>
                                             <ul class='nav nav-tabs' style='padding-left: 0px;'>
                                                 @if($lecture->type == 'Video')
-                                                    <li class='active'><a data-toggle='tab' href='#video{{$lecture->order}}'>Add Video</a></li>
+                                                    <li class='active'><a data-toggle='tab' href='#video{{$lecture->oldOrder}}'>Add Video</a></li>
                                                 @elseif($lecture->type == 'Document')
-                                                    <li class='active'><a data-toggle='tab' href='#video{{$lecture->order}}'>Add Document</a></li>
+                                                    <li class='active'><a data-toggle='tab' href='#video{{$lecture->oldOrder}}'>Add Document</a></li>
                                                 @else
-                                                    <li class='active'><a data-toggle='tab' href='#video{{$lecture->order}}'>Add Text</a></li>
+                                                    <li class='active'><a data-toggle='tab' href='#video{{$lecture->oldOrder}}'>Add Text</a></li>
                                                 @endif
-                                                <li class='cancel-addContent' getId='{{$lecture->order}}'>
-                                                    <a href='#lec{{$lecture->order}}' id='cancel{{$lecture->order}}'> Cancel</a>
+                                                <li class='cancel-addContent' getId='{{$lecture->oldOrder}}'>
+                                                    <a href='javascript:void(0)' id='cancel{{$lecture->oldOrder}}'> Cancel</a>
                                                 </li>
                                             </ul>
                                             <div class='tab-content'>
                                                 @if($lecture->type == 'Video')
-                                                    <div id='video{{$lecture->order}}' class="tab-pane fade in active">
-                                                       <form id='addVideo{{$lecture->order}}' class="addVideo" getId='{{$lecture->order}}'>
+                                                    <div id='video{{$lecture->oldOrder}}' class="tab-pane fade in active">
+                                                       <form id='addVideo{{$lecture->oldOrder}}' class="addVideo" getId='{{$lecture->oldOrder}}'>
                                                             <input type='hidden' name='_token' value='{!! csrf_token() !!}'>
-                                                            <input type='hidden' name='video_id' id='video_id{{$lecture->order}}' value="{{($lecture->video) ? $lecture->video->id : null}}">
-                                                            <input type='hidden' name='doc_id' id='doc_video_id{{$lecture->order}}' value="{{($lecture->document) ? $lecture->document->id : null}}">
+                                                            <input type='hidden' name='video_id' id='video_id{{$lecture->oldOrder}}' value="{{($lecture->video) ? $lecture->video->id : null}}">
+                                                            <input type='hidden' name='doc_id' id='doc_video_id{{$lecture->oldOrder}}' value="{{($lecture->document) ? $lecture->document->id : null}}">
 
                                                         </form>
-                                                        <form id='addDocument{{$lecture->order}}' class="addVideo hide" getId='{{$lecture->order}}'>
+                                                        <form id='addDocument{{$lecture->oldOrder}}' class="addVideo hide" getId='{{$lecture->oldOrder}}'>
                                                             <input type='hidden' name='_token' value='{!! csrf_token() !!}'>
-                                                            <input type='hidden' name='doc_id' id='doc_id{{$lecture->order}}' value="{{($lecture->document) ? $lecture->document->id : null}}">
-                                                            <input type='hidden' name='video_id' id='video_doc_id{{$lecture->order}}' value="{{($lecture->video) ? $lecture->video->id : null}}">
+                                                            <input type='hidden' name='doc_id' id='doc_id{{$lecture->oldOrder}}' value="{{($lecture->document) ? $lecture->document->id : null}}">
+                                                            <input type='hidden' name='video_id' id='video_doc_id{{$lecture->oldOrder}}' value="{{($lecture->video) ? $lecture->video->id : null}}">
                                                         </form>
                                                     </div>
-                                                    <div id='textContent{{$lecture->order}}' class="tab-pane fade in active hide">
-                                                        <form id='addText{{$lecture->order}}' class='addText' getId='{{$lecture->order}}'>
+                                                    <div id='textContent{{$lecture->oldOrder}}' class="tab-pane fade in active hide">
+                                                        <form id='addText{{$lecture->oldOrder}}' class='addText' getId='{{$lecture->oldOrder}}'>
                                                             <div class='form-group'>
-                                                                <textarea name='textContent' class='form-control textContent' rows='10' id='textarea{{$lecture->order}}' style='width:100%'>{{$lecture->text}}</textarea>
+                                                                <textarea name='textContent' class='form-control textContent' rows='10' id='textarea{{$lecture->oldOrder}}' style='width:100%'>{{$lecture->text}}</textarea>
                                                             </div>
                                                             <button type='submit' class='btn btn-primary col-md-1'>Save</button>
                                                         </form>
                                                     </div>
                                                 @elseif($lecture->type == 'Document')
-                                                    <div id='video{{$lecture->order}}' class="tab-pane fade in active">
-                                                       <form id='addVideo{{$lecture->order}}' class="addVideo hide" getId='{{$lecture->order}}'>
+                                                    <div id='video{{$lecture->oldOrder}}' class="tab-pane fade in active">
+                                                       <form id='addVideo{{$lecture->oldOrder}}' class="addVideo hide" getId='{{$lecture->oldOrder}}'>
                                                             <input type='hidden' name='_token' value='{!! csrf_token() !!}'>
-                                                            <input type='hidden' name='video_id' id='video_id{{$lecture->order}}' value="{{($lecture->video) ? $lecture->video->id : null}}">
-                                                            <input type='hidden' name='doc_id' id='doc_video_id{{$lecture->order}}' value="{{($lecture->document) ? $lecture->document->id : null}}">
+                                                            <input type='hidden' name='video_id' id='video_id{{$lecture->oldOrder}}' value="{{($lecture->video) ? $lecture->video->id : null}}">
+                                                            <input type='hidden' name='doc_id' id='doc_video_id{{$lecture->oldOrder}}' value="{{($lecture->document) ? $lecture->document->id : null}}">
 
                                                         </form>
-                                                        <form id='addDocument{{$lecture->order}}' class="addVideo" getId='{{$lecture->order}}'>
+                                                        <form id='addDocument{{$lecture->oldOrder}}' class="addVideo" getId='{{$lecture->oldOrder}}'>
                                                             <input type='hidden' name='_token' value='{!! csrf_token() !!}'>
-                                                            <input type='hidden' name='doc_id' id='doc_id{{$lecture->order}}' value="{{($lecture->document) ? $lecture->document->id : null}}">
-                                                            <input type='hidden' name='video_id' id='video_doc_id{{$lecture->order}}' value="{{($lecture->video) ? $lecture->video->id : null}}">
+                                                            <input type='hidden' name='doc_id' id='doc_id{{$lecture->oldOrder}}' value="{{($lecture->document) ? $lecture->document->id : null}}">
+                                                            <input type='hidden' name='video_id' id='video_doc_id{{$lecture->oldOrder}}' value="{{($lecture->video) ? $lecture->video->id : null}}">
                                                         </form>
                                                     </div>
-                                                    <div id='textContent{{$lecture->order}}' class="tab-pane fade in active hide">
-                                                        <form id='addText{{$lecture->order}}' class='addText' getId='{{$lecture->order}}'>
+                                                    <div id='textContent{{$lecture->oldOrder}}' class="tab-pane fade in active hide">
+                                                        <form id='addText{{$lecture->oldOrder}}' class='addText' getId='{{$lecture->oldOrder}}'>
                                                             <div class='form-group'>
-                                                                <textarea name='textContent' class='form-control textContent' rows='10' id='textarea{{$lecture->order}}' style='width:100%'>{{$lecture->text}}</textarea>
+                                                                <textarea name='textContent' class='form-control textContent' rows='10' id='textarea{{$lecture->oldOrder}}' style='width:100%'>{{$lecture->text}}</textarea>
                                                             </div>
                                                             <button type='submit' class='btn btn-primary col-md-1'>Save</button>
                                                         </form>
                                                     </div>
                                                 @else
-                                                    <div id='video{{$lecture->order}}' class="tab-pane fade in active hide">
-                                                       <form id='addVideo{{$lecture->order}}' class="addVideo hide" getId='{{$lecture->order}}'>
+                                                    <div id='video{{$lecture->oldOrder}}' class="tab-pane fade in active hide">
+                                                       <form id='addVideo{{$lecture->oldOrder}}' class="addVideo hide" getId='{{$lecture->oldOrder}}'>
                                                             <input type='hidden' name='_token' value='{!! csrf_token() !!}'>
-                                                            <input type='hidden' name='video_id' id='video_id{{$lecture->order}}' value="{{($lecture->video) ? $lecture->video->id : null}}">
-                                                            <input type='hidden' name='doc_id' id='doc_video_id{{$lecture->order}}' value="{{($lecture->document) ? $lecture->document->id : null}}">
+                                                            <input type='hidden' name='video_id' id='video_id{{$lecture->oldOrder}}' value="{{($lecture->video) ? $lecture->video->id : null}}">
+                                                            <input type='hidden' name='doc_id' id='doc_video_id{{$lecture->oldOrder}}' value="{{($lecture->document) ? $lecture->document->id : null}}">
 
                                                         </form>
-                                                        <form id='addDocument{{$lecture->order}}' class="addVideo" getId='{{$lecture->order}}'>
+                                                        <form id='addDocument{{$lecture->oldOrder}}' class="addVideo" getId='{{$lecture->oldOrder}}'>
                                                             <input type='hidden' name='_token' value='{!! csrf_token() !!}'>
-                                                            <input type='hidden' name='doc_id' id='doc_id{{$lecture->order}}' value="{{($lecture->document) ? $lecture->document->id : null}}">
-                                                            <input type='hidden' name='video_id' id='video_doc_id{{$lecture->order}}' value="{{($lecture->video) ? $lecture->video->id : null}}">
+                                                            <input type='hidden' name='doc_id' id='doc_id{{$lecture->oldOrder}}' value="{{($lecture->document) ? $lecture->document->id : null}}">
+                                                            <input type='hidden' name='video_id' id='video_doc_id{{$lecture->oldOrder}}' value="{{($lecture->video) ? $lecture->video->id : null}}">
                                                         </form>
                                                     </div>
-                                                    <div id='textContent{{$lecture->order}}' class="tab-pane fade in active">
-                                                        <form id='addText{{$lecture->order}}' class='addText' getId='{{$lecture->order}}'>
+                                                    <div id='textContent{{$lecture->oldOrder}}' class="tab-pane fade in active">
+                                                        <form id='addText{{$lecture->oldOrder}}' class='addText' getId='{{$lecture->oldOrder}}'>
                                                             <div class='form-group'>
-                                                                <textarea name='textContent' class='form-control textContent' rows='10' id='textarea{{$lecture->order}}' style='width:100%'>{{$lecture->text}}</textarea>
+                                                                <textarea name='textContent' class='form-control textContent' rows='10' id='textarea{{$lecture->oldOrder}}' style='width:100%'>{{$lecture->text}}</textarea>
                                                             </div>
                                                             <button type='submit' class='btn btn-primary col-md-1'>Save</button>
                                                         </form>
@@ -140,33 +149,33 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class='panel-body hide' id='chooseThumbnail{{$lecture->order}}'>
+                                        <div class='panel-body hide' id='chooseThumbnail{{$lecture->oldOrder}}'>
                                             <ul class='nav nav-tabs' style='padding-left: 0px;'>
-                                                <li class='active'><a data-toggle='tab' href='#thumbnails{{$lecture->order}}'> Choose thumbnail</a></li>
+                                                <li class='active'><a data-toggle='tab' href='#thumbnails{{$lecture->oldOrder}}'> Choose thumbnail</a></li>
                                             </ul>
                                             <div class='tab-content'>
-                                                <div id='thumbnails{{$lecture->order}}' class='tab-pane fade in active'>
+                                                <div id='thumbnails{{$lecture->oldOrder}}' class='tab-pane fade in active'>
 
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class='panel-collapse panel-default col-md-12 collapse in hide' aria-expanded="true" id='addContent{{$lecture->order}}'>
+                                    <div class='panel-collapse panel-default col-md-12 collapse in hide' aria-expanded="true" id='addContent{{$lecture->oldOrder}}'>
                                         <div class='panel-heading'>Select content type</div>
                                         <div class='panel-body'>                 
                                             <div class='row'>
                                                 <div class='col-xs-6 col-md-4'>
-                                                    <a href='#lec{{$lecture->order}}' class='type-content thumbnail' getId='{{$lecture->order}}' getName='Video'>
+                                                    <a href='javascript:void(0)' class='type-content thumbnail' getId='{{$lecture->oldOrder}}' getName='Video'>
                                                         <img src='...' alt='...'/>
                                                     </a>
                                                 </div>
                                                 <div class='col-xs-6 col-md-4'>
-                                                    <a href='#lec{{$lecture->order}}' class='type-content thumbnail' getId='{{$lecture->order}}' getName='Document'>
+                                                    <a href='javascript:void(0)' class='type-content thumbnail' getId='{{$lecture->oldOrder}}' getName='Document'>
                                                         <img src='...' alt='...'/>
                                                     </a>
                                                 </div>
                                                 <div class='col-xs-6 col-md-4'>
-                                                    <a href='#lec{{$lecture->order}}' class='type-contentText thumbnail' getId='{{$lecture->order}}' getName='Text'>
+                                                    <a href='javascript:void(0)' class='type-contentText thumbnail' getId='{{$lecture->oldOrder}}' getName='Text'>
                                                         <img src='...' alt='...'/>
                                                     </a>
                                                 </div>
@@ -175,21 +184,21 @@
                                     </div>
                                 </div>
 
-                                <div id='toggleDescription{{$lecture->order}}'>
-                                    <div class='panel-collapse panel-default col-md-12' id='addDescriptionArea{{$lecture->order}}'>
+                                <div id='toggleDescription{{$lecture->oldOrder}}'>
+                                    <div class='panel-collapse panel-default col-md-12' id='addDescriptionArea{{$lecture->oldOrder}}'>
                                         <div class='panel-body'>
-                                            <div id='showDescription{{$lecture->order}}' class='showDesClass' getId='{{$lecture->order}}'>{{$lecture->description}}</div>
-                                            <form class='add-description hide' id='addDescription{{$lecture->order}}' getId='{{$lecture->order}}'>
+                                            <div id='showDescription{{$lecture->oldOrder}}' class='showDesClass' getId='{{$lecture->oldOrder}}'>{{$lecture->description}}</div>
+                                            <form class='add-description hide' id='addDescription{{$lecture->oldOrder}}' getId='{{$lecture->oldOrder}}'>
                                                 <div class='form-group'>
                                                     <label for='lec_description'>Lecture description</label>
-                                                    <textarea class='form-control description-textarea' id='descriptionTextArea{{$lecture->order}}' name='description' placeholder='Enter lecture description' style='width:100%'>{{$lecture->description}}</textarea>
+                                                    <textarea class='form-control description-textarea' id='descriptionTextArea{{$lecture->oldOrder}}' name='description' placeholder='Enter lecture description' style='width:100%'>{{$lecture->description}}</textarea>
                                                 </div>
                                                 <button type='submit' class='btn btn-primary col-md-1'>Save</button>
-                                                <p class='col-md-11'> or <a href='#lec{{$lecture->order}}' id='cancelDescription{{$lecture->order}}' class='cancel-description' getId='{{$lecture->order}}'>Cancel</a></p>
+                                                <p class='col-md-11'> or <a href='javascript:void(0)' id='cancelDescription{{$lecture->oldOrder}}' class='cancel-description' getId='{{$lecture->oldOrder}}'>Cancel</a></p>
                                             </form>
                                         </div>
                                     </div>
-                                    <button class='btn btn-primary addDescriptionBtn hide' id='{{$lecture->order}}' style='margin-top:0px;'>Add Description</button>
+                                    <button class='btn btn-primary addDescriptionBtn hide' id='{{$lecture->oldOrder}}' style='margin-top:0px;'>Add Description</button>
                                 </div>
                             </div>
                         </div>
@@ -237,10 +246,106 @@
     <!--/panel-body-->
 </div>
 <!--/panel-->
-
 <script type="text/javascript">
     $(document).ready(function(){
-        
+
+        //var count = 0; //this variable was declared global
+        var count = {{($course->id) ? $course->lectures()->orderBy('order','asc')->get()->last()->oldOrder : '0'}};
+        var numberofLectures = {{($course->id) ? $course->lectures()->count() : '0'}};
+        $("#addLecture").submit(function(e){
+            
+            e.preventDefault();
+            count++;
+            numberofLectures++;
+            if(count == 1){
+                $('#curriculumPanel').prepend(
+                    @include('master.panel.show-lecture-in-curriculum-panel') // In show file, it have had count variable already to recognize lecture own.
+                );
+            }else{
+                $('#curriculumPanel').append(
+                    @include('master.panel.show-lecture-in-curriculum-panel') // In show file, it have had count variable already to recognize lecture own.
+                );
+            }
+            $('#showLecture'+count).find('#lec_name'+count+' > span').text($('#lec_title').val());   
+            $('#countLectures').text(numberofLectures - numberLecturesBeDeleted).attr('countLectures',(numberofLectures - numberLecturesBeDeleted));
+        });
+
+        $('#curriculumPanel').on('mouseover','div.lec-name',function(){
+            $('#editLecture'+$(this).attr('getId')).removeClass('hide');
+            $('#delLecture'+$(this).attr('getId')).removeClass('hide');
+        });
+        $('#curriculumPanel').on('mouseout','div.lec-name',function(){
+            $('#editLecture'+$(this).attr('getId')).addClass('hide');
+            $('#delLecture'+$(this).attr('getId')).addClass('hide');
+        });
+
+        $('#curriculumPanel').on('click','a.edit-lecture',function(){
+            var getId = $(this).attr('getId');
+            $('#divEditLecture'+getId).fadeIn(1000);
+            $('#inputLecName'+getId).val($('#lec_name'+getId).find('span').first().text());
+            //(!$('#toggleAddContentDetail'+getId).hasClass('hide'))?$('#toggleAddContentDetail'+getId).addClass('hide'):'';
+            //(!$('#toggleDescription'+getId).hasClass(' hide'))?$('#toggleDescription'+getId).addClass('hide'):'';
+        });
+
+        $('#curriculumPanel').on('submit','.form-editLecture',function(e){
+            var getId = $(this).attr('getId');
+            e.preventDefault();
+            $('#lec_name'+getId).find('span').first().text($('#inputLecName'+getId).val());
+            $('#divEditLecture'+getId).fadeOut(100);
+            //($('#toggleAddContentDetail'+getId).hasClass('hide'))?$('#toggleAddContentDetail'+getId).removeClass('hide'):'';
+            //($('#toggleDescription'+getId).hasClass('hide'))?$('#toggleDescription'+getId).removeClass('hide'):'';
+
+            if($('#publish'+this.getId).hasClass('published')){
+                $('#publish'+this.getId).removeClass('hide');
+                $('#showLecture'+this.getId)
+                    .removeClass('panel-primary')
+                    .addClass('panel-danger');
+                $('#publish'+this.getId).removeClass('published');
+            }else{
+                if($('#showVideo'+getId).find('p').text() != ''){
+                    $('#publish'+getId).removeClass('hide');
+                }
+            }
+            $('#showLecture'+getId)
+                    .removeClass('panel-primary')
+                    .addClass('panel-danger');
+
+        });
+
+        var numberLecturesBeDeleted = 0;
+        $('#curriculumPanel').on('click','a.del-lecture',function(){
+
+            
+            var getId = $(this).attr('getId');
+            var lecture = {};
+            lecture.lec_id = $('#lec_id'+getId).val();
+            lecture.doc_id = $('#doc_id'+getId).val();
+            lecture.video_id = $('#video_id'+getId).val();
+            lecture.course_id = $('#course_id').val();
+
+            var r = confirm('Do you wanna delete this lecture?');
+            if (r == true) {
+
+                $.ajax({
+                    type: "POST",
+                    url : "/course/delete-lecture",
+                    dataType: 'json',
+                    data: lecture, // remember that be must to pass data object type
+                    success : function(response){
+                        console.log(response);
+                        if(response.status){
+                            numberLecturesBeDeleted++;
+
+                            $('#lec'+getId).remove();
+                            $('#lecturesPublished').text(response.course.lectures.length).attr('lecturesPublished',response.course.lectures.length);;
+                            var n = noty({text: response.message, layout: 'top', type: 'success', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
+                            $('#countLectures').text(numberofLectures - numberLecturesBeDeleted);
+                        }
+                    }
+                });
+            }
+        });
+
         var attachDropzoneToForm = function(getName, getId){
             $('#add'+getName+getId).addClass('dropzone');
             
@@ -277,7 +382,7 @@
 
                     this.on("complete", function (file) {
                         this.removeFile(file);
-                        $('#uploadVideo'+this.getId+' > ul').append("<li class='cancel-addContent' getId='"+this.getId+"'><a href='#lec"+this.getId+"' id='cancel"+this.getId+"'> Cancel</a></li>");
+                        $('#uploadVideo'+this.getId+' > ul').append("<li class='cancel-addContent' getId='"+this.getId+"'><a href='javascript:void(0)' id='cancel"+this.getId+"'> Cancel</a></li>");
                         if(file.status != 'error'){
                             
                             if(this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
@@ -322,12 +427,11 @@
 
                     // Set value of textarea = null 
                     $('textarea#textarea'+this.getId).val(null);
-                    alert( $('textarea#textarea'+this.getId));
                     if(getName=='Video'){
                         $('#changeVideo'+this.getId).html("<span class='glyphicon glyphicon-edit'></span> Change Video")
                                                     .attr('getName','Video');
                         $('#showVideo'+this.getId).find('div.show-content-preview').html(
-                            "<a href='#lec"+this.getId+"' class='change-thumbnail' getId='"+this.getId+"'>"+
+                            "<a href='javascript:void(0)' class='change-thumbnail' getId='"+this.getId+"'>"+
                                 "<img src='/"+response.thumbnail.path+"' alt='"+response.thumbnail.img_name+"' class='img-thumbnail' id='imgThumbnail"+this.getId+"'/>"+
                             "</a>"
                         );
@@ -458,23 +562,7 @@
             $('#collapseLecture'+$(this).attr('getId')).toggleClass('hide');
         });
 
-        var count = 0; //this variable was declared global
-        $("#addLecture").submit(function(e){
-            
-            e.preventDefault();
-            count++;
-            if(count == 1){
-                $('#curriculumPanel').prepend(
-                    @include('master.panel.show-lecture-in-curriculum-panel') // In show file, it have had count variable already to recognize lecture own.
-                );
-            }else{
-                $('#curriculumPanel').append(
-                    @include('master.panel.show-lecture-in-curriculum-panel') // In show file, it have had count variable already to recognize lecture own.
-                );
-            }
-            $('#showLecture'+count).find('#lec_name'+count).text($('#lec_title').val());   
-            $('#countLectures').text(count).attr('countLectures',count);
-        });
+        
 
         $('#curriculumPanel').on('click','button.addDescriptionBtn',function(){
 
@@ -660,7 +748,7 @@
                     $thumbnails.empty();
                     for(var i = 0; i < response.thumbnails.length; i++){
                         $thumbnails.append(
-                            "<a href='#lec"+getId+"' class='choose-thumbnail' getId='"+getId+"' getValue='"+response.thumbnails[i].id+"'>"+
+                            "<a href='javascript:void(0)' class='choose-thumbnail' getId='"+getId+"' getValue='"+response.thumbnails[i].id+"'>"+
                                 "<img src='/"+response.thumbnails[i].path+"' alt='"+response.thumbnails[i].img_name+"' class='img-thumbnail col-md-4'/>"+
                             "</a>"
                         );
@@ -692,17 +780,15 @@
         $('#curriculumPanel').on('click','div.publish-lecture a.publish',function(){
             
             var getId = $(this).attr('getId');
-            var lecture = {};
+            var lecture = {};   
 
-            // $('#publish'+getId).addClass('disableBtn'); // Avoid to the second click 
-
-            lecture.lec_name = $('#lec_name'+getId).text();
+            lecture.lec_name = $('#lec_name'+getId).find('span').first().text();
             lecture.course_id = $('#course_id').val();
             lecture.description = $('#showDescription'+getId).text();
             lecture.video_id = $('#video_id'+getId).val();
             lecture.doc_id = $('#doc_id'+getId).val();
             lecture.lec_id = $('input#lec_id'+getId).val();
-            lecture.order = getId;
+            lecture.oldOrder = getId;
             lecture.text = $('textarea#textarea'+getId).val();
             lecture._token = '{{ csrf_token() }}';
             var itself = $(this);
@@ -720,6 +806,9 @@
                         $('#showLecture'+getId).addClass('panel-primary')
                                                .removeClass('panel-danger');
                         $('#lecturesPublished').text(response.course.lectures.length).attr('lecturesPublished',response.course.lectures.length);
+                        var n = noty({text: response.message, layout: 'top', type: 'success', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
+                    }else{
+                        var n = noty({text: response.message, layout: 'top', type: 'error', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
                     }
                 },
                 error: function(response){

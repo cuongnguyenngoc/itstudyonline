@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Lecture extends Model
 {
 
-	protected $fillable = ['course_id', 'user_id', 'lec_name', 'description', 'order'];
+	protected $fillable = ['course_id', 'user_id', 'lec_name', 'description', 'order', 'oldOrder'];
 
     public function video(){
     	return $this->hasOne('App\Video','lec_id','id');

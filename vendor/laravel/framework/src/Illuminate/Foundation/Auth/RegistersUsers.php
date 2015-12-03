@@ -36,6 +36,7 @@ trait RegistersUsers
         }
 
         Auth::login($this->create($request->all()));
+        $this->createImageDefault(Auth::user()->id);
 
         return redirect($this->redirectPath());
     }

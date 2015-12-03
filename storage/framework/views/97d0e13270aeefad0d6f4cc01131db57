@@ -15,7 +15,7 @@
 <div class="container main">
     <div class="row">
         <ul class="nav nav-tabs">
-            <li role="presentation" class="<?php echo e(($url='master/manage')?'active':''); ?>"><a href="<?php echo e(url('master/manage')); ?>">Manage Course</a></li>
+            <li role="presentation" class="active"><a href="<?php echo e(url('master/manage')); ?>">Manage Course</a></li>
             <li role="presentation"><a href="<?php echo e(url('master/create-course')); ?>">Create Course</a></li>
             <li role="presentation"><a href="#">Edit Course</a></li>
             <li role="presentation"><a href="#">Profile</a></li>

@@ -114,12 +114,12 @@
             <h2 style="text-align: center;" id="lec_name">{{$lecture1->lec_name}}</h2>
             <div class="col-md-12" style="padding-left: 0px; border: 1px solid #F0F0E9; background: #52D449; padding-bottom: 15px;">
                 <div class="col-md-4">
-                    <a href="#" class="btn btn-primary btn-md {{($previousLecture1) ? null : 'hide'}}" id="previousLecture" getId="{{($previousLecture1)?$previousLecture1->id:null}}">
+                    <a href="javascript:void(0)" class="btn btn-primary btn-md {{($previousLecture1) ? null : 'hide'}}" id="previousLecture" getId="{{($previousLecture1)?$previousLecture1->id:null}}">
                         <span class="glyphicon glyphicon-fast-backward"></span> Previous Lecture
                     </a>
                 </div>
-                <div class="col-md-3 col-md-offset-1" style="padding-left: 0px;">
-                    <a href="#forward" class="btn btn-primary btn-md" id="markLecture" getId="{{$lecture1->id}}">
+                <div class="col-md-3 col-md-offset-1" style="padding-left: 0px;" id="divMarkLecture">
+                    <a href="javascript:void(0)" class="btn btn-primary btn-md" id="markLecture" getId="{{$lecture1->id}}">
                         @if($enroll->mark($lecture1->id))
                             <span class='glyphicon glyphicon-ok'></span>
                         @else
@@ -128,7 +128,7 @@
                     </a>
                 </div>
                 <div class="col-md-2 col-md-offset-2">
-                    <a href="#" class="btn btn-primary btn-md {{($nextLecture1) ? null : 'hide'}}" id="nextLecture" getId="{{($nextLecture1)?$nextLecture1->id:null}}">
+                    <a href="javascript:void(0)" class="btn btn-primary btn-md {{($nextLecture1) ? null : 'hide'}}" id="nextLecture" getId="{{($nextLecture1)?$nextLecture1->id:null}}">
                         Next Lecture <span class="glyphicon glyphicon-fast-forward"></span>
                     </a>
                 </div>
@@ -225,10 +225,12 @@
                         
                         (response.previousLecture) ? $('#previousLecture').attr('getId',response.previousLecture.id) : $('#previousLecture').attr('getId',null);
                         $('#markLecture').attr('getId',response.lecture.id);
-                        if(response.mark)
-                            $('#markLecture').html("<span class='glyphicon glyphicon-ok'></span>");
-                        else
-                            $('#markLecture').html("Mark to complete this lecture");
+                        if(response.mark){
+                            $('div#divMarkLecture').empty().prepend("<a href='#' class='btn btn-primary'><span class='glyphicon glyphicon-ok'></span></a>");
+                        }
+                        else{
+                            $('div#divMarkLecture').empty().prepend("<a href='#' class='btn btn-primary btn-md' id='markLecture' getId='"+response.lecture.id+"'>Mark to complete this lecture</a>");
+                        }
 
                         (response.nextLecture)?$('#nextLecture').attr('getId',response.nextLecture.id):$('#nextLecture').attr('getId',null);
 
@@ -481,7 +483,7 @@
             }
         });
 
-        $('a#markLecture').on('click',function(){
+        $('div#divMarkLecture').on('click','a#markLecture',function(){
             var getId = $(this).attr('getId');
             var itself = $(this);
             var enroll = {};
@@ -501,7 +503,7 @@
                         setTimeout(function(){
                             itself.children('i').remove();
                             itself.empty();
-                            itself.prepend("<span class='glyphicon glyphicon-ok'></span>");
+                            $('div#divMarkLecture').empty().prepend("<a href='#' class='btn btn-primary'><span class='glyphicon glyphicon-ok'></span></a>");
                         },1000);
                         $('#progress').attr('aria-valuenow',response.enroll.process)
                                       .attr('style','width:'+response.enroll.process+'%')

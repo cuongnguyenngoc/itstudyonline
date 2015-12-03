@@ -155,15 +155,15 @@
     @else
         <script>{{ 'var logged = false;' }}</script>
     @endif
-    @if($enroll)
-        <script>{{ "var enroll = true" }}</script>
+    @if($enroll != null)
+        <script>{{ 'var enroll = true;' }}</script>
     @else
         <script>{{ 'var enroll = false;' }}</script>
     @endif
     <script type="text/javascript">
         //$(document).ready(function(){
             if(enroll)
-                var n = noty({text: 'Welcome back, {{$enroll->user->fullname}}. How do you do, buddy', layout: 'top', type: 'success', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
+                var n = noty({text: 'Welcome back. How do you do, buddy', layout: 'top', type: 'success', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
 
             $('div.lecture').click(function(){
                 var getId = $(this).attr('getId');

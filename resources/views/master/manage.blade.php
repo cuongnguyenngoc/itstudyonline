@@ -17,7 +17,7 @@
 <div class="container main">
     <div class="row">
         <ul class="nav nav-tabs">
-            <li role="presentation" class="{{($url='master/manage')?'active':''}}"><a href="{{url('master/manage')}}">Manage Course</a></li>
+            <li role="presentation" class="active"><a href="{{url('master/manage')}}">Manage Course</a></li>
             <li role="presentation"><a href="{{url('master/create-course')}}">Create Course</a></li>
             <li role="presentation"><a href="#">Edit Course</a></li>
             <li role="presentation"><a href="#">Profile</a></li>

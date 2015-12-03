@@ -26,17 +26,17 @@
 					<div class="left-sidebar" id="sidebar">
 						<h2> Browser Courses</h2>
 			            <ul class="nav nav-stacked left-sidebar" id="navLeftSidebar" style="background: #F0F0E9;">
-			                <li class="nav-header" id="cat"> 
-			                	<a href="#manage" data-parent="#navLeftSidebar" data-toggle="collapse">
+			                <li class="nav-header"> 
+			                	<a href="#category" data-parent="#navLeftSidebar" data-toggle="collapse">
 			                		Category <i class="glyphicon glyphicon-chevron-right" style="margin-left: 157px;"></i>
 			                	</a>
-			                    <ul class="nav nav-stacked collapse" id="manage">
+			                    <ul class="nav nav-stacked collapse" id="category">
 			                    	@foreach($categories as $category)
 			                        	<li><a href="#"> {{$category->cat_name}}</a></li>
 			                        @endforeach
 			                    </ul>
 			                </li>
-			                <li class="nav-header" id="prg"> 
+			                <li class="nav-header"> 
 			                	<a href="#language" data-parent="#navLeftSidebar" data-toggle="collapse"> 
 			                		Programming Language <i class="glyphicon glyphicon-chevron-right" style="margin-left: 63px;"></i>
 			                	</a>
@@ -47,7 +47,7 @@
 			                        @endforeach
 			                    </ul>
 			                </li>
-			                <li class="nav-header" id="level">
+			                <li class="nav-header">
 			                    <a href="#level" data-parent="#navLeftSidebar" data-toggle="collapse"> 
 			                    	Learning Level <i class="glyphicon glyphicon-chevron-right" style="margin-left: 122px;"></i>
 			                    </a>
@@ -237,6 +237,26 @@
 @section('script')
 	<script type="text/javascript">
 		$('div.category-tab ul.nav-tabs').find('li').first().addClass('active');
-		$('div#{{str_replace(' ','_',$category->cat_name)}}').addClass('active in');
+		$('div#{{($categories->first()) ? str_replace(' ','_',$categories->first()->cat_name) : ''}}').addClass('active in');
+		var $sidebar   = $("#sidebar"), 
+	        $window    = $(window),
+	        offset     = $sidebar.offset(),
+	        topPadding = 15,
+	    	footer = $('#footer').offset(),
+	    	sidebarDelta = footer.top - $("#header").offset().top - $("#header").outerHeight() - $("#slider").outerHeight() - $sidebar.outerHeight() - $('.recommended_items').outerHeight();
+	    
+	    $window.scroll(function() {
+	    	console.log($window.scrollTop()+" - "+offset.top+" - "+footer.top);
+	    	console.log(sidebarDelta +" = "+ Math.min($window.scrollTop() - offset.top + topPadding, sidebarDelta));
+	        if ($window.scrollTop() > offset.top) {
+	            $sidebar.stop().animate({
+	                marginTop: Math.min($window.scrollTop() - offset.top + topPadding, sidebarDelta)
+	            });
+	        }else{
+	        	$sidebar.stop().animate({
+	                marginTop: 0
+	            });
+	        }
+	    });
 	</script>
 @stop

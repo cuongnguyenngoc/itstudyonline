@@ -2,7 +2,11 @@
     "<div class='panel-collapse panel-danger col-md-12' id='showLecture"+count+"'>"+
          "<div class='panel-heading'>"+
          	"<div class='row'>"+
-         		"<div id='lec_name"+count+"' class='col-md-10'></div>"+
+         		"<div id='lec_name"+count+"' class='col-md-10 lec-name' getId='"+count+"'>"+
+         			"<span></span>"+
+         			"<a href='javascript:void(0)' id='editLecture"+count+"' getId='"+count+"' style='margin-left: 20px; color: #fff;' class='edit-lecture hide'><span class='glyphicon glyphicon-edit'></span></a>"+
+         			"<a href='javascript:void(0)' id='delLecture"+count+"' getId='"+count+"' style='margin-left: 10px; color: #fff;' class='del-lecture hide'><span class='glyphicon glyphicon-trash'></span></a>"+
+         		"</div>"+
          		"<input type='hidden' value='' name='lec_id' id='lec_id"+count+"'/>"+
          		"<button class='btn btn-primary addContentBtn btn-sm col-md-2' id='addContentBtn"+count+"' data-toggle='collapse' data-target='#addContent"+count+"' aria-expanded='false' getId='"+count+"'>"+
          		"<span class='glyphicon glyphicon glyphicon-plus' aria-hidden='true'></span>"+
@@ -11,7 +15,12 @@
          	"</div>"+
          "</div>"+
          "<div class='panel-body small-panel' id='collapseLecture"+count+"'>"+
-
+			"<div id='divEditLecture"+count+"' style='display:none;'>"+
+				"<form getId='"+count+"' class='form-editLecture'>"+
+					"<input type='text' class='form-control' id='inputLecName"+count+"' placeholder=' Type your lecture name'/>"+
+					"<button type='submit' class='btn btn-primary btn-md' style='margin-top: 10px; margin-bottom: 20px;'> Update</button>"+
+				"</form>"+
+			"</div>"+
          	"<div id='toggleAddContentDetail"+count+"' class='hide'>"+
 	         	"<div class='panel-collapse panel-default col-md-12 hide' id='addContentDetail"+count+"'>"+
 	         		"<div class='panel-body hide' id='showVideo"+count+"'>"+
@@ -20,17 +29,17 @@
 				        "</div>"+
 			         	"<div class='col-md-7 editContent'>"+
 			         		"<p></p>"+	
-			         		"<a href='#lec"+count+"' class='change-video' id='changeVideo"+count+"' getId='"+count+"' getName=''></a>"+
-			         		" Or <a href='#lec"+count+"' class='edit-content' id='editContent"+count+"' getId='"+count+"'> <span class='glyphicon glyphicon-edit'></span> Edit Content</a>"+	
+			         		"<a href='javascript:void(0)' class='change-video' id='changeVideo"+count+"' getId='"+count+"' getName=''></a>"+
+			         		" Or <a href='javascript:void(0)' class='edit-content' id='editContent"+count+"' getId='"+count+"'> <span class='glyphicon glyphicon-edit'></span> Edit Content</a>"+	
 			         	"</div>"+
 			         	"<div class='col-md-1 publish-lecture'>"+
-			         		"<a href='#lec"+count+"' class='publish btn btn-success btn-sm hide' id='publish"+count+"' getId='"+count+"'> Publish</a>"+	
+			         		"<a href='javascript:void(0)' class='publish btn btn-success btn-sm hide' id='publish"+count+"' getId='"+count+"'> Publish</a>"+	
 			         	"</div>"+
 					"</div>"+
 		         	"<div class='panel-body' id='uploadVideo"+count+"'>"+
 			         	"<ul class='nav nav-tabs' style='padding-left: 0px;'>"+
 			 				"<li class='active'><a data-toggle='tab' href='#video"+count+"'></a></li>"+
-			 				"<li class='cancel-addContent' getId='"+count+"'><a href='#lec"+count+"' id='cancel"+count+"'> Cancel</a></li>"+
+			 				"<li class='cancel-addContent' getId='"+count+"'><a href='javascript:void(0)' id='cancel"+count+"'> Cancel</a></li>"+
 						"</ul>"+
 						"<div class='tab-content'>"+
 						    "<div id='video"+count+"' class='tab-pane fade in active'>"+
@@ -72,17 +81,17 @@
 	         		"<div class='panel-body'>"+       			
 						"<div class='row'>"+
 						  	"<div class='col-xs-6 col-md-4'>"+
-						    	"<a href='#lec"+count+"' class='type-content thumbnail' getId='"+count+"' getName='Video'>"+
+						    	"<a href='javascript:void(0)' class='type-content thumbnail' getId='"+count+"' getName='Video'>"+
 						      		"<img src='...' alt='...'/>"+
 						    	"</a>"+
 						  	"</div>"+
 						  	"<div class='col-xs-6 col-md-4'>"+
-						    	"<a href='#lec"+count+"' class='type-content thumbnail' getId='"+count+"' getName='Document'>"+
+						    	"<a href='javascript:void(0)' class='type-content thumbnail' getId='"+count+"' getName='Document'>"+
 						      		"<img src='...' alt='...'/>"+
 						    	"</a>"+
 						  	"</div>"+
 						  	"<div class='col-xs-6 col-md-4'>"+
-						    	"<a href='#lec"+count+"' class='type-contentText thumbnail' getId='"+count+"' getName='Text'>"+
+						    	"<a href='javascript:void(0)' class='type-contentText thumbnail' getId='"+count+"' getName='Text'>"+
 						      		"<img src='...' alt='...'/>"+
 						    	"</a>"+
 						  	"</div>"+
@@ -101,7 +110,7 @@
 	                            "<textarea class='form-control description-textarea' id='descriptionTextArea"+count+"' name='description' placeholder='Enter lecture description' style='width:100%'></textarea>"+
 	                        "</div>"+
 	                        "<button type='submit' class='btn btn-primary col-md-1'>Save</button>"+
-	                        "<p class='col-md-11'> or <a href='#lec"+count+"' id='cancelDescription"+count+"' class='cancel-description' getId='"+count+"'>Cancel</a></p>"+
+	                        "<p class='col-md-11'> or <a href='javascript:void(0)' id='cancelDescription"+count+"' class='cancel-description' getId='"+count+"'>Cancel</a></p>"+
 	                    "</form>"+
 	                "</div>"+
 	            "</div>"+

@@ -138,14 +138,15 @@
                             $('#course_id').val(response.course.id);
                             $('#course_id_img').val(response.course.id); // To assign value for image when upload image of course
                             $('#course_id_video').val(response.course.id); // To assign value for video when upload video introduction of course
-                            $('#message').removeClass('hide');
-                            $('#message').find('p').text(response.message);
                             $('.list-group-item-success.course-goals').removeClass('active');
                             $('.list-group-item-success.curriculum').addClass('active');
                             $('div.course-goals').addClass('hide');
                             $('div.curriculum').removeClass('hide');
 
                             $('#courseName').text(response.course.course_name);
+                            var n = noty({text: response.message, layout: 'top', type: 'success', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
+                        }else{
+                            var n = noty({text: response.message, layout: 'top', type: 'error', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
                         }
                     }
                 });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Image;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -80,6 +81,15 @@ class AuthController extends Controller
             'fullname' => $data['fullname'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'role_id' => 3,
+        ]);
+    }
+
+    protected function createImageDefault($user_id){
+        Image::create([
+            'user_id' => $user_id,
+            'img_name' => 'avatar',
+            'path' => 'images/it_me.jpg'
         ]);
     }
 }

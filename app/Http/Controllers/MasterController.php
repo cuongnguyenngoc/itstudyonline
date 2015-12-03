@@ -95,6 +95,38 @@ class MasterController extends Controller
         
     }
 
+    public function deleteLecture(Request $request){
+
+        if($request->ajax()){
+            if($request->input('course_id') != null && Course::find($request->input('course_id'))){
+
+                if($request->input('lec_id') != null && Lecture::find($request->input('lec_id'))){
+
+                    $lecture = Lecture::find($request->input('lec_id'));
+                    $lecture->delete();
+
+                }else{
+                    if($request->input('video_id') != null && Video::find($request->input('video_id'))){
+                        $video = Video::find($request->input('video_id'));
+                        File::delete($video->path);
+                        $video->delete();
+                    }
+
+                    if($request->input('doc_id') != null && Document::find($request->input('doc_id'))){
+                        $document = Document::find($request->input('doc_id'));
+                        File::delete($document->path);
+                        $document->delete();
+                    }
+                    
+                }
+                $course = Course::find($request->input('course_id'));
+                $course->lectures;
+            }
+            return Response::json(['status' => true, 'course'=>$course, 'message'=>'Cool! You have deleted lecture successfully']);
+        }else{
+            return Response::json(['status' => false, 'message'=>'Oh no! something went wrong, buddy']);
+        }
+    }
 
     public function create_detail_course($id){
 
@@ -261,6 +293,9 @@ class MasterController extends Controller
                 if($request->input('lec_id') != null && Lecture::find($request->input('lec_id')) != null){
 
                     $lecture = Lecture::find($request->input('lec_id'));
+                    $lecture->lec_name = $request->input('lec_name');
+                    $lecture->description = $request->input('description');
+                    $lecture->save();
                 }else{
                     
                     $lecture = $course->lectures()->create([
@@ -268,7 +303,7 @@ class MasterController extends Controller
                                 'user_id' => Auth::user()->id,
                                 'lec_name' => $request->input('lec_name'),
                                 'description' => $request->input('description'),
-                                'order' => $request->input('order')
+                                'oldOrder' => $request->input('oldOrder')
                             ]);
                     $lecture = Lecture::find($lecture->id);
                 }
@@ -455,6 +490,15 @@ class MasterController extends Controller
                         'course_id' => $request->input('course_id'),
                         'isBoss' => true
                     ]);
+
+                }
+                // Refactor order for lectures
+                $lectures = $usercreatecourse->course->lectures()->orderBy('oldOrder','asc')->get();
+                $order = 1;
+                foreach($lectures as $lecture){
+                    $lecture->order = $order;
+                    $lecture->save();
+                    $order++;
                 }
 
                 return Response::json(['status' => true, 'usercreatecourse'=>$usercreatecourse, 'message'=>'Cool! you have submited course successfully']);

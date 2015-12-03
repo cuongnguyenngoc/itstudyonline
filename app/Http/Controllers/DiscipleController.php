@@ -50,8 +50,8 @@ class DiscipleController extends Controller
             $lecture1 = $enroll->course->lectures()->where('order',1)->first();            
         }
 
-    	$previousLecture1 = $course->lectures()->where('order',($lecture1->order - 1))->first();
-        $nextLecture1 = $course->lectures()->where('order',($lecture1->order + 1))->first();
+    	$previousLecture1 = $enroll->course->lectures()->where('order',($lecture1->order - 1))->first();
+        $nextLecture1 = $enroll->course->lectures()->where('order',($lecture1->order + 1))->first();
 
         return view('disciple.learn-course',compact('lecture1','previousLecture1','nextLecture1','enroll'));
     }
