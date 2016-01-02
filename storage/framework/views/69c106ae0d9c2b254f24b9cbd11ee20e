@@ -1,0 +1,98 @@
+<?php $__env->startSection('css'); ?>
+<link href="<?php echo e(url('css/forum/styles.css')); ?>" rel="stylesheet">
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('header-top'); ?>
+<?php echo $__env->make('public.layouts.header.header-top', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('header-middle'); ?>
+<?php echo $__env->make('public.layouts.header.header-middle', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+
+<!-- Main -->
+<div class="container" style="min-height: 500px;">
+    <div class="row">
+        <div class="col-md-12">
+            <?php echo $__env->make('forum.panel.menu-panel',  ['items'=> $items, 'cateName' => $cateName], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        </div>
+    </div>
+    <div class = "row">
+        <div class="col-md-12">
+            <table class="table table-striped " id = "cateList">
+                <colgroup>
+                    <col style="width:60%">
+                    <col style="width:10%">
+                    <col style="width:5%">
+                    <col style="width:15%">
+                </colgroup>  
+                <thead>
+                    <tr>
+                        <th>Topic</th>
+                        <th>Category</th>
+                        <th>Replies</th>
+                        <th>Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if(isset($topics)): ?>
+                    <?php foreach($topics as  $value): ?>
+                    <tr>
+                        <?php
+                        $link_cate = url('forum/category') . '/' . urlencode($value['cateName']);
+                        $link_topic = url('forum/topic') . '/' . urlencode($value['topicName']);
+                        ?>
+                        <td style="word-wrap:break-word" class = "category">
+                            <div class="category-name">
+                                <a href="<?php echo e($link_topic); ?>"><?php echo e($value['topicName']); ?></a>
+                            </div>
+                            <div class = "category-desciption">
+                                 <?php echo $value['excerp']; ?>
+
+                            </div>
+                        </td>
+                        <td><a href="<?php echo e($link_cate); ?>"><?php echo e($value['cateName']); ?></a></td>
+                        <td><?php echo e($value['count']); ?></td>
+                        <td><?php echo e($value['date']); ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+            <?php if(isset($paginate)): ?>
+            <?php echo $paginate->render(); ?>
+
+            <?php endif; ?>
+        </div>
+    </div>
+
+</div>
+
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('footer-bottom'); ?>
+    <footer>
+    <?php echo $__env->make('public.layouts.footer.footer-bottom', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('script'); ?>
+<script>
+    $(document).ready(function () {
+        $('div.btn-group ul.dropdown-menu li a').click(function (e) {
+            var $div = $(this).parent().parent().parent();
+            var $btn = $div.find('button');
+            var text = $(this).text();
+            if (text == "New Category")
+                return;
+            $btn.html(text + ' <span class="caret"></span>');
+            e.preventDefault();
+            $(location).attr('href', '/forum/category/' + encodeURIComponent($(this).text()));
+            return false;
+        });
+    });
+</script>
+
+
+<?php $__env->stopSection(); ?>
+
+
+<?php echo $__env->make('public.layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -18,3 +18,4 @@
 <script src="{{url('js/noty/themes/default.js')}}"></script>
 <script src="{{url('js/noty/layouts/top.js')}}"></script>
 <script src="{{url('js/nprogress.js')}}"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>

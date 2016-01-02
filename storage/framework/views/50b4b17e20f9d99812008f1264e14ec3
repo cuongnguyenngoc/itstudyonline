@@ -1,0 +1,78 @@
+<?php $__env->startSection('css'); ?>
+    <link href="<?php echo e(url('css/master/styles.css')); ?>" rel="stylesheet">
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('header-top'); ?>
+    <?php echo $__env->make('public.layouts.header.header-top', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('header-middle'); ?>
+    <?php echo $__env->make('public.layouts.header.header-middle', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+
+<!-- Main -->
+<div class="container main" style="min-height: 350px;">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item active">
+                            RANK DISCIPLE'S COURSE LEARNING RESULT
+                        </a>
+                        <?php foreach($enrolls as $enroll): ?>
+                            <a href='javascript:void(0)' getId="<?php echo e($enroll->course->id); ?>" class='list-group-item'><?php echo e($enroll->course->course_name); ?></a>
+                        <?php endforeach; ?>
+                    </div>
+                </div><!-- /.col-sm-4 -->
+                <div class="col-md-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">RANK OF COURSE <?php echo e($enrolls->first()->course->course_name); ?></h3>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Rank order</th>
+                                        <th>Student name</th>
+                                        <th>Number of wrong answers</th>
+                                        <th>Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach($enrolls->first()->course->enrolls()->orderBy('score','desc')->get() as $enroll): ?>
+                                        <tr>
+                                            <td><?php echo e($order); ?></td>
+                                            <td><?php echo e($enroll->user->fullname); ?></td>
+                                            <th><?php echo e($enroll->); ?>
+
+                                            <td><?php echo e($enroll->score); ?></td>
+                                        </tr>
+                                        <span class="hide"><?php echo e($order++); ?></span>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('footer-bottom'); ?>
+    <?php echo $__env->make('public.layouts.footer.footer-bottom', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('script'); ?>
+    <script type="text/javascript">
+        
+    </script>
+<?php $__env->stopSection(); ?>
+
+
+<?php echo $__env->make('public.layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

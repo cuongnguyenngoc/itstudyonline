@@ -1,11 +1,11 @@
 "<div class='row small-panel' id='lec"+count+"'>"+
-    "<div class='panel-collapse panel-danger col-md-12' id='showLecture"+count+"'>"+
+    "<div class='panel-collapse panel-danger col-md-12 showLecture' lecName='' id='showLecture"+count+"'>"+
          "<div class='panel-heading'>"+
          	"<div class='row'>"+
          		"<div id='lec_name"+count+"' class='col-md-10 lec-name' getId='"+count+"'>"+
-         			"<span></span>"+
+         			"<i></i><span></span>"+
          			"<a href='javascript:void(0)' id='editLecture"+count+"' getId='"+count+"' style='margin-left: 20px; color: #fff;' class='edit-lecture hide'><span class='glyphicon glyphicon-edit'></span></a>"+
-         			"<a href='javascript:void(0)' id='delLecture"+count+"' getId='"+count+"' style='margin-left: 10px; color: #fff;' class='del-lecture hide'><span class='glyphicon glyphicon-trash'></span></a>"+
+         			"<a href='javascript:void(0)' id='delLecture"+count+"' getId='"+count+"' getName='Lecture' style='margin-left: 10px; color: #fff;' class='del-lecture hide'><span class='glyphicon glyphicon-trash'></span></a>"+
          		"</div>"+
          		"<input type='hidden' value='' name='lec_id' id='lec_id"+count+"'/>"+
          		"<button class='btn btn-primary addContentBtn btn-sm col-md-2' id='addContentBtn"+count+"' data-toggle='collapse' data-target='#addContent"+count+"' aria-expanded='false' getId='"+count+"'>"+
@@ -82,17 +82,17 @@
 						"<div class='row'>"+
 						  	"<div class='col-xs-6 col-md-4'>"+
 						    	"<a href='javascript:void(0)' class='type-content thumbnail' getId='"+count+"' getName='Video'>"+
-						      		"<img src='...' alt='...'/>"+
+						      		"<img src='/images/video-icon.png' alt='Video content' style='height: 60px;' />"+
 						    	"</a>"+
 						  	"</div>"+
 						  	"<div class='col-xs-6 col-md-4'>"+
 						    	"<a href='javascript:void(0)' class='type-content thumbnail' getId='"+count+"' getName='Document'>"+
-						      		"<img src='...' alt='...'/>"+
+						      		"<img src='/images/doc-icon.png' alt='Document content' style='height: 60px;'/>"+
 						    	"</a>"+
 						  	"</div>"+
 						  	"<div class='col-xs-6 col-md-4'>"+
 						    	"<a href='javascript:void(0)' class='type-contentText thumbnail' getId='"+count+"' getName='Text'>"+
-						      		"<img src='...' alt='...'/>"+
+						      		"<img src='/images/text-icon.jpg' alt='Text content' style='height: 60px;'/>"+
 						    	"</a>"+
 						  	"</div>"+
 						"</div>"+

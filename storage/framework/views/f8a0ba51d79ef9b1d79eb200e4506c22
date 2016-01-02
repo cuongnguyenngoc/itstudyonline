@@ -24,17 +24,19 @@
                         <li class="active"><a href="#listlectures" data-toggle="tab"><span class="glyphicon glyphicon-th-list"></span></a></li>
                         <li><a href="#downloadable" data-toggle="tab"><span class="glyphicon glyphicon-download-alt"></span></a></li>
                         <li><a href="#discussion" data-toggle="tab"><span class="glyphicon glyphicon-comment"></span></a></li>
+                        <li><a href="<?php echo e(url('forum/course/'.$enroll->id)); ?>">Forum</a></li>
+                        <li><a href="<?php echo e(url('disciple/watch-rank')); ?>">Watch rank</a></li>
                     </ul>
                 </div>
                 <input type="hidden" name="course_id" id="course_id" value="<?php echo e($enroll->course->id); ?>">
                 <div class="tab-content">
                     <div class="tab-pane fade active in" id="listlectures">
                         <div class="col-sm-12">
-                            <ul class="nav nav-pills nav-stacked" style="overflow-y: scroll; height: 629px;">
-                                <?php foreach($enroll->course->lectures()->orderBy('order','asc')->get() as $lecture): ?>
+                            <ul class="nav nav-pills nav-stacked" style="overflow-y: scroll; height: 505px;">
+                                <?php foreach($enroll->course->lectures()->orderBy('position','asc')->get() as $lecture): ?>
                                     <li role="presentation">
                                         <a href="#" style="text-transform: none;" getId="<?php echo e($lecture->id); ?>" id="lecture<?php echo e($lecture->id); ?>">
-                                            <span class="glyphicon glyphicon-adjust"></span> Lecture <?php echo e($lecture->order); ?>: <?php echo e($lecture->lec_name); ?>
+                                            <span class="glyphicon glyphicon-adjust"></span> <?php echo e(($lecture->type=='Quiz')?'Quiz '.$lecture->order:'Lecture '.$lecture->order); ?>: <?php echo e($lecture->lec_name); ?>
 
                                         </a>
                                     </li>
@@ -44,14 +46,20 @@
                     </div>
                     <div class="tab-pane fade" id="downloadable">
                         <div class="col-sm-12" style="margin-bottom: 30px;">
-                            <div style="overflow-y: scroll; height: 629px;">
-                                This is download
+                            <div style="overflow-y: scroll; height: 505px;">
+                                <?php if($lecture1->type=='Quiz' || $lecture1->type=='Text'): ?>
+                                    Nothing to download
+                                <?php elseif($lecture1->type=='Document'): ?>
+                                    <a href="/<?php echo e($lecture1->document->path); ?>" class="btn btn-primary"><span class="glyphicon glyphicon-download-alt"></span> Download this lecture</a>
+                                <?php else: ?>
+                                    <a href="/<?php echo e($lecture1->video->path); ?>" class="btn btn-primary"><span class="glyphicon glyphicon-download-alt"></span> Download this lecture</a>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="discussion">
                         <div class="col-sm-12" style="margin-bottom: 30px;">
-                            <div style="overflow-y: scroll; height: 629px;">
+                            <div style="overflow-y: scroll; height: 505px;">
                                 <div class="form-add-comment col-md-12" style="padding: 0px; margin-top: 15px;">
                                     <img src="/<?php echo e((Auth::user()->image)? Auth::user()->image->path:'images/it_me.jpg'); ?>" class="col-md-1 img-circle" style="padding: 0px;">
                                     <form id="addComment<?php echo e($lecture1->id); ?>" getId="<?php echo e($lecture1->id); ?>" class="col-md-11 add-comment" style="padding: 0px;">
@@ -113,49 +121,121 @@
                 </div>
             </div><!--/category-tab-->
         </div>
-        <div class="col-md-9" id="forward" style="padding-left: 0px; margin-top: 20px;">
-            <h2 style="text-align: center;" id="lec_name"><?php echo e($lecture1->lec_name); ?></h2>
-            <div class="col-md-12" style="padding-left: 0px; border: 1px solid #F0F0E9; background: #52D449; padding-bottom: 15px;">
-                <div class="col-md-4">
-                    <a href="javascript:void(0)" class="btn btn-primary btn-md <?php echo e(($previousLecture1) ? null : 'hide'); ?>" id="previousLecture" getId="<?php echo e(($previousLecture1)?$previousLecture1->id:null); ?>">
-                        <span class="glyphicon glyphicon-fast-backward"></span> Previous Lecture
-                    </a>
-                </div>
-                <div class="col-md-3 col-md-offset-1" style="padding-left: 0px;" id="divMarkLecture">
-                    <a href="javascript:void(0)" class="btn btn-primary btn-md" id="markLecture" getId="<?php echo e($lecture1->id); ?>">
-                        <?php if($enroll->mark($lecture1->id)): ?>
-                            <span class='glyphicon glyphicon-ok'></span>
-                        <?php else: ?>
-                            Mark to complete this lecture
-                        <?php endif; ?>
-                    </a>
-                </div>
-                <div class="col-md-2 col-md-offset-2">
-                    <a href="javascript:void(0)" class="btn btn-primary btn-md <?php echo e(($nextLecture1) ? null : 'hide'); ?>" id="nextLecture" getId="<?php echo e(($nextLecture1)?$nextLecture1->id:null); ?>">
-                        Next Lecture <span class="glyphicon glyphicon-fast-forward"></span>
-                    </a>
+        <div class="modal fade" id="congratulation" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header" style="padding:15x 50px;">
+                        Congratulation! You have compeleted this course
+                    </div>
+                    <div class="modal-body">
+                        Do you want to watch rank of you and students who have enrolled this course?
+                        Click this <a href="<?php echo e(url('course/watch-rank')); ?>">link</a>
+                    </div>
                 </div>
             </div>
+        </div> 
+        <div class="col-md-9" id="forward" style="padding-left: 0px; margin-top: -31px;">
+            <div class="col-md-2 btn btn-primary btn-sm col-md-offset-10 <?php echo e(($enroll->process>50)?'':'hide'); ?>" style="margin-top: 0px;" id="ratingStar" data-toggle="collapse" data-target="#ratingReviewPanel" aria-expanded="false">
+            <?php if((Auth::user()->rating($enroll->course->id))): ?>
+                <?php for($i=1;$i<= Auth::user()->rating($enroll->course->id)->num_stars;$i++): ?>
+                    <span class="glyphicon glyphicon-star" aria-hidden="true" style="color: red;"></span>
+                <?php endfor; ?>
+                <?php for($i=1;$i<= 5 - Auth::user()->rating($enroll->course->id)->num_stars;$i++): ?>
+                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                <?php endfor; ?>
+            <?php else: ?>
+                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+            <?php endif; ?>
+                Rate course
+            </div>
+             <div class="row small-panel">
+                <div class="panel-collapse panel-info collapse col-md-4 col-md-offset-8" id="ratingReviewPanel">
+                    <div class="panel-body">
+                        <form id="addReview">
+                            <div class="form-group">
+                                <input type="hidden" id="rating_id" value="<?php echo e((Auth::user()->rating($enroll->course->id))?Auth::user()->rating($enroll->course->id)->id:null); ?>">
+                                <label for="review">Your review</label>
+                                <input type="text" class="form-control" value="<?php echo e((Auth::user()->rating($enroll->course->id))?Auth::user()->rating($enroll->course->id)->review:''); ?>" id="review" placeholder="Enter your review here" name="review">
+                                <div class="message"></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="margin-top:0px;">Add Review</button>
+                        </form>
+                    </div>
+                </div>
+            </div> <!-- End of add info lecture -->
+            <h2 style="text-align: center;" id="lec_name"><?php echo e($lecture1->lec_name); ?></h2>
         </div>
-        <div class="col-md-9" id="contentLearning" style="padding-left: 0px;">
+        <div class="col-md-9" id="contentLearning" style="padding-left: 0px; margin-bottom: 25px; height: 424px;">
             
             <?php if($lecture1->type == 'Text'): ?>
-                <div style="overflow-y: scroll; height: 561px;">
+                <div style="overflow-y: scroll; height: 424px; ">
                     <?php echo $lecture1->text; ?>
 
                 </div>
             <?php elseif($lecture1->type == 'Video'): ?>
                 <div class="embed-responsive embed-responsive-16by9">
-                    <video class="embed-responsive-item" controls="controls" preload="auto">
+                    <video class="embed-responsive-item" controls="controls" preload="auto" style=" height: 424px;">
                         <source src="/<?php echo e($lecture1->video->path); ?>" type="video/mp4">
                         Your browser does not support HTML5 video.
                     </video>
                 </div>
-            <?php else: ?>
+            <?php elseif($lecture1->type == 'Document'): ?>
                 <div class="embed-responsive embed-responsive-16by9">
-                    <embed src='/<?php echo e($lecture1->document->path); ?>' type='application/pdf'/>
+                    <embed src='/<?php echo e($lecture1->document->path); ?>' type='application/pdf' style=" height: 424px;"/>
+                </div>
+            <?php else: ?>
+                <div>
+                    <form role="form" class="formDoQuiz" getId="<?php echo e($lecture1->id); ?>">
+                        <div class="form-group">
+                            <p>Question: <?php echo e($lecture1->questions[0]->content); ?></p>
+                        </div>
+                        <p>Please choose right answer</p>
+                        <div id="answers">
+                            <?php foreach($lecture1->questions[0]->answers as $answer): ?>
+                                <div class="checkbox">
+                                    <?php if($enroll->mark($lecture1->id)): ?>
+                                        <label><input type="radio" answerId="<?php echo e($answer->id); ?>" name="answer" <?php echo e(($enroll->mark($lecture1->id)->isRight&&$answer->isRight)?'checked':''); ?>><?php echo e($answer->content); ?></label>
+                                    <?php else: ?>
+                                        <label><input type="radio" answerId="<?php echo e($answer->id); ?>" name="answer"><?php echo e($answer->content); ?></label>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php if($enroll->mark($lecture1->id)): ?>
+                            <button class="btn btn-primary btn-md<?php echo e(($enroll->mark($lecture1->id)->isRight)?' hide':''); ?>" type="submit">Send</button>
+                        <?php else: ?>
+                            <button class="btn btn-primary btn-md" type="submit">Send</button>
+                        <?php endif; ?>
+                    </form>
                 </div>
             <?php endif; ?>
+            
+        </div>
+        <div class="col-md-9" style="padding-left: 0px; border: 1px solid #F0F0E9; background: #52D449; padding-bottom: 10px;">
+            <div class="col-md-4">
+                <a href="javascript:void(0)" class="btn btn-primary btn-md <?php echo e(($previousLecture1) ? null : 'hide'); ?>" id="previousLecture" getId="<?php echo e(($previousLecture1)?$previousLecture1->id:null); ?>">
+                    <span class="glyphicon glyphicon-fast-backward"></span> Previous Lecture
+                </a>
+            </div>
+            <div class="col-md-3 col-md-offset-1" style="padding-left: 0px;" id="divMarkLecture">
+                <a href="javascript:void(0)" class="btn btn-primary btn-md" id="markLecture" getId="<?php echo e($lecture1->id); ?>">
+                    <?php if($enroll->mark($lecture1->id)): ?>
+                        <span class='glyphicon glyphicon-ok'></span>
+                    <?php else: ?>
+                        Mark to complete this lecture
+                    <?php endif; ?>
+                </a>
+            </div>
+            <div class="col-md-2 col-md-offset-2">
+                <a href="javascript:void(0)" class="btn btn-primary btn-md <?php echo e(($nextLecture1) ? null : 'hide'); ?>" id="nextLecture" getId="<?php echo e(($nextLecture1)?$nextLecture1->id:null); ?>">
+                    Next Lecture <span class="glyphicon glyphicon-fast-forward"></span>
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -181,6 +261,91 @@
 
 <?php $__env->startSection('script'); ?>
     <script type="text/javascript">
+
+        $('#contentLearning').on('submit','form.formDoQuiz',function(e){
+            e.preventDefault();
+            var getId = $(this).attr('getId');
+            var quiz = {};
+            quiz.lec_id = getId;
+            quiz.enroll_id = <?php echo e($enroll->id); ?>;
+            quiz.rightAnsId = 0;
+            $(this).find('#answers input[type=radio]').each(function(){
+                if($(this).is(':checked')){
+                    quiz.rightAnsId = $(this).attr('answerId');
+                    return false;
+                }
+            });
+
+            var itself = $(this);
+            $.ajax({
+                type: "POST",
+                url : "/disciple/do-quiz",
+                dataType: 'json',
+                data: quiz, // remember that be must to pass data object type
+                success : function(response){
+                    console.log(response);
+                    if(response.status){
+                        var n = noty({text: response.message, layout: 'top', type: 'success', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
+                        $('div#divMarkLecture').empty().prepend("<a href='#' class='btn btn-primary'><span class='glyphicon glyphicon-ok'></span></a>");
+                        $('#progress').attr('aria-valuenow',response.enroll.process)
+                                      .attr('style','width:'+response.enroll.process+'%')
+                                      .text(response.enroll.process+'%');
+                        itself.find('button[type=submit]').addClass('hide');
+                    }else{
+                        var n = noty({text: response.message, layout: 'top', type: 'error', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 }); 
+                    }
+                }
+            });
+        });
+
+        $('#ratingStar').find('span').click(function(){
+            $(this).prevAll('span').css('color','red');
+            $(this).css('color','red');
+            $(this).nextAll('span').css('color','#fff');
+        });
+        $('#addReview').validate({
+            rules: { 
+                review : {
+                    required : true
+                }
+            },
+            messages: {
+                review: {
+                    required: "Please enter your review"
+                }
+            },
+            errorPlacement: function (error , element) { 
+                element.parents('div.form-group').find('.message').html(error);
+            } 
+        });
+
+        $('#addReview').submit(function(e){
+            e.preventDefault();
+            var count = 0;
+            $('#ratingStar').find('span').each(function(index){
+
+                if($(this).attr('style')=="color: red;"){
+                    count++; 
+                }
+            });
+            var rating = {};
+            rating.num_stars = count;
+            rating.review = $('#review').val();
+            rating.course_id = $('#course_id').val();
+            rating.id = $('#rating_id').val();
+            $.ajax({
+                type: "POST",
+                url : "/disciple/rating-course",
+                dataType: 'json',
+                data: rating, // remember that be must to pass data object type
+                success : function(response){
+                    console.log(response);
+                    $('#ratingReviewPanel').removeClass('in');
+                    $('#rating_id').val(response.rating.id);
+                }
+            });
+        });
+
         $('.container').addClass('container-fluid').removeClass('container');
         $('#listlectures').find('#lecture<?php echo e($lecture1->id); ?>').parent().addClass('active');
         // $('#listlectures').find('ul li').first().addClass('active');
@@ -192,6 +357,8 @@
             $(this).parent().addClass('active');
 
             changeLectureByAjax(getId);
+
+            $('#answers').find()
             
         });
 
@@ -238,12 +405,12 @@
 
                         (response.nextLecture)?$('#nextLecture').attr('getId',response.nextLecture.id):$('#nextLecture').attr('getId',null);
 
-                        if(response.lecture.order == 1){
+                        if(response.lecture.position == 1){
                             $('#previousLecture').addClass('hide');
                         }else{
                             $('#previousLecture').removeClass('hide');
                         }
-                        if(response.lecture.order == <?php echo e($enroll->course->lectures->count()); ?>){
+                        if(response.lecture.position == <?php echo e($enroll->course->lectures->count()); ?>){
                             $('#nextLecture').addClass('hide')
                         }else{
                             $('#nextLecture').removeClass('hide');
@@ -302,27 +469,66 @@
                         
                         $('#lec_name').text(response.lecture.lec_name);
                         if(response.lecture.type == 'Text'){
-                            $('#contentLearning').html("<div style='overflow-y: scroll; height: 561px;'>"+response.lecture.text+"</div>");
+                            $('#contentLearning').html("<div style='overflow-y: scroll; height: 424px;'>"+response.lecture.text+"</div>");
                         }else if(response.lecture.type == 'Video'){
                             $('#contentLearning').html(
                                 "<div class='embed-responsive embed-responsive-16by9'>"+
-                                    "<video class='embed-responsive-item' controls='controls' preload='auto'>"+
+                                    "<video class='embed-responsive-item' controls='controls' preload='auto' style='height: 424px;'>"+
                                         "<source src='/"+response.lecture.video.path+"' type='video/mp4'>"+
                                         "Your browser does not support HTML5 video."+
                                     "</video>"+
                                 "</div>"
                             );
-                        }else{
+                        }else if(response.lecture.type == 'Document'){
                             $('#contentLearning').html(
                                 "<div class='embed-responsive embed-responsive-16by9'>"+
-                                    "<embed src='/"+response.lecture.document.path+"' type='application/pdf'/>"+
+                                    "<embed src='/"+response.lecture.document.path+"' type='application/pdf' style='height: 424px;'/>"+
                                 "</div>"
                             );
+                        }else{
+                            $('#contentLearning').html(
+                                "<div>"+
+                                    "<form role='form' class='formDoQuiz' getId='"+response.lecture.id+"'>"+
+                                        "<div class='form-group'>"+
+                                            "<p>Question: "+response.lecture.questions[0].content+"</p>"+
+                                        "</div>"+
+                                        "<p>Please choose right answer</p>"+
+                                        "<div id='answers'>"+
+
+                                        "</div>"+
+                                        "<button class='btn btn-primary btn-md' type='submit'>Send</button>"+
+                                    "</form>"+
+                                "</div>"
+                            );
+                            for(var i=0;i<response.lecture.questions[0].answers.length; i++){
+                                if(response.mark){
+                                    $('#contentLearning form.formDoQuiz').find('button[type=submit]').addClass('hide');
+                                    if(response.lecture.questions[0].answers[i].isRight)
+                                        $('#answers').append(
+                                            "<div class='checkbox'>"+
+                                                "<label><input type='radio' checked answerId='"+response.lecture.questions[0].answers[i].id+"' name='answer'>"+response.lecture.questions[0].answers[i].content+"</label>"+
+                                            "</div>"  
+                                        );
+                                    else
+                                        $('#answers').append(
+                                            "<div class='checkbox'>"+
+                                                "<label><input type='radio' answerId='"+response.lecture.questions[0].answers[i].id+"' name='answer'>"+response.lecture.questions[0].answers[i].content+"</label>"+
+                                            "</div>"  
+                                        );
+                                }else{
+                                    $('#answers').append(
+                                            "<div class='checkbox'>"+
+                                                "<label><input type='radio' answerId='"+response.lecture.questions[0].answers[i].id+"' name='answer'>"+response.lecture.questions[0].answers[i].content+"</label>"+
+                                            "</div>"  
+                                        );
+                                }
+                            }
                         }
                     }
                 }
             });
         }
+
         $('#discussion').on('submit','form.add-comment',function(e){
             e.preventDefault();
             $(this).find('button').prepend('<i class="fa fa-refresh fa-spin"></i> ');
@@ -369,7 +575,7 @@
                         );
                     }
                     itself.find('button').children('i').remove();
-
+                    $('#contentComment'+getId).val('');
                 }
             });
         });
@@ -512,7 +718,12 @@
                         $('#progress').attr('aria-valuenow',response.enroll.process)
                                       .attr('style','width:'+response.enroll.process+'%')
                                       .text(response.enroll.process+'%');
-                        // ;.empty().prepend("<span class='glyphicon glyphicon-ok'></span>");
+                        if(response.enroll.process > 50)
+                            $('#ratingStar').removeClass('hide');
+                        if(response.enroll.process==100)
+                            setTimeout(function(){
+                                $('#congratulation').modal();
+                            },1000);
                     }
                     itself.find('button').children('i').remove();
 

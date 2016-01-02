@@ -1,0 +1,79 @@
+<?php $__env->startSection('css'); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('header-top'); ?>
+<?php echo $__env->make('public.layouts.header.header-top', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('header-middle'); ?>
+<?php echo $__env->make('public.layouts.header.header-middle', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+<div class="container main">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-info course-goals">
+                <div class="panel-heading">
+                    New Category 
+                </div>
+                <div class="panel-body">
+                    <div class="alert alert-success hide" id="message">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <p></p>
+                    </div>
+                    <?php echo Form::open(array('route' => 'forum.cate.create',"method" => "POST","id"=>"frm")); ?>
+
+                    <?php echo Form::hidden('id',null,['id'=>'cat_id']); ?> 
+                    <div class="form-group">
+                        <label for="Category-name">Category name</label>
+                        <?php echo Form::text('cat_name',null,['id'=>'cat_name' , 'placeholder'=>'Enter category name','class'=>'form-control']); ?>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description for your category</label>
+                        <?php echo Form::textarea('cat_des',null,['id'=>'cat_des' ,'rows'=>'5','class'=>'form-control']); ?>
+
+                    </div>
+                     <button type="submit" class="btn btn-default">Submit</button>
+                    <?php echo Form:: close(); ?>
+
+                </div>
+
+                <!--/panel-body-->
+            </div>
+            <!--/panel-->
+        </div>
+    </div>
+</div>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('footer'); ?>
+<?php echo $__env->make('public.layouts.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('script'); ?>
+<script>
+    $('document').ready(function () {
+        $("#frm").submit(function (e) {
+            e.preventDefault();
+            var cat = {};
+            cat.id = $("#cat_id").val();
+            cat.cat_name = $('#cat_name').val();
+            cat.cat_des = $('#cat_des').val();
+            cat.token = $("input[name=_token]").val();
+            $.ajax({
+                type: "POST",
+                url: "<?php echo e(url('forum/category/store')); ?>",
+                data: cat,
+                dataType : 'json',
+                success: function (response) {
+                    $('#message').removeClass('hide');
+                    $('#message').find('p').text(response.message);
+                }
+            });
+        });
+    });
+</script>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('public.layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

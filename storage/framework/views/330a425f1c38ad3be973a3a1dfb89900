@@ -4,7 +4,6 @@
     <?php echo $__env->make('public.layouts.resources.link-css', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
     <?php echo $__env->yieldContent('css'); ?>
     <?php echo $__env->make('public.layouts.resources.scripts', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-    <!-- <?php echo $__env->yieldContent('script'); ?> -->
     <style type="text/css">
 		#nprogress .bar {
 		    background:#58D550;
@@ -44,7 +43,13 @@
   	<?php echo $__env->yieldContent('footer-top'); ?>
   	<?php echo $__env->yieldContent('footer-bottom'); ?>
 
-    <!-- <?php echo $__env->make('public.layouts.resources.scripts', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> -->
     <?php echo $__env->yieldContent('script'); ?>
+    <script type="text/javascript">
+    	var preventLoadPage = function(){
+	    	$(window).on("beforeunload", function() {
+	            return "Are you sure? You didn't finish the form! Please submit first to avoid lose your data";
+	        });
+	    }
+    </script>
 </body>
 </html>

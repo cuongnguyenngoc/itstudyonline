@@ -19,6 +19,8 @@ use App\Document;
 use App\Thumbnail;
 use App\Image;
 use App\Introvideo;
+use App\Question;
+use App\Answer;
 use Validator;
 use Response;
 use File;
@@ -27,6 +29,115 @@ class MasterController extends Controller
 {
     public function __construct(){
         $this->middleware('master');
+    }
+
+
+    public function addQuiz(Request $request){
+        if($request->ajax()){
+            if($request->input('course_id') != null && Course::find($request->input('course_id'))){
+                $course = Course::find($request->input('course_id'));
+                if($request->input('lec_id') != null && Lecture::find($request->input('lec_id'))){
+                    $quiz = Lecture::find($request->input('lec_id'));
+                    $quiz->lec_name = $request->input('lec_name');
+                    $quiz->type = "Quiz";
+                    $quiz->save();
+                }else{
+                    $quiz = $course->lectures()->create([
+                        'user_id' => Auth::user()->id,
+                        'lec_name' => $request->input('lec_name'),
+                        'oldOrder' => $request->input('oldOrder'),
+                        'type' => "Quiz"
+                    ]);
+
+                    $quiz = Lecture::find($quiz->id);
+                }
+
+                if($request->input('que_id') != null && Question::find($request->input('que_id'))){
+                    $question = Question::find($request->input('que_id'));
+                    $question->content = $request->input('content');
+                    $question->save();
+                    if($question->answers()->count() > 1){
+                        $i = 0;
+                        foreach($request->input('answers') as $answer){
+                            if($answer[0] === 'false'){
+                                $answer[0] = 0;
+                            }else{
+                                $answer[0] = 1;
+                            }
+
+                            $question->answers[$i]->isRight = $answer[0];
+                            $question->answers[$i]->content = $answer[1];
+                            $question->answers[$i]->save();
+                            $i++;  
+                        }
+                    }else{
+                        foreach($request->input('answers') as $answer){
+                            if($answer[0] === 'false'){
+                                $answer[0] = 0;
+                            }else{
+                                $answer[0] = 1;
+                            }
+                            $question->answers()->create([
+                                'isRight' => $answer[0],
+                                'content' => $answer[1]
+                            ]);
+                        }
+                    }
+                }else{
+                    $question = $quiz->questions()->create([
+                        'content' => $request->input('content')
+                    ]);
+
+                    $question = Question::find($question->id);
+
+                    foreach($request->input('answers') as $answer){
+                        if($answer[0] === 'false'){
+                            $answer[0] = 0;
+                        }else{
+                            $answer[0] = 1;
+                        }
+                        $question->answers()->create([
+                            'isRight' => $answer[0],
+                            'content' => $answer[1]
+                        ]);
+                    }
+                }
+
+                $order = 1;
+                foreach($course->lectures()->where('type','Quiz')->orderBy('oldOrder','asc')->get() as $quiz){
+                    $quiz->order = $order;
+                    $quiz->save();
+                    $order++;
+                }
+
+                $position = 1;
+                foreach ($course->lectures()->orderBy('oldOrder','asc')->get() as $lecture) {
+                    $lecture->position = $position;
+                    $lecture->save();
+                    $position++;
+                }
+
+                return Response::json(['status' => true, 'quiz' => $quiz, 'question' => $question, 'message'=>'Cool! You have published quiz successfully']);
+            }
+            
+        }else{
+            return Response::json(['status' => false, 'message'=>'Oh no! something went wrong, buddy']);
+        }
+    }
+
+    public function deleteQuiz(Request $request){
+
+        if($request->ajax()){
+            if($request->input('quiz_id') != null && Lecture::find($request->input('quiz_id'))){
+
+                $quiz = Lecture::find($request->input('quiz_id'));
+                $quiz->delete();
+
+            }
+            return Response::json(['status' => true, 'message'=>'Cool! You have deleted quiz successfully']);
+        }else{
+            return Response::json(['status' => false, 'message'=>'Oh no! something went wrong, buddy']);
+        }
     }
 
     public function manage(){
@@ -40,7 +151,7 @@ class MasterController extends Controller
 
         $courseItems = array(
             'COURSE CONTENT' => array(
-                'course-goals'=>'Course goals',
+                'course-basics'=>'Course basics',
                 'curriculum'=>'Curriculum'
             ),
             'COURSE INFO' => array(
@@ -75,7 +186,7 @@ class MasterController extends Controller
 
             if($validator->fails()){
                 //return Redirect::back()->withErrors($validator);
-                return Response::json(['status'=>false, 'message'=>'Error man','input'=>$request->input()]);
+                return Response::json(['status'=>false, 'message'=>'Error man']);
             }
             if($request->input('id') !=null && Course::find($request->input('id') != null))
                 
@@ -120,9 +231,9 @@ class MasterController extends Controller
                     
                 }
                 $course = Course::find($request->input('course_id'));
-                $course->lectures;
+                $lectures = $course->lectures()->where('type','<>','Quiz')->get();
             }
-            return Response::json(['status' => true, 'course'=>$course, 'message'=>'Cool! You have deleted lecture successfully']);
+            return Response::json(['status' => true, 'lectures'=>$lectures, 'course'=>$course, 'message'=>'Cool! You have deleted lecture successfully']);
         }else{
             return Response::json(['status' => false, 'message'=>'Oh no! something went wrong, buddy']);
         }
@@ -309,8 +420,8 @@ class MasterController extends Controller
                 }
                 
                 if($request->input('video_id') != null 
-                        && $request->input('doc_id') == null 
-                        && $request->input('text') == null
+                        // && $request->input('doc_id') == null 
+                        // && $request->input('text') == null
                         && Video::find($request->input('video_id')) != null){
 
                     $video = Video::find($request->input('video_id'));
@@ -345,8 +456,21 @@ class MasterController extends Controller
                 }else{
                     return Response::json(['status'=>false,'message'=>'It have get a problem']);
                 }
-                $course->lectures;
-                return Response::json(['status'=>true,'lecture'=>$lecture, 'course' => $course, 'message'=>'Cool! You have created lecture successfully']);
+                $lectures = $course->lectures()->where('type','<>','Quiz')->orderBy('oldOrder','asc')->get();
+                $order = 1;
+                foreach($lectures as $lecture){
+                    $lecture->order = $order;
+                    $lecture->save();
+                    $order++;
+                }
+
+                $position = 1;
+                foreach ($course->lectures()->orderBy('oldOrder','asc')->get() as $lecture) {
+                    $lecture->position = $position;
+                    $lecture->save();
+                    $position++;
+                }
+                return Response::json(['status'=>true,'lecture'=>$lecture, 'lectures' => $lectures, 'course' => $course, 'message'=>'Cool! You have created lecture successfully']);
             }else{
                 return Response::json(['status'=>false,'message'=>'I can not find course_id, you need create course first']);
             }
@@ -467,11 +591,77 @@ class MasterController extends Controller
                         return Response::json(['status' => false, 'user'=>$user, 'message'=>'This user is not master, please try again']);
                     }
                 }else{
-                    return Response::json(['status' => false, 'message'=>'Dont add yourself']);
+                    return Response::json(['status' => false, 'message'=>'Come on, guy! Dont add yourself']);
                 }
-            }else{
-                return Response::json(['status' => false, 'message'=>'Something went wrong, buddy']);
             }
+            return Response::json(['status' => false, 'message'=>'This email is not exist in itstudyonline, buddy']);
+
+        }
+    }
+
+    public function doSaveMasterCourse(Request $request){
+
+        if($request->ajax()){
+            if($request->input('course_id') != null && Course::find($request->input('course_id')) != null){
+                $course = Course::find($request->input('course_id'));
+                if($request->input('masters') != null){
+                    $usercreatecourses = array();
+                    foreach ($request->input('masters') as $master) {
+                        if($master[2] === 'false'){
+                            $master[2] = 0;
+                        }else{
+                            $master[2] = 1;
+                        }
+                        if($master[3] === 'false'){
+                            $master[3] = 0;
+                        }else{
+                            $master[3] = 1;
+                        }
+
+                        if($master[0] != null && UserCreateCourse::find($master[0]) != null){
+                            $usercreatecourse = UserCreateCourse::find($master[0]);
+                            $usercreatecourse->can_edit_lec = $master[2];
+                            $usercreatecourse->can_delete = $master[3];
+                            $usercreatecourse->revenue = $master[4];
+                            $usercreatecourse->save();
+                        }else{
+                            $usercreatecourse = $course->usercreatecourses()->create([
+                                'user_id' => $master[1],
+                                'isBoss' => false,
+                                'can_edit_lec' => $master[2],
+                                'can_delete' => $master[3],
+                                'revenue' => $master[4]
+                            ]);
+
+                            $usercreatecourse = UserCreateCourse::find($usercreatecourse->id);
+                        }
+                        $usercreatecourses[] = $usercreatecourse;
+                    }
+                    return Response::json(['status' => true, 'usercreatecourses'=>$usercreatecourses, 'message'=>'Cool! you have added masters successfully']);
+                }else{
+                    return Response::json(['status' => false,'message'=>'Something went wrong']);
+                }
+                return Response::json(['status' => false,'message'=>'Something oh no wrong']);
+            }
+            return Response::json(['status' => false,'course_id'=>$request->input('course_id'),'course'=>Course::find($request->input('course_id')),'message'=>'Something no wrong']);
+        }
+    }
+
+    public function doDeleteMasterCourse(Request $request){
+
+        if($request->ajax()){
+            if($request->input('course_id') != null && Course::find($request->input('course_id')) != null){
+                $course = Course::find($request->input('course_id'));
+                if($request->input('master_id') != null && $course->usercreatecourse($request->input('master_id')) != null){
+                    $master = $course->usercreatecourse($request->input('master_id'));
+                    $boss = $course->bosscreatecourse();
+                    $boss->revenue += $master->revenue;
+                    $boss->save();
+                    $master->delete();
+                }
+                return Response::json(['status' => true, 'boss'=>$boss, 'message'=>'Cool! you have deleted master successfully']);
+            }
+            return Response::json(['status' => false,'course_id'=>$request->input('course_id'),'course'=>Course::find($request->input('course_id')),'message'=>'Something no wrong']);
         }
     }
 
@@ -488,12 +678,14 @@ class MasterController extends Controller
                     $usercreatecourse = Auth::user()->usercreatecourses()->create([
                         'user_id' => Auth::user()->id,
                         'course_id' => $request->input('course_id'),
-                        'isBoss' => true
+                        'isBoss' => true,
+                        'can_edit_lec' => true,
+                        'can_delete' => true
                     ]);
 
                 }
                 // Refactor order for lectures
-                $lectures = $usercreatecourse->course->lectures()->orderBy('oldOrder','asc')->get();
+                $lectures = $usercreatecourse->course->lectures()->where('type','<>','Quiz')->orderBy('oldOrder','asc')->get();
                 $order = 1;
                 foreach($lectures as $lecture){
                     $lecture->order = $order;
@@ -501,6 +693,20 @@ class MasterController extends Controller
                     $order++;
                 }
 
+                $quizs = $usercreatecourse->course->lectures()->where('type','Quiz')->orderBy('oldOrder','asc')->get();
+                $orderForQuiz = 1;
+                foreach($quizs as $quiz){
+                    $quiz->order = $orderForQuiz;
+                    $quiz->save();
+                    $orderForQuiz++;
+                }
+
+                $position = 1;
+                foreach ($usercreatecourse->course->lectures()->orderBy('oldOrder','asc')->get() as $lecture) {
+                    $lecture->position = $position;
+                    $lecture->save();
+                    $position++;
+                }
                 return Response::json(['status' => true, 'usercreatecourse'=>$usercreatecourse, 'message'=>'Cool! you have submited course successfully']);
             }else{
                 return Response::json(['status' => false, 'message'=>'Something went wrong, buddy']);
@@ -533,6 +739,7 @@ class MasterController extends Controller
         if(Course::find($course_id) != null){
 
             $course = Course::find($course_id);
+
             $courseItems = array(
                 'COURSE CONTENT' => array(
                     'course-goals'=>'Course goals',
@@ -554,6 +761,36 @@ class MasterController extends Controller
             $levels = Learninglevel::lists('level_name','id')->all();
 
             return View('master.create-course', compact('courseItems','languages','categories','levels','course','url'));
+        }
+    }
+
+    public function doCheckLectureExisted(Request $request){
+        $input['lec_name'] = $request->get('lec_name');
+
+        if($request->ajax()){
+
+            $validator = Validator::make($input,[
+                            'lec_name' => 'unique:lectures'
+                        ]);
+            if($validator->fails())
+                return Response::json(FALSE);
+            else 
+                return Response::json(TRUE);
+        }
+    }
+
+    public function doCheckCourseExisted(Request $request){
+        $input['course_name'] = $request->get('course_name');
+
+        if($request->ajax()){
+
+            $validator = Validator::make($input,[
+                            'course_name' => 'unique:courses'
+                        ]);
+            if($validator->fails())
+                return Response::json(FALSE);
+            else 
+                return Response::json(TRUE);
         }
     }
 

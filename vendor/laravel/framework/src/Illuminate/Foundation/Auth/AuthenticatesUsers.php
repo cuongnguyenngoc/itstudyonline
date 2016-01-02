@@ -5,7 +5,6 @@ namespace Illuminate\Foundation\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
-use Input;
 
 trait AuthenticatesUsers
 {
@@ -33,7 +32,6 @@ trait AuthenticatesUsers
      */
     public function postLogin(Request $request)
     {
-
         $this->validate($request, [
             $this->loginUsername() => 'required', 'password' => 'required',
         ]);
@@ -60,7 +58,12 @@ trait AuthenticatesUsers
             $this->incrementLoginAttempts($request);
         }
 
-        return redirect($this->loginPath())
+        // return redirect($this->loginPath())
+        //     ->withInput($request->only($this->loginUsername(), 'remember'))
+        //     ->withErrors([
+        //         $this->loginUsername() => $this->getFailedLoginMessage(),
+        //     ]);
+        return back()
             ->withInput($request->only($this->loginUsername(), 'remember'))
             ->withErrors([
                 $this->loginUsername() => $this->getFailedLoginMessage(),
@@ -84,7 +87,7 @@ trait AuthenticatesUsers
             return $this->authenticated($request, Auth::user());
         }
 
-        // return redirect()->intended($this->redirectPath());
+        //return redirect()->intended($this->redirectPath());
         return back();
     }
 
@@ -120,7 +123,7 @@ trait AuthenticatesUsers
     {
         Auth::logout();
 
-        // return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
+        //return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
         return back();
     }
 

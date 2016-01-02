@@ -1207,7 +1207,7 @@ class Builder
     {
         $property = $this->unions ? 'unionLimit' : 'limit';
 
-        if ($value > 0) {
+        if ($value >= 0) {
             $this->$property = $value;
         }
 
@@ -1461,7 +1461,7 @@ class Builder
     {
         $this->backupFieldsForCount();
 
-        $this->aggregate = ['function' => 'count', 'columns' => $columns];
+        $this->aggregate = ['function' => 'count', 'columns' => $this->clearSelectAliases($columns)];
 
         $results = $this->get();
 
@@ -1494,6 +1494,20 @@ class Builder
 
             $this->bindings[$key] = [];
         }
+    }
+
+    /**
+     * Remove the column aliases since they will break count queries.
+     *
+     * @param  array  $columns
+     * @return array
+     */
+    protected function clearSelectAliases(array $columns)
+    {
+        return array_map(function ($column) {
+            return is_string($column) && ($aliasPosition = strpos(strtolower($column), ' as ')) !== false
+                    ? substr($column, 0, $aliasPosition) : $column;
+        }, $columns);
     }
 
     /**
@@ -1546,7 +1560,7 @@ class Builder
      * Get an array with the values of a given column.
      *
      * @param  string  $column
-     * @param  string  $key
+     * @param  string|null  $key
      * @return array
      */
     public function lists($column, $key = null)
@@ -1607,6 +1621,8 @@ class Builder
 
             return (bool) $results['exists'];
         }
+
+        return false;
     }
 
     /**

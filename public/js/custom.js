@@ -29,6 +29,7 @@ $(document).ready(function(){
         NProgress.start();
     });
 
+    
 	// Begin of login, signup processing
 
 	var $formTabs = $('#main-nav');

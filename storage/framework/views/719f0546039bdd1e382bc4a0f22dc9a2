@@ -23,7 +23,7 @@
             </div>
             <div class="col-md-9">
                 <h3 style="margin-top: 2px;"><a href="#"><?php echo e($course->course_name); ?></a></h3>
-                <a href="#">
+                <a href="javascript:void(0)">
                     <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
                     <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
                     <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
@@ -32,7 +32,7 @@
                     <span><?php echo e($course->ratings->count()); ?> ratings, <?php echo e($course->enrolls->count()); ?> students enrolled</span>
                 </a> 
                 <div>
-                    <p class="col-md-4" style="padding: 0px;"> Created by <a href="#" style="font-size: 16px;"> <?php echo e($course->usercreatecourse->user->fullname); ?></a></p>
+                    <p class="col-md-4" style="padding: 0px;"> Created by <a href="#" style="font-size: 16px;"> <?php echo e($course->bosscreatecourse()->user->fullname); ?></a></p>
                     <p class="col-md-8" style="padding: 0px;"> Category <a href="#" style="font-size: 16px;"> <?php echo e($course->category->cat_name); ?></a></p>
                 </div>            
             </div>
@@ -95,11 +95,11 @@
                 </div>
                 <h3>Master Information</h3>
                 <div>
-                    <a href="<?php echo e(url('user/'.$course->usercreatecourse->user->id)); ?>" class="thumbnail col-md-3">
-                        <img src="<?php echo e(($course->usercreatecourse->user->image)?url($course->usercreatecourse->user->image->path):''); ?>" height="100px" />
+                    <a href="<?php echo e(url('user/'.$course->bosscreatecourse()->user->id)); ?>" class="thumbnail col-md-3">
+                        <img src="<?php echo e(($course->bosscreatecourse()->user->image)?url($course->bosscreatecourse()->user->image->path):''); ?>" height="100px" />
                     </a>
                     <a href="#" class="col-md-9">
-                        <?php echo e($course->usercreatecourse->user->fullname); ?>
+                        <?php echo e($course->bosscreatecourse()->user->fullname); ?>
 
                     </a>
                     <div class="social-icons">
@@ -115,10 +115,96 @@
                 </div>
                 <div class="col-md-12" style="padding-left: 0px;">
                     <h3>Reviews</h3>
-                    <div class="btn btn-primary"> I will do this later</div>
+                    <div class="col-md-12" style="padding-left: 0px;">
+                        <div class="col-md-6" style="padding-left: 0px;">
+                            <p>Average Rating</p>
+                            <div class="col-md-12" style="padding-left: 0px;font-size: 75px;color: #D9534F;"><?php echo e($course->averageRating()); ?></div>
+                            <div class="col-md-4" style="padding-left: 0px;">
+                                <?php for($i=1;$i<= intval($course->averageRating());$i++): ?>
+                                    <span class="glyphicon glyphicon-star" aria-hidden="true" style="color: #D9534F;"></span>
+                                <?php endfor; ?>
+                                <?php for($i=1;$i<= 5 - intval($course->averageRating());$i++): ?>
+                                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                                <?php endfor; ?>
+                                <!-- <span class="glyphicon glyphicon-star" aria-hidden="true" style="color: #D9534F;"></span>
+                                <span class="glyphicon glyphicon-star" aria-hidden="true" style="color: #D9534F;"></span>
+                                <span class="glyphicon glyphicon-star" aria-hidden="true" style="color: #D9534F;"></span>
+                                <span class="glyphicon glyphicon-star" aria-hidden="true" style="color: #D9534F;"></span>
+                                <span class="glyphicon glyphicon-star" aria-hidden="true" style="color: #D9534F;"></span> -->
+                            </div>
+                            <div><?php echo e($course->ratings()->count()); ?> ratings</div>
+                        </div>
+                        <div class="col-md-5">
+                            <p>Details</p>
+                            <div class="col-md-3" style="padding-left: 0px;padding-right: 0px;">5 stars</div>
+                            <div class="progress" style="margin: 4px;">
+                                <div class="progress-bar progress-bar-danger" role="progressbar"
+                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo e($course->fiveStarsPercent()); ?>%">
+                                    <?php echo e($course->fivestars()); ?>
 
-                    <div class="comments">
-                        Comments will be showed below, buddy
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="padding-left: 0px;padding-right: 0px;">4 stars</div>
+                            <div class="progress" style="margin: 4px;">
+                                <div class="progress-bar progress-bar-danger" role="progressbar"
+                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo e($course->fourStarsPercent()); ?>%">
+                                    <?php echo e($course->fourstars()); ?>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="padding-left: 0px;padding-right: 0px;">3 stars</div>
+                            <div class="progress" style="margin: 4px;">
+                                <div class="progress-bar progress-bar-danger" role="progressbar"
+                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo e($course->threeStarsPercent()); ?>%">
+                                    <?php echo e($course->threestars()); ?>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="padding-left: 0px;padding-right: 0px;">2 stars</div>
+                            <div class="progress" style="margin: 4px;">
+                                <div class="progress-bar progress-bar-danger" role="progressbar"
+                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo e($course->twoStarsPercent()); ?>%">
+                                    <?php echo e($course->twostars()); ?>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="padding-left: 0px;padding-right: 0px;">1 star</div>
+                            <div class="progress" style="margin: 4px;">
+                                <div class="progress-bar progress-bar-danger" role="progressbar"
+                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo e($course->oneStarPercent()); ?>%">
+                                    <?php echo e($course->onestar()); ?>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="comments col-md-12" style="padding-left: 0px;">
+                        <?php if($course->ratings()->count() != 0): ?>
+                            <?php foreach($course->ratings as $rating): ?>
+                                <div class="col-md-12" style="padding: 0px;margin-top: 10px; padding-bottom: 20px; border-bottom: 1px solid #F0F0E9;">
+                                    <img src="/<?php echo e(($rating->user->image)? $rating->user->image->path:'images/it_me.jpg'); ?>" class="col-md-1 img-circle" style="padding: 0px;">
+                                    <div class="col-md-11" style="padding: 0px;">
+                                        <a href="#" class="col-md-4">
+                                            <?php echo e($rating->user->fullname); ?>
+
+                                        </a>
+                                        <?php for($i=1;$i<= $rating->num_stars;$i++): ?>
+                                            <span class="glyphicon glyphicon-star" aria-hidden="true" style="color: #D9534F;"></span>
+                                        <?php endfor; ?>
+                                        <?php for($i=1;$i<= 5 - $rating->num_stars;$i++): ?>
+                                            <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                                        <?php endfor; ?>
+                                        <div class="col-md-12">
+                                            <?php echo e($rating->review); ?>
+
+                                        </div>                                                    
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            No review here
+                        <?php endif; ?>
                     </div>
                 </div>         
             </div>

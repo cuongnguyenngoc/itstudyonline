@@ -26,7 +26,7 @@
             </div>
             <div class="col-md-9">
                 <h3 style="margin-top: 2px;"><a href="#">{{$course->course_name}}</a></h3>
-                <a href="#">
+                <a href="javascript:void(0)">
                     <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
                     <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
                     <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
@@ -35,7 +35,7 @@
                     <span>{{$course->ratings->count()}} ratings, {{$course->enrolls->count()}} students enrolled</span>
                 </a> 
                 <div>
-                    <p class="col-md-4" style="padding: 0px;"> Created by <a href="#" style="font-size: 16px;"> {{$course->usercreatecourse->user->fullname}}</a></p>
+                    <p class="col-md-4" style="padding: 0px;"> Created by <a href="#" style="font-size: 16px;"> {{$course->bosscreatecourse()->user->fullname}}</a></p>
                     <p class="col-md-8" style="padding: 0px;"> Category <a href="#" style="font-size: 16px;"> {{$course->category->cat_name}}</a></p>
                 </div>            
             </div>
@@ -96,11 +96,11 @@
                 </div>
                 <h3>Master Information</h3>
                 <div>
-                    <a href="{{url('user/'.$course->usercreatecourse->user->id)}}" class="thumbnail col-md-3">
-                        <img src="{{($course->usercreatecourse->user->image)?url($course->usercreatecourse->user->image->path):''}}" height="100px" />
+                    <a href="{{url('user/'.$course->bosscreatecourse()->user->id)}}" class="thumbnail col-md-3">
+                        <img src="{{($course->bosscreatecourse()->user->image)?url($course->bosscreatecourse()->user->image->path):''}}" height="100px" />
                     </a>
                     <a href="#" class="col-md-9">
-                        {{$course->usercreatecourse->user->fullname}}
+                        {{$course->bosscreatecourse()->user->fullname}}
                     </a>
                     <div class="social-icons">
                         <ul class="nav navbar-nav">
@@ -115,10 +115,89 @@
                 </div>
                 <div class="col-md-12" style="padding-left: 0px;">
                     <h3>Reviews</h3>
-                    <div class="btn btn-primary"> I will do this later</div>
+                    <div class="col-md-12" style="padding-left: 0px;">
+                        <div class="col-md-6" style="padding-left: 0px;">
+                            <p>Average Rating</p>
+                            <div class="col-md-12" style="padding-left: 0px;font-size: 75px;color: #D9534F;">{{$course->averageRating()}}</div>
+                            <div class="col-md-4" style="padding-left: 0px;">
+                                @for($i=1;$i<= intval($course->averageRating());$i++)
+                                    <span class="glyphicon glyphicon-star" aria-hidden="true" style="color: #D9534F;"></span>
+                                @endfor
+                                @for($i=1;$i<= 5 - intval($course->averageRating());$i++)
+                                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                                @endfor
+                                <!-- <span class="glyphicon glyphicon-star" aria-hidden="true" style="color: #D9534F;"></span>
+                                <span class="glyphicon glyphicon-star" aria-hidden="true" style="color: #D9534F;"></span>
+                                <span class="glyphicon glyphicon-star" aria-hidden="true" style="color: #D9534F;"></span>
+                                <span class="glyphicon glyphicon-star" aria-hidden="true" style="color: #D9534F;"></span>
+                                <span class="glyphicon glyphicon-star" aria-hidden="true" style="color: #D9534F;"></span> -->
+                            </div>
+                            <div>{{$course->ratings()->count()}} ratings</div>
+                        </div>
+                        <div class="col-md-5">
+                            <p>Details</p>
+                            <div class="col-md-3" style="padding-left: 0px;padding-right: 0px;">5 stars</div>
+                            <div class="progress" style="margin: 4px;">
+                                <div class="progress-bar progress-bar-danger" role="progressbar"
+                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{$course->fiveStarsPercent()}}%">
+                                    {{$course->fivestars()}}
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="padding-left: 0px;padding-right: 0px;">4 stars</div>
+                            <div class="progress" style="margin: 4px;">
+                                <div class="progress-bar progress-bar-danger" role="progressbar"
+                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{$course->fourStarsPercent()}}%">
+                                    {{$course->fourstars()}}
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="padding-left: 0px;padding-right: 0px;">3 stars</div>
+                            <div class="progress" style="margin: 4px;">
+                                <div class="progress-bar progress-bar-danger" role="progressbar"
+                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{$course->threeStarsPercent()}}%">
+                                    {{$course->threestars()}}
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="padding-left: 0px;padding-right: 0px;">2 stars</div>
+                            <div class="progress" style="margin: 4px;">
+                                <div class="progress-bar progress-bar-danger" role="progressbar"
+                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{$course->twoStarsPercent()}}%">
+                                    {{$course->twostars()}}
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="padding-left: 0px;padding-right: 0px;">1 star</div>
+                            <div class="progress" style="margin: 4px;">
+                                <div class="progress-bar progress-bar-danger" role="progressbar"
+                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{$course->oneStarPercent()}}%">
+                                    {{$course->onestar()}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                    <div class="comments">
-                        Comments will be showed below, buddy
+                    <div class="comments col-md-12" style="padding-left: 0px;">
+                        @if($course->ratings()->count() != 0)
+                            @foreach($course->ratings as $rating)
+                                <div class="col-md-12" style="padding: 0px;margin-top: 10px; padding-bottom: 20px; border-bottom: 1px solid #F0F0E9;">
+                                    <img src="/{{($rating->user->image)? $rating->user->image->path:'images/it_me.jpg'}}" class="col-md-1 img-circle" style="padding: 0px;">
+                                    <div class="col-md-11" style="padding: 0px;">
+                                        <a href="#" class="col-md-4">
+                                            {{$rating->user->fullname}}
+                                        </a>
+                                        @for($i=1;$i<= $rating->num_stars;$i++)
+                                            <span class="glyphicon glyphicon-star" aria-hidden="true" style="color: #D9534F;"></span>
+                                        @endfor
+                                        @for($i=1;$i<= 5 - $rating->num_stars;$i++)
+                                            <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                                        @endfor
+                                        <div class="col-md-12">
+                                            {{$rating->review}}
+                                        </div>                                                    
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            No review here
+                        @endif
                     </div>
                 </div>         
             </div>

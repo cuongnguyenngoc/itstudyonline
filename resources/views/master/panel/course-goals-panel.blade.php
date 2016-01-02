@@ -1,6 +1,6 @@
- <div class="panel panel-info course-goals panel-right">
+ <div class="panel panel-info course-basics panel-right">
     <div class="panel-heading">
-        <a href="#" title="My tooltip text">Course goals</a>
+        <a href="#" title="My tooltip text">Course basics</a>
     </div>
     <div class="panel-body">
         <div class="alert alert-success hide" id="message">
@@ -92,7 +92,12 @@
                 },
                 course_name: {
                     required: true,
-                    minlength: 10
+                    minlength: 10,
+                    remote: {
+                        url: '/master/check-course-existed',
+                        type: 'post',
+                        dataType: 'json'
+                    }
                 },
                 descriptionText: {
                     required: true,
@@ -105,7 +110,8 @@
                 level_id: "Please choose study level",
                 course_name: {
                     required: "Please enter your course name",
-                    minlength: "Course name should be minimax 10 characters"
+                    minlength: "Course name should be minimax 10 characters",
+                    remote: "This name was taken, Please type another course's name"
                 },
                 descriptionText: {
                     required: "Please enter your course name",
@@ -138,9 +144,9 @@
                             $('#course_id').val(response.course.id);
                             $('#course_id_img').val(response.course.id); // To assign value for image when upload image of course
                             $('#course_id_video').val(response.course.id); // To assign value for video when upload video introduction of course
-                            $('.list-group-item-success.course-goals').removeClass('active');
+                            $('.list-group-item-success.course-basics').removeClass('active');
                             $('.list-group-item-success.curriculum').addClass('active');
-                            $('div.course-goals').addClass('hide');
+                            $('div.course-basics').addClass('hide');
                             $('div.curriculum').removeClass('hide');
 
                             $('#courseName').text(response.course.course_name);

@@ -1,0 +1,36 @@
+<div class = "row">
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <?php echo $cateName; ?> <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <?php foreach($items as $item): ?>
+            <li><a href="#"><?php echo e($item->cat_name); ?></a></li>
+             <?php endforeach; ?>
+             <li class="divider"></li>
+             <li><a href="<?php echo e(URL::to('forum/category/create')); ?>">New Category</a></li>
+            </ul>
+        </div>
+        <a class="btn pull-right btn-default" id="newTopic" type="button" href="javascript:void(0)"><span class = "glyphicon glyphicon-plus"> </span> New Topic</a>
+        
+    </div>
+    <?php if(Auth::check()): ?>
+        <script><?php echo e('var signin = true;'); ?></script>
+    <?php else: ?>
+        <script><?php echo e('var signin = false;'); ?></script>
+    <?php endif; ?>
+
+<script type="text/javascript">
+    
+    $('#newTopic').click(function(e){
+        if(!signin){
+            $("#authModal").modal();
+            login_selected();
+        }else{
+            window.location.href = "<?php echo e(URL::to('forum/topic/create')); ?>";
+        }
+    });
+</script>
+    
+
+

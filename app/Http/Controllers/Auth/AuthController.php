@@ -89,7 +89,7 @@ class AuthController extends Controller
         Image::create([
             'user_id' => $user_id,
             'img_name' => 'avatar',
-            'path' => 'images/it_me.jpg'
+            'path' => 'images/forum/user-def.png'
         ]);
     }
 }

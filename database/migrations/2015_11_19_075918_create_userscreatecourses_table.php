@@ -17,8 +17,8 @@ class CreateUserscreatecoursesTable extends Migration
             $table->integer('course_id')->unsigned()->nullable();
             $table->integer('user_id')->unsigned()->nullable();
             $table->boolean('isBoss');
-            $table->boolean('visible');
-            $table->boolean('can_edit');
+            $table->boolean('can_edit_lec');
+            $table->boolean('can_delete');
             $table->integer('revenue');
             $table->timestamps();
 

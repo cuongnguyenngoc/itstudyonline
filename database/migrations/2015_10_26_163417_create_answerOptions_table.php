@@ -15,7 +15,7 @@ class CreateAnswerOptionsTable extends Migration
         Schema::create('answerOptions', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('que_id')->unsigned()->nullable();
-            $table->char('alphabet',1);
+            $table->boolean('isRight');
             $table->string('content');
             $table->timestamps();
 

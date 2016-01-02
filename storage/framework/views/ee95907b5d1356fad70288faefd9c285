@@ -1,0 +1,141 @@
+<?php $__env->startSection('admin-content'); ?>
+<style type="text/css">
+	p{
+		font-family: "Times New Roman";
+		font-size: 20px;
+		margin: 20px;
+		margin-left: 20px;
+		margin-right: 20px;
+		margin-top: 20px;
+
+	}
+   /* id : #
+    class : .
+    */
+    #user{
+    	border: 1px #e4e4e4 solid;
+    	padding: 20px;
+    	border-radius: 4px;
+    	box-shadow: 0 0 6px #ccc;
+    	border-radius: 20px;
+    	-moz-border-radius: 20px;
+    	-webkit-border-radius: 20px;
+    }
+    #mainContent{
+    	position: relative;
+    	margin: 0px auto;
+    	padding: 0px;
+    	background-color:#F0F0F0 ;
+    }
+    #center{
+    	background-color:#FFFFFF ;
+    }
+    #goBack{
+    	text-align: center;
+    	font-weight: 100;
+    	font-size: 40px;
+    }
+    #user-img{
+    	border: 1px #e4e4e4 solid;
+    	padding: 20px;
+    	border-radius: 4px;
+    	box-shadow: 0 0 6px #ccc;
+    	border-radius: 20px;
+    	-moz-border-radius: 20px;
+    	-webkit-border-radius: 20px;
+    	height: 100px;
+    	margin-right: 400px;
+    	margin-left: 400px;
+    }
+    #content{
+    	border: 1px #e4e4e4 solid;
+    	padding: 20px;
+    	border-radius: 4px;
+    	box-shadow: 0 0 6px #ccc;
+    	border-radius: 20px;
+    	-moz-border-radius: 20px;
+    	-webkit-border-radius: 20px;
+    }
+
+
+</style>
+
+
+
+
+<div id="user">
+	<div id="user-img">
+		<img src="">
+	</div>
+	<div id="content">
+		<p>
+			<strong>
+				Name : 
+			</strong>                    
+			<?php echo e($User->fullname); ?>
+
+		</p>
+		<p>
+			<strong>
+				Address : 
+			</strong>
+			<?php echo e($User->address); ?>
+
+		</p>
+		<p>
+			<strong>
+				Email : 
+			</strong>
+			<?php echo e($User->email); ?>
+
+		</p>
+		<p>
+			<strong>
+				Birth Day : 
+			</strong>
+			<?php echo e($User->birth); ?>
+
+		</p>
+		<p>
+			<strong>
+				Contact : <?php echo e($User->links); ?>
+
+			</strong>
+		</p>
+		<p>
+			<strong>
+				Introduction :
+			</strong>
+			<?php echo e($User->biography); ?>
+
+		</p>
+		<p>
+			<strong>
+				Expert : 
+			</strong>
+			<?php echo e($User->expert); ?>
+
+		</p>
+	</div>
+				<!-- <p id="goBack">
+					<a href="<?php echo e(route('admin.roleManage')); ?>">
+					<span class="glyphicon glyphicon-step-backward"></span>
+					<strong>Go Back</strong>
+					</a>
+				</p> -->
+
+			</div>
+			
+
+			
+			<?php $__env->stopSection(); ?>
+
+
+
+
+
+
+
+
+
+<?php echo $__env->make('admin.home', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

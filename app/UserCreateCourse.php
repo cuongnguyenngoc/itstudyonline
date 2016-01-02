@@ -8,7 +8,7 @@ class UserCreateCourse extends Model
 {
     protected $table = "userscreatecourses";
 
-    protected $fillable = ['user_id', 'course_id', 'isBoss'];
+    protected $fillable = ['user_id', 'course_id', 'isBoss', 'can_edit_lec', 'can_delete', 'revenue'];
 
     public function course(){
     	return $this->belongsTo('App\Course');

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Lecture extends Model
 {
 
-	protected $fillable = ['course_id', 'user_id', 'lec_name', 'description', 'order', 'oldOrder'];
+	protected $fillable = ['course_id', 'user_id', 'lec_name', 'description', 'order', 'oldOrder', 'position', 'type'];
 
     public function video(){
     	return $this->hasOne('App\Video','lec_id','id');
@@ -19,5 +19,9 @@ class Lecture extends Model
 
     public function comments(){
     	return $this->hasMany('App\Comment','lec_id','id');
+    }
+
+    public function questions(){
+        return $this->hasMany('App\Question','lec_id','id');
     }
 }

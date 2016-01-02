@@ -13,22 +13,14 @@
 				<div class="mainmenu pull-left">
 					<ul class="nav navbar-nav collapse navbar-collapse">
 						<li><a href="index.html" class="active">IT STUDY ONLINE</a></li>
-						<li class="dropdown"><a href="#">Manage<i class="fa fa-angle-down"></i></a>
+						<li class="dropdown"><a href="#">Learning course<i class="fa fa-angle-down"></i></a>
                             <ul role="menu" class="sub-menu">
-                                <li><a href="shop.html">Products</a></li>
-								<li><a href="product-details.html">Product Details</a></li> 
-								<li><a href="checkout.html">Checkout</a></li> 
-								<li><a href="cart.html">Cart</a></li> 
-								<li><a href="login.html">Login</a></li> 
+                                <li><a href="#freecourse">Free courses</a></li>
+								<li><a href="#coursesbycat">Courses by category</a></li> 
+								<li><a href="#recommendcourse">Recommend courses</a></li>  
                             </ul>
                         </li> 
-						<li class="dropdown"><a href="#">Blog<i class="fa fa-angle-down"></i></a>
-                            <ul role="menu" class="sub-menu">
-                                <li><a href="blog.html">Blog List</a></li>
-								<li><a href="blog-single.html">Blog Single</a></li>
-                            </ul>
-                        </li> 
-						<li><a href="404.html">404</a></li>
+						<li><a href="{{url('forum')}}">Forum</a></li> 
 						<li><a href="contact-us.html">Contact</a></li>
 					</ul>
 				</div>

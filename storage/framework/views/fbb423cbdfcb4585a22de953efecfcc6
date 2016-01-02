@@ -1,0 +1,119 @@
+<?php $__env->startSection('admin-content'); ?>
+
+<style type="text/css">
+  #user{
+    border: 1px #e4e4e4 solid;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 0 6px #ccc;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+  }
+  #title{
+    order: 1px #e4e4e4 solid;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 0 6px #ccc;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+    background-color: #337ab7;
+    color: #FE980F;
+    font-size: 20px;
+  }
+  #div-a{
+    color: #8C8C88;
+    /*font-size: 20px;*/
+  }
+  #div-a:hover{
+    color:  #FE980F;
+  }
+  #change-role{
+    color: #8C8C88;
+  }
+  #change-role:hover{
+    color:  #FE980F;
+  }
+  
+
+</style>
+
+<div id="user">
+    <div id="title"><STRONG>Manage Roles</STRONG></div>
+        <table class="table table-hover" <?php echo e($i=1); ?>>
+            <tr>
+                <td>STT</td>
+                <td>Role</td>
+                <td>Name</td>
+                <td>Avata</td>
+                <td>Address</td>
+                <td>Birth </td>
+                <td>Read More</td>
+                <td>Change Role</td>
+                <td>Delete User</td>
+            </tr>
+            <?php foreach($users as $user): ?>
+            <tr>
+                <td><?php echo e($i); ?></td>
+                <td><?php echo e($user->role->role_name); ?></td>
+                <td><?php echo e($user->fullname); ?></td>
+                <td><img src="/<?php echo e($user->image->path); ?>" height="30px;"></td>
+                <td><?php echo e($user->address); ?></td>
+                <td><?php echo e($user->birth); ?></td>
+                <td>
+                    <a href="<?php echo e(route('admin.roleManage.userInfomation',$user->id)); ?>" id="div-a">Read More</a>
+                </td>
+                <td>
+                    <a data-toggle="collapse" href="#adminCollapse_<?php echo e($i); ?>" id="div-a">Change role</a>
+                    <div id="adminCollapse_<?php echo e($i); ?>" class="panel-collapse collapse">
+                        <ul class="list-group">
+                            <?php if($user->role->id==1): ?>
+                            <li class="list-group-item">
+                                <a href="roleManage/<?php echo e($user->id); ?>/2/update" onclick="return confirm('Do you want to change Role?')"><p id="change-role">Master</p></a>                       
+                            </li>
+                            <li class="list-group-item">
+                                <a href="roleManage/<?php echo e($user->id); ?>/3/update" onclick="return confirm('Do you want to change Role?')"><p id="change-role">Disciple</p></a>
+                            </li>
+                            <?php elseif($user->role->id==2): ?>
+                            <li class="list-group-item">
+                                <a href="roleManage/<?php echo e($user->id); ?>/1/update" onclick="return confirm('Do you want to change Role?')"><p id="change-role">Admin</p></a>                       
+                            </li>
+                            <li class="list-group-item">
+                                <a href="roleManage/<?php echo e($user->id); ?>/3/update" onclick="return confirm('Do you want to change Role?')"><p id="change-role">Disciple</p></a>
+                            </li>
+                            <?php else: ?>
+                            <li class="list-group-item">
+                                <a href="roleManage/<?php echo e($user->id); ?>/1/update" onclick="return confirm('Do you want to change Role?')"><p id="change-role">Admin</p></a>                       
+                            </li>
+                            <li class="list-group-item">
+                                <a href="roleManage/<?php echo e($user->id); ?>/2/update" onclick="return confirm('Do you want to change Role?')"><p id="change-role">Master</p></a>
+                            </li>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                  <a href="<?php echo e(route('admin.roleManage.delete',$user->id)); ?>" onclick="return confirm('Do you want to delete this user')" id="div-a">Delete</a>
+                </td>
+            </tr> 
+            <p class="hide" <?php echo e($i++); ?>>
+            <?php endforeach; ?>              
+        <!-- end -->
+        </table>
+    </div>
+<div class="row">
+  <div class="col-lg-4  col-lg-offset-5">
+    <?php echo $users->render(); ?>
+
+  </div>
+</div>
+<?php $__env->stopSection(); ?>
+
+
+
+
+
+<?php echo $__env->make('admin.home', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

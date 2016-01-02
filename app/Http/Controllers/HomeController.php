@@ -32,14 +32,16 @@ class HomeController extends Controller
         $categories = Category::all();
         $languages = ProgrammingLanguage::all();
         $levels = Learninglevel::all();
-        $usercreatecourses = UserCreateCourse::all();
+        $usercreatecourses = UserCreateCourse::where('isBoss',1)->get();
         return view('home.index',compact('categories','languages','levels','usercreatecourses'));
     }
 
     public function getCourse($id){
 
         $course = Course::find($id);
-        if(Auth::user()->enroll(intval($id)) != null){
+        $course->views += 1;
+        $course->save();
+        if(Auth::user() && Auth::user()->enroll(intval($id)) != null){
             $enroll = Auth::user()->enroll(intval($id));
         }else{
             $enroll = null;
@@ -50,36 +52,8 @@ class HomeController extends Controller
     public function test()
     {
         
-        $enroll = Enroll::find(1);
-
-        // Save learning process
         $course = Course::find(1);
-        echo $course->lectures()->orderBy('order','asc')->get()->last()->oldOrder;
-
-        // $enroll->process = $percentProcess;
-        // $enroll->save();
-
-        //return View('test',compact('thumbnails'));
-    }
-    public function manage(){
-        return View('admin.manage');
-    }
-    public function awe(){
-        $upload_dir = './uploads/videos/';
-        // chuyển file về thư mục $upload_dir
-        $video_file = "./uploads/videos/564b7796933eaBoa_Hancock_hugs_Luffy(One_Piece_3D2Y).mp4";
-        //$file->move('../uploads/videos',$video_file);
-    
-        // lưu ảnh thumbnail
-        $ffmpeg = 'public\\ffmpeg\\ffmpeg';
-        $image_file = "./uploads/videos/Boa_Hancock_hugs_Luffy(One_Piece_3D2Y).jpg";
-        $second = 5;
-        $cmd = "$ffmpeg -itsoffset $second -i $video_file -vcodec mjpeg -vframes 1 -an -f rawvideo $image_file";
-        exec($cmd);
-        echo $video_file;
-		echo "\n";
-        echo "<p>".$image_file."</p>";
-		echo "\n";
-        echo exec($cmd);
+        $course->lectureAndQuizMixed();
+        
     }
 }

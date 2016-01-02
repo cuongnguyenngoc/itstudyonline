@@ -60,9 +60,10 @@
 				</div>
 				
 				<div class="col-sm-9 padding-right">
-					<div class="features_items"><!--features_items-->
+					<div class="features_items" id="freecourse"><!--features_items-->
 						<h2 class="title text-center">Free Courses</h2>
 						<?php foreach($usercreatecourses as $usercreatecourse): ?>
+							<?php if($usercreatecourse->course->cost == 0): ?>
 							<div class="col-sm-4">
 								<div class="product-image-wrapper">
 									<div class="single-products">
@@ -89,10 +90,11 @@
 									</div>
 								</div>
 							</div>
+							<?php endif; ?>
 						<?php endforeach; ?>
 					</div><!--features_items-->
 					
-					<div class="category-tab"><!--category-tab-->
+					<div class="category-tab" id="coursesbycat"><!--category-tab-->
 						<div class="col-sm-12">
 							<ul class="nav nav-tabs">
 								<?php foreach($categories as $category): ?>
@@ -103,7 +105,7 @@
 						<div class="tab-content">
 							<?php foreach($categories as $category): ?>
 								<div class="tab-pane fade" id="<?php echo e(str_replace(' ','_',$category->cat_name)); ?>">
-									<?php foreach($category->usercreatecourses as $usercreatecourse): ?>
+									<?php foreach($category->usercreatecourses()->where('isBoss',1)->get() as $usercreatecourse): ?>
 										<div class="col-sm-3">
 											<div class="product-image-wrapper">
 												<div class="single-products">
@@ -122,92 +124,28 @@
 						</div>
 					</div><!--/category-tab-->
 					
-					<div class="recommended_items"><!--recommended_items-->
-						<h2 class="title text-center">recommended items</h2>
+					<div class="recommended_items" id="recommendcourse"><!--recommended_items-->
+						<h2 class="title text-center">recommended courses</h2>
 						
 						<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
 							<div class="carousel-inner">
-								<div class="item active">	
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="/images/home/recommend1.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+								<div class="item active">
+									<?php foreach($usercreatecourses as $usercreatecourse): ?>	
+										<?php if($usercreatecourse->course()->where('views','>',200)->first() != null): ?>
+											<div class="col-sm-4">
+												<div class="product-image-wrapper">
+													<div class="single-products">
+														<div class="productinfo text-center">
+															<img src="/<?php echo e($usercreatecourse->course->image->path); ?>" alt="<?php echo e($usercreatecourse->course->image->img_name); ?>" />
+															<h2><?php echo e($usercreatecourse->course->cost); ?></h2>
+															<p><?php echo e($usercreatecourse->course->course_name); ?></p>
+															<a href="<?php echo e(url('course/'.$usercreatecourse->course->id)); ?>" class="btn btn-default add-to-cart"> Detail</a>
+														</div>
+													</div>
 												</div>
-												
 											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="/images/home/recommend2.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="/images/home/recommend3.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="item">	
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="/images/home/recommend1.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="/images/home/recommend2.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="/images/home/recommend3.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-												
-											</div>
-										</div>
-									</div>
+										<?php endif; ?>
+									<?php endforeach; ?>
 								</div>
 							</div>
 							 <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
@@ -225,9 +163,6 @@
 	</section>
 <?php $__env->stopSection(); ?>
 
-<?php $__env->startSection('footer-top'); ?>
-	<?php echo $__env->make('public.layouts.footer.footer-top', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php $__env->stopSection(); ?>
 <?php $__env->startSection('footer-bottom'); ?>
 	<?php echo $__env->make('public.layouts.footer.footer-bottom', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php $__env->stopSection(); ?>

@@ -4,7 +4,6 @@
     @include('public.layouts.resources.link-css')
     @yield('css')
     @include('public.layouts.resources.scripts')
-    <!-- @yield('script') -->
     <style type="text/css">
 		#nprogress .bar {
 		    background:#58D550;
@@ -44,7 +43,13 @@
   	@yield('footer-top')
   	@yield('footer-bottom')
 
-    <!-- @include('public.layouts.resources.scripts') -->
     @yield('script')
+    <script type="text/javascript">
+    	var preventLoadPage = function(){
+	    	$(window).on("beforeunload", function() {
+	            return "Are you sure? You didn't finish the form! Please submit first to avoid lose your data";
+	        });
+	    }
+    </script>
 </body>
 </html>

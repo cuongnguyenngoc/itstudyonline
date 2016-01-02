@@ -8,7 +8,7 @@ class Mark extends Model
 {
     protected $table = "usersmarklectures";
 
-    protected $fillable = ['enroll_id', 'lec_id', 'isMarked'];
+    protected $fillable = ['enroll_id', 'lec_id', 'isMarked', 'isRight'];
 
     public function lecture(){
     	return $this->belongsTo('App\Lecture');

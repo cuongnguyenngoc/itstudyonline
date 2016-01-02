@@ -29,7 +29,8 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $fillable = ['fullname', 'email', 'password', 'role_id'];
+    protected $fillable = ['fullname', 'email', 'password', 'role_id', 'biography', 'address', 
+        'links', 'expert', 'birth'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -47,6 +48,10 @@ class User extends Model implements AuthenticatableContract,
         return $this->hasMany('App\UserCreateCourse','user_id','id');
     }
 
+    public function usercreatecourse($course_id){
+        return $this->usercreatecourses->where('course_id',$course_id)->first();
+    }
+
     public function enrolls(){
         return $this->hasMany('App\Enroll');
     }
@@ -61,5 +66,13 @@ class User extends Model implements AuthenticatableContract,
 
     public function comments(){
         return $this->hasMany('App\Comment','user_id','id');
+    }
+
+    public function ratings(){
+        return $this->hasMany('App\Rating','user_id','id');
+    }
+
+    public function rating($course_id){
+        return $this->ratings()->where('course_id',intval($course_id))->first();
     }
 }

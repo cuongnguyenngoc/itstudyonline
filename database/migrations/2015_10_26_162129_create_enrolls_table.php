@@ -17,7 +17,6 @@ class CreateEnrollsTable extends Migration
             $table->integer('course_id')->unsigned()->nullable();
             $table->integer('user_id')->unsigned()->nullable();
             $table->bigInteger('tuition')->nullable();
-            $table->bigInteger('earning')->nullable();
             $table->integer('process');
             $table->integer('lectureSaved');
             $table->timestamps();

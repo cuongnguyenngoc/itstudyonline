@@ -2,60 +2,85 @@
     <div class="panel-heading">
         Manage Masters
     </div>
-    <form id="formAddMaster">
+    <?php if($course->usercreatecourse(Auth::user()->id)->isBoss): ?>
         <div class="panel-body" style="background-color: #F1F3F6;">
-            <table class="table table-hover table-bordered">
-                <thead>
-                    <tr>
-                        <td>Master</td>
-                        <td>Visible</td>
-                        <td>Can edit</td>
-                        <td>Revenue Share</td>
-                        <td>Delete</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Itstudyonline</td>
-                        <td><input type="checkbox" checked="checked" disabled="true"/></td>
-                        <td><input type="checkbox" checked="checked" disabled="true"/></td>
-                        <td class="col-md-2">
-                            <input type="text" class="col-md-4 col-md-offset-4" style="padding: 0px;" />
-                            <p class="col-md-1" style="margin-top: 3px;"> %</p>
-                        </td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?php echo e(Auth::user()->fullname); ?></td>
-                        <td><input type="checkbox" checked="checked" disabled="true"/></td>
-                        <td><input type="checkbox" checked="checked" disabled="true"/></td>
-                        <td class="col-md-2">
-                            <input type="text" class="col-md-4 col-md-offset-4" style="padding: 0px;" />
-                            <p class="col-md-1" style="margin-top: 3px;"> %</p>
-                        </td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
+            <form id="formSaveMaster">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <td>Master</td>
+                            <td>Can edit lectures</td>
+                            <td>Can delete Course</td>
+                            <td>Revenue Share</td>
+                            <td>Delete</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Itstudyonline</td>
+                            <td><input type="checkbox" checked="checked" disabled="true" class="itstudyonline"/></td>
+                            <td><input type="checkbox" checked="checked" disabled="true" class="itstudyonline"/></td>
+                            <td class="col-md-2">
+                                <input type="text" class="col-md-4 col-md-offset-4 itstudyonline" style="padding: 0px;" value="40" disabled="true"/>
+                                <p class="col-md-1" style="margin-top: 3px;"> %</p>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr class="newMaster">
+                            <td><?php echo e(Auth::user()->fullname); ?></td>
+                            <td class='hide joiner'><input type='hidden' class='joiner_id' value="<?php echo e(Auth::user()->usercreatecourse($course->id)->id); ?>"></td>
+                            <td class='hide'><input type='hidden' class='master_id' value='<?php echo e(Auth::user()->id); ?>'></td>
+                            <td><input type="checkbox" class='visible' checked="checked" disabled="true"/></td>
+                            <td><input type="checkbox" class='canEdit' checked="checked" disabled="true"/></td>
+                            <td class="col-md-2">
+                                <input type="text" value="<?php echo e(Auth::user()->usercreatecourse($course->id)->revenue); ?>" class="col-md-4 col-md-offset-4 revenue" style="padding: 0px;" id="revenueofboss"/>
+                                <p class="col-md-1" style="margin-top: 3px;"> %</p>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <?php foreach($course->membercreatecourses() as $membercreatecourse): ?>
+                            <tr class="newMaster">
+                                <td><?php echo e($membercreatecourse->user->fullname); ?></td>
+                                <td class='hide'><input type='hidden' class='joiner_id' value="<?php echo e($membercreatecourse->id); ?>"></td>
+                                <td class='hide'><input type='hidden' class='master_id' value='<?php echo e($membercreatecourse->user->id); ?>'></td>
+                                <td><input type="checkbox" class='visible' <?php echo e(($membercreatecourse->visible)?'checked':''); ?>/></td>
+                                <td><input type="checkbox" class='canEdit' <?php echo e(($membercreatecourse->can_edit)?'checked':''); ?>/></td>
+                                <td class="col-md-2">
+                                    <input type="text" value="<?php echo e($membercreatecourse->revenue); ?>" class="col-md-4 col-md-offset-4 revenue" style="padding: 0px;"/>
+                                    <p class="col-md-1" style="margin-top: 3px;"> %</p>
+                                </td>
+                                <td><a href='javascript:void(0)' class="delete-master" getId="<?php echo e($membercreatecourse->user->id); ?>"><span class='glyphicon glyphicon-trash'></span></a></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <p class="col-md-2 col-md-offset-5"><button type="submit" class="btn btn-primary btn-sm" style="margin-top: 0px;"> Save</button></p>
+            </form>
             <div class="row">
-                <div id="divaddMaster" class="col-md-12">
-                    <div class="col-md-10" style="padding-left: 0px;">
-                        <input type="text" name="email" class="form-control" placeholder="Type new master's email you wanna add" id="masterEmail"/>
-                    </div>
-                    <a href="#" class="btn btn-primary col-md-2" style="margin-top: 0px;" id="addMaster"> Add master</a>
-                </div>
-                <div class="col-md-8 col-md-offset-2 hide" style="padding-left: 1px; padding-top: 10px;" id="tipMaster">
-                    <p><b> NOTE:</b> Only Itstudyonline users can be added as master.</p> 
-                </div>
+                
             </div>
         </div>
         <!--/panel-body-->
         <div class="panel-footer">
             <div class="row">
-                <p class="col-md-2 col-md-offset-5"><button type="submit" class="btn btn-primary btn-sm" style="margin-top: 0px;"> Save</button></p>
+                <div id="divaddMaster" class="col-md-12">
+                    <form id="formAddMaster">
+                        <div class="col-md-10" style="padding-left: 0px;">
+                            <input type="text" name="email" class="form-control" placeholder="Type new master's email you wanna add" id="masterEmail"/>
+                        </div>
+                        <a href="javascript:void(0)" class="btn btn-primary col-md-2" style="margin-top: 0px;" id="addMaster"> Add master</a>
+                    </form>
+                </div>
+                <div class="col-md-8 col-md-offset-2 hide" style="padding-left: 1px; padding-top: 10px;" id="tipMaster">
+                    <p><b> NOTE:</b> Only Itstudyonline users can be added as master.</p> 
+                </div>
             </div>       
         </div>
-    </form>
+    <?php else: ?>
+        <div class="panel-body" style="background-color: #F1F3F6; text-align: center; min-height: 326px;">
+            You dont have permission to add other master, Try to ask your boss <a href=""><?php echo e($course->bosscreatecourse()->user->fullname); ?></a> to learn more detail
+        </div>
+    <?php endif; ?>
 </div>
 <!--/panel-->
 <style type="text/css">
@@ -89,10 +114,11 @@ $(document).on('ready', function() {
         }
     });
     
-    var countMaster = 0;
+    var countMaster = <?php echo e($course->usercreatecourses()->count()); ?>;
+    var oldCountMaster = <?php echo e($course->usercreatecourses()->count()); ?>;
     $('#addMaster').on('click',function(){
-        countMaster++;
-        if($("#formAddMaster").valid()){
+        
+        if($("#masterEmail").valid()){
             $.ajax({
                 type: "POST",
                 url : "/master/add-master-course",
@@ -101,43 +127,110 @@ $(document).on('ready', function() {
                 success : function(response){
                     console.log(response);
                     if(response.status){
-                        
-                        $('#formAddMaster table').find('tbody').append(
-                            "<tr id='newMaster'"+countMaster+">"+
+                        countMaster++;
+                        $('#formSaveMaster table').find('tbody').append(
+                            "<tr class='newMaster'>"+
                                 "<td>"+response.user.fullname+"</td>"+
-                                "<td><input type='checkbox'/></td>"+
-                                "<td><input type='checkbox'/></td>"+
+                                "<td class='hide'><input type='hidden' id='joiner_id"+countMaster+"' class='joiner_id'></td>"+
+                                "<td class='hide'><input type='hidden' id='master_id"+countMaster+"' class='master_id' value='"+response.user.id+"'></td>"+
+                                "<td><input type='checkbox' name='visible"+countMaster+"' id='visible"+countMaster+"' class='visible'/></td>"+
+                                "<td><input type='checkbox' name='canEdit"+countMaster+"' id='canEdit"+countMaster+"' class='canEdit'/></td>"+
                                 "<td class='col-md-2'>"+
-                                    "<input type='text' class='col-md-4 col-md-offset-4' style='padding: 0px;' />"+
+                                    "<input type='text' class='col-md-4 col-md-offset-4 revenue' style='padding: 0px;' name='revenue"+countMaster+"' id='revenue"+countMaster+"'/>"+
                                     "<p class='col-md-1' style='margin-top: 3px;'> %</p>"+
                                 "</td>"+
-                                "<td><a href='#' id='deleteMaster'"+countMaster+"><span class='glyphicon glyphicon-trash'></span></a></td>"+
+                                "<td><a href='javascript:void(0)'class='delete-master' getId='"+response.user.id+"'><span class='glyphicon glyphicon-trash'></span></a></td>"+
                             "</tr>"
                         );
+                        $('#masterEmail').val(null);
+                        var n = noty({text: response.message, layout: 'top', type: 'success', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
+                    }else{
+                        var n = noty({text: response.message, layout: 'top', type: 'error', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
                     }
                 }
             });
         }
+
     });
 
-    $('#formAddMaster').submit(function(e){
+    $('#formSaveMaster').on('submit',function(e){
+        
         e.preventDefault();
-        var course = {};
-        course.course_id = $('#course_id').val();
-        course.price = $('#priceCourse').val();
-        if ($("#formPrice").valid()){
+        var isNoneEmpty = true;
+        var notEqual100 = true;
+        var masters = [];
+        var itself = $(this);
+
+        var sum = 0;
+        $('table').find('input[type=text]').each(function(){
+            if(!$(this).val()){
+                isNoneEmpty = false;
+            }
+            sum += parseInt($(this).val());
+        });
+        if(sum != 100)
+            notEqual100 = false;
+
+        if(isNoneEmpty){
+            if(notEqual100){
+                $(this).find('tr.newMaster').each(function(index){
+                    var master = [];
+                    master.push($(this).find('.joiner_id').val());
+                    master.push($(this).find('.master_id').val());
+                    master.push($(this).find('.visible').is(':checked'));
+                    master.push($(this).find('.canEdit').is(':checked'));
+                    master.push($(this).find('.revenue').val());
+                    masters.push(master);
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url : "/master/save-master-course",
+                    dataType: 'json',
+                    data: {course_id: $('#course_id').val(), masters: masters},
+                    success : function(response){
+                        console.log(response);
+                        if(response.status){
+                            for(var i = (oldCountMaster + 1); i <= response.usercreatecourses.length; i++){
+                                itself.find('#joiner_id'+(i)).val(response.usercreatecourses[i - 1].id);
+                            }
+                            var n = noty({text: response.message, layout: 'top', type: 'success', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
+                        }else{
+                            var n = noty({text: response.message, layout: 'top', type: 'error', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
+                        }
+                    }
+                });
+            }else{
+               alert('All revenues should have sum be 100 %, please check again'); 
+            }
+        }else{
+            alert('Some fields is not completed yet, Please try again');
+        }
+    });
+
+    $('#formSaveMaster').on('click','a.delete-master',function(e){
+        var getId = $(this).attr('getId');
+        var master = {};
+        master.course_id = $('#course_id').val();
+        master.master_id = getId;
+        var itself = $(this);
+        var r = confirm('Do you wanna delete this lecture?');
+        if (r == true) {
+
             $.ajax({
                 type: "POST",
-                url : "/master/update-price-course",
+                url : "/master/delete-master-course",
                 dataType: 'json',
-                data: course,
+                data: master, // remember that be must to pass data object type
                 success : function(response){
                     console.log(response);
                     if(response.status){
-                        $('#priceSetting').fadeOut(1000);
-                        $('#showPrice').find('h2').text(response.course.cost+'VND');
-                        $('.price-coupons').find('div.panel-footer').addClass('hide');
-                    }
+                        itself.parents('tr.newMaster').remove();
+                        $('#revenueofboss').val(response.boss.revenue);
+                        var n = noty({text: response.message, layout: 'top', type: 'success', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
+                    }else
+                        var n = noty({text: response.message, layout: 'top', type: 'error', template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>', closeWith: ['button'], timeout:2000 });
+
                 }
             });
         }

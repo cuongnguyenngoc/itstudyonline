@@ -2,40 +2,48 @@
     <div class="panel-heading">
         Price & Coupons
     </div>
-    <form id="formPrice">
-        <div class="panel-body" style="background-color: #F1F3F6;">
-            <div class="row" id="showPrice">
-                <div class="col-md-3 col-md-offset-4" style="padding: 10px; border: 1px solid #EEEEEE; background: #fff;">
-                    <div class="col-md-5">Current price of the course</div>
-                    <div class="col-md-7"><h2 style="color: #378D39;"><?php echo e(($course->cost) ? $course->cost.'VND' : 'FREE'); ?></h2></div>
-                </div>
-                <div class="col-md-4 col-md-offset-4" style="padding-left: 1px; padding-top: 10px;">
-                    <p style="font-size: 15px;"> Click <a href="#headCourse" id="show_hide_price">here</a> to change the pricing</p> 
-                </div>
-            </div>
-            <div class="row" id="priceSetting" style="display:none">
-                <div class="col-md-8 col-md-offset-2" style="padding: 10px; border: 1px solid #EEEEEE;">
-                    <div class="col-md-12">Price Settings:</div>
-                    <div class="col-md-12" id="divPrice">
-                        
-                        <input type="text" name="price" class="form-control col-md-8" id="priceCourse" value="" placeholder=" Type course's price"/>
-                        
-                    </div>
-                </div>
-                <div class="col-md-8 col-md-offset-2 hide" style="padding-left: 1px; padding-top: 10px;" id="tipPrice">
-                    <p><b> TIP:</b> Remember that by switching your course from free to paid you will be automatically 
-                    entered into Udemy's Re-Review process. See more information on the Re-Review process here.</p> 
-                    <p> Please keep in mind that courses cannot be offered as paid on Udemy if you are offering them for free elsewhere (e.g. Youtube).</p>
-                </div>
-            </div>
+    <?php if($course && $course->bosscreatecourse() && !$course->usercreatecourse(Auth::user()->id)->isBoss): ?>
+        <div class="panel-body" style="background-color: #F1F3F6; text-align: center; min-height: 326px;">
+            You dont have permission to add other master, Try to ask your boss <a href=""><?php echo e($course->bosscreatecourse()->user->fullname); ?></a> to learn more detail
         </div>
         <!--/panel-body-->
-        <div class="panel-footer hide">
-            <div class="row">
-                <p class="col-md-2 col-md-offset-5"><button type="submit" class="btn btn-primary btn-sm" style="margin-top: 0px;"> Save</button></p>
-            </div>       
-        </div>
-    </form>
+    <?php else: ?>
+        <form id="formPrice">
+            <div class="panel-body" style="background-color: #F1F3F6; min-height: 326px;">
+                <div class="row" id="showPrice">
+                    <div class="col-md-3 col-md-offset-4" style="padding: 10px; border: 1px solid #EEEEEE; background: #fff;">
+                        <div class="col-md-5">Current price of the course</div>
+                        <div class="col-md-7"><h2 style="color: #378D39;"><?php echo e(($course->cost) ? $course->cost.'VND' : 'FREE'); ?></h2></div>
+                    </div>
+                    <div class="col-md-4 col-md-offset-4" style="padding-left: 1px; padding-top: 10px;">
+                        <p style="font-size: 15px;"> Click <a href="javascript:void(0)" id="show_hide_price">here</a> to change the pricing</p> 
+                    </div>
+                </div>
+                <div class="row" id="priceSetting" style="display:none">
+                    <div class="col-md-8 col-md-offset-2" style="padding: 10px; border: 1px solid #EEEEEE;">
+                        <div class="col-md-12">Price Settings:</div>
+                        <div class="col-md-12" id="divPrice">
+                            
+                            <input type="text" name="price" class="form-control col-md-8" id="priceCourse" value="" placeholder=" Type course's price"/>
+                            
+                        </div>
+                    </div>
+                    <div class="col-md-8 col-md-offset-2 hide" style="padding-left: 1px; padding-top: 10px;" id="tipPrice">
+                        <p><b> TIP:</b> Remember that by switching your course from free to paid you will be automatically 
+                        entered into Udemy's Re-Review process. See more information on the Re-Review process here.</p> 
+                        <p> Please keep in mind that courses cannot be offered as paid on Udemy if you are offering them for free elsewhere (e.g. Youtube).</p>
+                    </div>
+                </div>
+            </div>
+            <!--/panel-body-->
+            <div class="panel-footer hide">
+                <div class="row">
+                    <p class="col-md-2 col-md-offset-5"><button type="submit" class="btn btn-primary btn-sm" style="margin-top: 0px;"> Save</button></p>
+                </div>       
+            </div>
+        </form>
+    
+    <?php endif; ?>
 </div>
 <!--/panel-->
 

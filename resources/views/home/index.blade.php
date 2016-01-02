@@ -62,9 +62,10 @@
 				</div>
 				
 				<div class="col-sm-9 padding-right">
-					<div class="features_items"><!--features_items-->
+					<div class="features_items" id="freecourse"><!--features_items-->
 						<h2 class="title text-center">Free Courses</h2>
 						@foreach($usercreatecourses as $usercreatecourse)
+							@if($usercreatecourse->course->cost == 0)
 							<div class="col-sm-4">
 								<div class="product-image-wrapper">
 									<div class="single-products">
@@ -91,10 +92,11 @@
 									</div>
 								</div>
 							</div>
+							@endif
 						@endforeach
 					</div><!--features_items-->
 					
-					<div class="category-tab"><!--category-tab-->
+					<div class="category-tab" id="coursesbycat"><!--category-tab-->
 						<div class="col-sm-12">
 							<ul class="nav nav-tabs">
 								@foreach($categories as $category)
@@ -105,7 +107,7 @@
 						<div class="tab-content">
 							@foreach($categories as $category)
 								<div class="tab-pane fade" id="{{str_replace(' ','_',$category->cat_name)}}">
-									@foreach($category->usercreatecourses as $usercreatecourse)
+									@foreach($category->usercreatecourses()->where('isBoss',1)->get() as $usercreatecourse)
 										<div class="col-sm-3">
 											<div class="product-image-wrapper">
 												<div class="single-products">
@@ -124,92 +126,28 @@
 						</div>
 					</div><!--/category-tab-->
 					
-					<div class="recommended_items"><!--recommended_items-->
-						<h2 class="title text-center">recommended items</h2>
+					<div class="recommended_items" id="recommendcourse"><!--recommended_items-->
+						<h2 class="title text-center">recommended courses</h2>
 						
 						<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
 							<div class="carousel-inner">
-								<div class="item active">	
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="/images/home/recommend1.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+								<div class="item active">
+									@foreach($usercreatecourses as $usercreatecourse)	
+										@if($usercreatecourse->course()->where('views','>',200)->first() != null)
+											<div class="col-sm-4">
+												<div class="product-image-wrapper">
+													<div class="single-products">
+														<div class="productinfo text-center">
+															<img src="/{{$usercreatecourse->course->image->path}}" alt="{{$usercreatecourse->course->image->img_name}}" />
+															<h2>{{$usercreatecourse->course->cost}}</h2>
+															<p>{{$usercreatecourse->course->course_name}}</p>
+															<a href="{{url('course/'.$usercreatecourse->course->id)}}" class="btn btn-default add-to-cart"> Detail</a>
+														</div>
+													</div>
 												</div>
-												
 											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="/images/home/recommend2.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="/images/home/recommend3.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="item">	
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="/images/home/recommend1.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="/images/home/recommend2.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="/images/home/recommend3.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-												
-											</div>
-										</div>
-									</div>
+										@endif
+									@endforeach
 								</div>
 							</div>
 							 <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
@@ -227,9 +165,6 @@
 	</section>
 @stop
 
-@section('footer-top')
-	@include('public.layouts.footer.footer-top')
-@stop
 @section('footer-bottom')
 	@include('public.layouts.footer.footer-bottom')
 @stop

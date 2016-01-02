@@ -75,3 +75,9 @@ ul.profile-arrow:after {
 }
 
 /********** END NOTY CSS TOP NOTIFICATION BAR **********/
+
+.message .error{
+    margin-top: 10px;
+    margin-bottom: 0px;
+    color: red;
+}
