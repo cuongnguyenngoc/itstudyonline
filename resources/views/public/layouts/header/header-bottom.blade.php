@@ -20,16 +20,33 @@
 								<li><a href="#recommendcourse">Recommend courses</a></li>  
                             </ul>
                         </li> 
+                        @if(Auth::check())
+							<li><a href="{{url('disciple/watch-rank')}}">Rank of Course</a></li> 
+                        @endif
 						<li><a href="{{url('forum')}}">Forum</a></li> 
 						<li><a href="contact-us.html">Contact</a></li>
 					</ul>
 				</div>
 			</div>
 			<div class="col-sm-3">
-				<div class="search_box pull-right">
-					<input type="text" placeholder="Search"/>
-				</div>
+				<form action="/search" method="GET" onsubmit="return tk(query.value);">
+					<input type="hidden" name="_token" value="{{ csrf_token() }}">
+					<div class="search_box pull-right">
+						<input type="text" placeholder="Search" name="query" id="query"/>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
 </div><!--/header-bottom-->
+<script type="text/javascript">
+	function search(query)
+{
+	if (isEmpty(query)==false)
+    {
+		alert("Chưa nhập từ khóa cần tìm!");
+		return false;
+	}	
+return true;
+}
+</script>

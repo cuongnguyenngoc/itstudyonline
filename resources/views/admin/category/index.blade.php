@@ -7,12 +7,16 @@
  }
 </style>
 <div id="Category">
+    @if(session('statusdelete'))
+        <div class="alert alert-success" role="alert">{{ session('statusdelete') }}</div>
+    @endif
     <a data-toggle="collapse" href="#adminCollapse" id="div-a" class="btn btn-primary">Categories <span class="caret"></span></a>
     <div id="adminCollapse" class="panel-collapse collapse">
         <ul class="list-group">
         @foreach ($categories as $category)
             <li class="list-group-item">
-                {{$category->cat_name}}                       
+                {{$category->cat_name}}  
+                <a href="{{route('admin.category.delete',$category->id)}}" onclick="return confirm('Do you want to delete this Category?')"><p>Delete</p></a>                     
             </li>
         @endforeach
         </ul>
@@ -21,6 +25,9 @@
 <div class="panel panel-info panel-right">
     <div class="panel-heading">Add Category</div>
     <div class="panel-body">
+        @if(session('status'))
+            <div class="alert alert-success" role="alert">{{ session('status') }}</div>
+        @endif
         <form action="{{route('admin.category.update')}}" method="POST" id="addCategory">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div class="form-group">

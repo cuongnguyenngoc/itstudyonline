@@ -7,12 +7,16 @@
  }
 </style>
 <div id="Language">
+    @if(session('statusdelete'))
+        <div class="alert alert-success" role="alert">{{ session('statusdelete') }}</div>
+    @endif
     <a data-toggle="collapse" href="#adminCollapse" id="div-a" class="btn btn-primary">Languages <span class="caret"></span></a>
     <div id="adminCollapse" class="panel-collapse collapse">
         <ul class="list-group">
         @foreach ($languages as $language)
             <li class="list-group-item">
-                {{$language->lang_name}}                       
+                {{$language->lang_name}}   
+                <a href="{{route('admin.language.delete',$language->id)}}" onclick="return confirm('Do you want to delete this Category?')"><p>Delete</p></a>                                         
             </li>
         @endforeach
         </ul>
@@ -21,6 +25,9 @@
 <div class="panel panel-info panel-right">
     <div class="panel-heading">Add Category</div>
     <div class="panel-body">
+        @if(session('status'))
+            <div class="alert alert-success" role="alert">{{ session('status') }}</div>
+        @endif
         <form action="{{route('admin.language.update')}}" method="POST" role="form" id="addLanguage">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 

@@ -102,4 +102,14 @@ class Course extends Model
     public function numQuizs(){
         return $this->lectures()->where('type','Quiz')->count();
     }
+
+    public function numWrongAnswerInQuizs(){
+        $num = 0;
+        foreach ($this->lectures as $lecture) {
+            foreach ($lecture->questions as $question) {
+                $num += $question->num_wrong_answers;
+            }
+        }
+        return $num;
+    }
 }

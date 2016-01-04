@@ -14,7 +14,7 @@
 @section('content')
 
 <!-- Main -->
-<div class="container">
+<div class="container" style="min-height: 500px;">
     <div class="row">
         <a class="btn pull-right btn-default"  type="button" href="{{URL::to('forum/topic/create/'. $id)}}"><span class = "glyphicon glyphicon-plus"> </span> New Topic</a>
     </div>
@@ -30,6 +30,7 @@
                 <thead>
                     <tr>
                         <th>Topic</th>
+
                         <th>Replies</th>
                         <th>Activity</th>
                     </tr>

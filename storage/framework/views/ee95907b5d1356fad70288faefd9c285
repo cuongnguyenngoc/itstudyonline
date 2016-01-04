@@ -64,41 +64,41 @@
 
 
 <div id="user">
-	<div id="user-img">
-		<img src="">
+	<div class="col-md-12" style="padding: 37px;">
+		<img src="<?php echo e(url($user->image->path)); ?>" height="100px;" />
 	</div>
 	<div id="content">
 		<p>
 			<strong>
 				Name : 
 			</strong>                    
-			<?php echo e($User->fullname); ?>
+			<?php echo e($user->fullname); ?>
 
 		</p>
 		<p>
 			<strong>
 				Address : 
 			</strong>
-			<?php echo e($User->address); ?>
+			<?php echo e($user->address); ?>
 
 		</p>
 		<p>
 			<strong>
 				Email : 
 			</strong>
-			<?php echo e($User->email); ?>
+			<?php echo e($user->email); ?>
 
 		</p>
 		<p>
 			<strong>
 				Birth Day : 
 			</strong>
-			<?php echo e($User->birth); ?>
+			<?php echo e($user->birth); ?>
 
 		</p>
 		<p>
 			<strong>
-				Contact : <?php echo e($User->links); ?>
+				Contact : <?php echo e($user->links); ?>
 
 			</strong>
 		</p>
@@ -106,14 +106,14 @@
 			<strong>
 				Introduction :
 			</strong>
-			<?php echo e($User->biography); ?>
+			<?php echo e($user->biography); ?>
 
 		</p>
 		<p>
 			<strong>
 				Expert : 
 			</strong>
-			<?php echo e($User->expert); ?>
+			<?php echo e($user->expert); ?>
 
 		</p>
 	</div>

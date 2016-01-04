@@ -10,6 +10,8 @@ use App\TopicForum;
 use App\CategoryForum;
 use App\PostForum;
 use App\Enroll;
+use App\Course;
+use App\Image;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,9 +22,8 @@ class TopicController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-
-    public function __construct(){
-        $this->middleware('auth', ['except' => 'show']);
+    public function __construct() {
+        $this->middleware('auth',['except'=>'show']);
     }
 
     public function index() {
@@ -40,12 +41,12 @@ class TopicController extends Controller {
         return View('forum.create-topic', compact('items'));
     }
 
-    public function createOfCouse($enroll_id) {
-        $enrolls = Enroll::where("user_id", "=", Auth::user()->id)->get();
-
+    public function createOfCouse($course_id) {
+        $enrolls = Enroll::where("user_id", "=", Auth::user()->id)->where('course_id', '=', $course_id)->get();
         if ($enrolls->count() == 0)
             return redirect("/");
-        return View('forum.create-topic', compact("enroll_id"));
+        $enroll_id = $enrolls[0]->course_id;
+        return View('forum.create-topic', compact("course_id"));
     }
 
     /**
@@ -65,7 +66,6 @@ class TopicController extends Controller {
                 $topic = new TopicForum;
                 $topic->topic_date = \Carbon\Carbon::now()->toDateTimeString();
                 $user_id = Auth::user()->id;
-//            $user_id = 3;
                 $user = User::find($user_id);
                 $topic->User()->associate($user);
             }
@@ -75,7 +75,7 @@ class TopicController extends Controller {
                 $cate = CategoryForum::find($request->input("cat_id"));
                 $topic->CategoryForum()->associate($cate);
             } else {
-                $enroll = Enrolls::find($request->input("enroll_id"));
+                $enroll = Enroll::where('course_id', '=', $request->input("course_id"))->where('user_id', '=', Auth::user()->id)->get()->first()->id;
                 $topic->EnrollForum()->associate($enroll);
             }
 
@@ -129,6 +129,8 @@ class TopicController extends Controller {
         $replies = $topic->replyForums()->where('parent_id', '=', '0')->orderBy('rep_date', 'desc')->get();
         $result['repCount'] = $replies->count();
         foreach ($replies as $reply) {
+            $reply->link_img = Image::where('user_id', '=', $reply->rep_by)->get()->first()->path;
+            $reply->isEdit = (Auth::check() && Auth::user()->id == $reply->rep_by) ? "edit" : "";
             $reply->rep_by = User::find($reply->rep_by)->fullname;
             $reply->rep_date = \Carbon\Carbon::parse($reply->rep_date)->format("M d,Y");
             $subReply = \App\ReplyForum::where('parent_id', '=', $reply->id)->orderBy('rep_date', 'desc')->get();
@@ -148,7 +150,7 @@ class TopicController extends Controller {
 
     public function showOfEnroll($enroll_id, $id) {
 
-        $enroll_id = urldecode($enroll_id);
+        $course_id = urldecode($enroll_id);
         $id = urldecode($id);
         //get thoi gian
         $topic = TopicForum::whereRaw("topic_subject = '$id'")->get()->toArray();
@@ -160,8 +162,8 @@ class TopicController extends Controller {
         $user = User::findOrFail($userId);
         $post = $topic->PostForum()->first();
         //get thu muc cua bai viet
-        $enroll = Enroll::where("id", "=", $enroll_id)->where("user_id", "=", Auth::user()->id)->get();
-        if($enroll->count() == 0)
+        $enroll = Enroll::where("course_id", "=", $course_id)->where("user_id", "=", Auth::user()->id)->get();
+        if ($enroll->count() == 0)
             return \Illuminate\Support\Facades\Redirect::back();
         $result = [];
         $result['idTopic'] = $topic->id;
@@ -170,11 +172,14 @@ class TopicController extends Controller {
         $result['subject'] = $subject;
         $result['content'] = $post->post_content;
         $result['course_id'] = $enroll[0]->course_id;
+        $result['course_name'] = Course::find($enroll[0]->course_id)->course_name;
         $result['isEdit'] = (Auth::check() && Auth::user()->id == $userId) ? true : false;
         //get cac reply cua bai viet
         $replies = $topic->replyForums()->where('parent_id', '=', '0')->orderBy('rep_date', 'desc')->get();
         $result['repCount'] = $replies->count();
         foreach ($replies as $reply) {
+            $reply->link_img = Image::where('user_id', '=', $reply->rep_by)->get()->first()->path;
+            $reply->isEdit = (Auth::check() && Auth::user()->id == $reply->rep_by) ? "edit" : "";
             $reply->rep_by = User::find($reply->rep_by)->fullname;
             $reply->rep_date = \Carbon\Carbon::parse($reply->rep_date)->format("M d,Y");
             $subReply = \App\ReplyForum::where('parent_id', '=', $reply->id)->orderBy('rep_date', 'desc')->get();
@@ -207,21 +212,20 @@ class TopicController extends Controller {
         $post = $topicSub->PostForum()->first();
         $content = $post->post_content;
         if (Auth::check() && Auth::user()->id == $topicBy) {
-            $route = $_SERVER['REQUEST_URI'];
             return view("forum.edit-topic", compact("items", "content"))->with("topic", $topicSub);
         } else {
             return \Illuminate\Support\Facades\Redirect::back();
         }
     }
-    public function editOfEnroll($enroll_id, $id){
 
-        $enrolls = Enrolls::where("id", "=", $enroll_id)->where("user_id", "=", Auth::user()->id)->get();
+    public function editOfEnroll($course_id, $id) {
+
+        $enrolls = Enroll::where("course_id", "=", $course_id)->where("user_id", "=", Auth::user()->id)->get();
         if ($enrolls->count() == 0)
             return redirect("/");
-        
+
         $id = urldecode($id);
         //get thoi gian
-        $enroll_id = $enrolls[0]->id;
         $topic = TopicForum::whereRaw("topic_subject = '$id'")->get()->toArray();
         $topicSub = TopicForum::findOrFail($topic[0]["id"]);
         $topicBy = $topic[0]["topic_by"];
@@ -229,11 +233,10 @@ class TopicController extends Controller {
         $content = $post->post_content;
         if (Auth::check() && Auth::user()->id == $topicBy) {
             $route = $_SERVER['REQUEST_URI'];
-            return view("forum.edit-topic", compact("content", "enroll_id"))->with("topic", $topicSub);
+            return view("forum.editTopicOfCourse", compact("content", "course_id"))->with("topic", $topicSub);
         } else {
             return \Illuminate\Support\Facades\Redirect::back();
         }
-        
     }
 
     /**
@@ -257,27 +260,30 @@ class TopicController extends Controller {
         //delete
         $id = urldecode($id);
         //get thoi gian
-        $topic = TopicForum::whereRaw("topic_subject = '$id'")->where("enroll_id" ,"=",0)->get()->toArray();
-        $topicSub = TopicForum::findOrFail($topic[0]["id"]);
+        $topic = TopicForum::where("topic_subject", "=", $id)->where("enroll_id", NULL)->get();
+        $topicSub = TopicForum::find($topic[0]->id);
         $topicBy = $topic[0]["topic_by"];
-        if (Auth::check() && Auth::user()->id == $topicBy) {
+        if (Auth::check() && Auth::user()->id == $topicBy && null !== $topicSub) {
             $topicSub->delete();
             return \Illuminate\Support\Facades\Redirect::to('/forum');
         } else {
             return \Illuminate\Support\Facades\Redirect::back();
         }
     }
-    public function destroyOfEnroll($enroll_id, $id){
+
+    public function destroyOfEnroll($course_id, $id) {
         $id = urldecode($id);
         //get thoi gian
-        $topic = TopicForum::whereRaw("topic_subject = '$id'")->where("enroll_id" ,"=",$enroll_id)->get()->toArray();
-        $topicSub = TopicForum::findOrFail($topic[0]["id"]);
+        $enroll_id = Enroll::where('course_id', '=', $course_id)->where('user_id', '=', Auth::user()->id)->get()->first()->id;
+        $topic = TopicForum::where("topic_subject", '=', $id)->where("enroll_id", "=", $enroll_id)->get();
+        $topicSub = TopicForum::find($topic[0]["id"]);
         $topicBy = $topic[0]["topic_by"];
         if (Auth::check() && Auth::user()->id == $topicBy) {
             $topicSub->delete();
-            return \Illuminate\Support\Facades\Redirect::to('/forum/course/' . $enroll_id);
+            return \Illuminate\Support\Facades\Redirect::to('/forum/course/' . $course_id);
         } else {
             return \Illuminate\Support\Facades\Redirect::back();
         }
     }
+
 }

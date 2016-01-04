@@ -1,0 +1,113 @@
+<?php $__env->startSection('css'); ?>
+	
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('header-top'); ?>
+	<?php echo $__env->make('public.layouts.header.header-top', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('header-middle'); ?>
+	<?php echo $__env->make('public.layouts.header.header-middle', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+	<section>
+		<div class="container" style="min-height: 500px;">
+			<div class="row">
+				<div class="col-md-5 col-md-offset-4">
+					<h3 style="text-align: center; color: #444444;"> Result searching for keyword <?php echo e($query); ?></h3>
+				</div>
+				<div class="col-sm-3">
+				<form action="/search" method="GET" onsubmit="return tk(query.value);">
+					<input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
+					<div class="search_box pull-right">
+						<input type="text" placeholder="Search" name="query" id="query"/>
+					</div>
+				</form>
+			</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-3">
+					<!-- Left column -->
+					<div class="left-sidebar" id="sidebar">
+						<h2> Browser Courses</h2>
+			            <ul class="nav nav-stacked left-sidebar" id="navLeftSidebar" style="background: #F0F0E9;">
+			                <li class="nav-header"> 
+			                	<a href="#category" data-parent="#navLeftSidebar" data-toggle="collapse">
+			                		Category <i class="glyphicon glyphicon-chevron-right" style="margin-left: 157px;"></i>
+			                	</a>
+			                    <ul class="nav nav-stacked collapse" id="category">
+			                    	<?php foreach($categories as $category): ?>
+			                        	<li><a href="#"> <?php echo e($category->cat_name); ?></a></li>
+			                        <?php endforeach; ?>
+			                    </ul>
+			                </li>
+			                <li class="nav-header"> 
+			                	<a href="#language" data-parent="#navLeftSidebar" data-toggle="collapse"> 
+			                		Programming Language <i class="glyphicon glyphicon-chevron-right" style="margin-left: 63px;"></i>
+			                	</a>
+
+			                    <ul class="nav nav-stacked collapse" id="language">
+			                        <?php foreach($languages as $language): ?>
+			                        	<li><a href="#"> <?php echo e($language->lang_name); ?></a></li>
+			                        <?php endforeach; ?>
+			                    </ul>
+			                </li>
+			                <li class="nav-header">
+			                    <a href="#level" data-parent="#navLeftSidebar" data-toggle="collapse"> 
+			                    	Learning Level <i class="glyphicon glyphicon-chevron-right" style="margin-left: 122px;"></i>
+			                    </a>
+			                    <ul class="nav nav-stacked collapse" id="level">
+				                    <?php foreach($levels as $level): ?>
+				                        <li><a href="#"> <?php echo e($level->level_name); ?></a></li>
+				                    <?php endforeach; ?>
+			                    </ul>
+			                </li>
+			            </ul>
+					</div>
+				</div>
+				
+				<div class="col-sm-9 padding-right">
+					<div class="features_items" id="freecourse"><!--features_items-->
+						<h2 class="title text-center">Result</h2>
+						<?php if($courses->count() > 0): ?>
+							<?php foreach($courses as $course): ?>
+								<div class="col-sm-4">
+									<div class="product-image-wrapper">
+										<div class="single-products">
+											<div class="productinfo text-center">
+												<a href="" class="thumbnail">
+													<img src="/<?php echo e($course->image->path); ?>" alt="<?php echo e($course->image->img_name); ?>" style="height: 240px;" />
+												</a>
+												<h2><?php echo e($course->course_name); ?></h2>
+											</div>
+											<div class="product-overlay">
+												<div class="overlay-content">
+													<h2><?php echo e($course->course_name); ?></h2>
+													<a href="<?php echo e(url('course/'.$course->id)); ?>" class="btn btn-default add-to-cart"> Detail</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							<?php endforeach; ?>
+						<?php else: ?>
+							<h5 style="text-align: center;">Nothing to show</h5>
+						<?php endif; ?>
+					</div><!--features_items-->
+				</div>
+			</div>
+		</div>
+		<div class="row">
+        <div class="col-lg-4  col-lg-offset-5">
+            <?php echo $courses->render(); ?>
+
+        </div>
+    </div>
+	</section>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('footer-bottom'); ?>
+	<?php echo $__env->make('public.layouts.footer.footer-bottom', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('public.layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

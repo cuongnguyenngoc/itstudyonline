@@ -15,7 +15,7 @@
         <div class="col-sm-3">
             <!-- Left column -->
             <ul class="side-nav" id="sideUser">
-                <img src="/<?php echo e(Auth::user()->image->path); ?>" width="150" height="150" style="display:inline-block;border: 1px solid #ddd;padding: 4px;margin-top:10px;" />
+                <img src="<?php echo e(url(Auth::user()->image->path)); ?>" width="150" height="150" style="display:inline-block;border: 1px solid #ddd;padding: 4px;margin-top:10px;" />
                 <h5><?php echo e(Auth::user()->fullname); ?></h5>
                 <li style=""> <a href="<?php echo e(route('user.editprofile')); ?>" class="list-group-item ">Profile</a>
                 </li>
@@ -33,7 +33,7 @@
                 <h2 style="text-align:center"><i></i>Account</h2>
                 <p style="text-align:center; font-size:15px">Change Your Password</p>
                 
-                <div class="panel panel-info course-goals panel-right">
+                <div class="panel panel-info panel-right">
                     <div class="panel-heading"></div>
                     <div class="panel-body">
                         <div class="alert alert-success hide" id="message">
@@ -95,6 +95,7 @@
             },
             newpassword: {
                 required: true,
+                minlength: 6
             },
             confirm: {
                 required: true,
@@ -106,7 +107,10 @@
                 required: "Please enter your email",
                 remote: "Please enter right password"
             },
-            password: "Please enter your new password",
+            newpassword: {
+                required: "Please enter your new password",
+                minlength: "Password should be minimax 6 characters"
+            }
             confirmPwd: {
                 required: "Please confirm your password",
                 equalTo: "Password don't match, Please try again"

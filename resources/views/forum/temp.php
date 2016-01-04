@@ -14,7 +14,7 @@
 @section('content')
 
 <!-- Main -->
-<div class="container main">
+<div class="container main" style="min-height: 500px;">
 
     <div class="row">
         <div class="col-md-8 col-md-push-2 news-show">	

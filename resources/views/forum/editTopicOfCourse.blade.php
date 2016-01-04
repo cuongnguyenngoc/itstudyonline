@@ -11,7 +11,7 @@
 @stop
 
 @section('content')
-<div class="container main">
+<div class="container main" style="min-height: 500px;">
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-info">
@@ -26,7 +26,7 @@
                     {!!Form::open(array('route' => 'forum.topic.create',"method" => "POST","id"=>"frm"))!!}
                     {!!Form::hidden('id',$topic->id,['id'=>'topic_id'])!!}
                     <div class="col-lg-6">
-                        {!! Form::text('topic_name',$topic->topic_subject,['id'=>'topic_name', 'value'=> '123' , 'placeholder'=>'What is this discussion about in one of sentence?','class'=>'form-control']) !!}
+                        {!! Form::text('topic_name',$topic->topic_subject,['disabled' => 'disabled','id'=>'topic_name', 'value'=> '123' , 'placeholder'=>'What is this discussion about in one of sentence?','class'=>'form-control']) !!}
                     </div>
 
                     <div class="col-lg-12">
@@ -34,6 +34,7 @@
                     </div>
                     <div class = "col-lg-2">
                         <button type="submit" class="btn btn-default">Submit</button>
+                        <a href="javascript:history.go(-1)" class="btn btn-default">Cancel</a>
                     </div>
                     {!! Form:: close() !!}
                 </div>
@@ -65,7 +66,7 @@ $('document').ready(function () {
         var topic = {};
         topic.id = $("#topic_id").val();
         topic.topic_name = $('#topic_name').val();
-        topic.enroll_id = {{$enroll_id}};
+        topic.course_id = {{$course_id}};
         topic.post = CKEDITOR.instances.editor1.getData();
         if(topic.post == '')
             return;

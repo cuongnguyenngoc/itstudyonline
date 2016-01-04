@@ -18,13 +18,15 @@
         <div class="col-sm-3">
             <!-- Left column -->
             <ul class="side-nav" id="sideUser">
-                <img src="/{{Auth::user()->image->path}}" width="150" height="150" style="display:inline-block;border: 1px solid #ddd;padding: 4px;margin-top:10px;" />
+                <img src="{{url(Auth::user()->image->path)}}" width="150" height="150" style="display:inline-block;border: 1px solid #ddd;padding: 4px;margin-top:10px;" />
                 <h5>{{ Auth::user()->fullname }}</h5>
                 <li style=""> <a href="{{ route('user.editprofile') }}" class="list-group-item ">Profile</a>
                 </li>
                 <li > <a href="{{ url('user/addphoto') }}" class="list-group-item "> Avatar</a>
                 </li>
                 <li><a href="{{ url('user/changepassword') }}" class="list-group-item "> ChangePassword</a>
+                </li>
+                <li><a href="{{ url('user/rechargeMoney') }}" class="list-group-item "> Balance</a>
                 </li>
             </ul>
             <hr>

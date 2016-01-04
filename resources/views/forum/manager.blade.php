@@ -14,7 +14,7 @@
 @section('content')
 
 <!-- Main -->
-<div class="container">
+<div class="container" style="min-height: 500px;">
     <div class = "row">
         @include('forum.panel.leftsidebar')
         <div class="col-md-8">

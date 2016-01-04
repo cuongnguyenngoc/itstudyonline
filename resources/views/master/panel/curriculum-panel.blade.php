@@ -89,7 +89,7 @@
                                                     <div class='tab-content'>
                                                         @if($lecture->type == 'Video')
                                                             <div id='video{{$lecture->oldOrder}}' class="tab-pane fade in active">
-                                                               <form id='addVideo{{$lecture->oldOrder}}' class="addVideo" getId='{{$lecture->oldOrder}}'>
+                                                                <form id='addVideo{{$lecture->oldOrder}}' class="addVideo" getId='{{$lecture->oldOrder}}'>
                                                                     <input type='hidden' name='_token' value='{!! csrf_token() !!}'>
                                                                     <input type='hidden' name='video_id' id='video_id{{$lecture->oldOrder}}' value="{{($lecture->video) ? $lecture->video->id : null}}">
                                                                     <input type='hidden' name='doc_id' id='doc_video_id{{$lecture->oldOrder}}' value="{{($lecture->document) ? $lecture->document->id : null}}">
@@ -111,7 +111,7 @@
                                                             </div>
                                                         @elseif($lecture->type == 'Document')
                                                             <div id='video{{$lecture->oldOrder}}' class="tab-pane fade in active">
-                                                               <form id='addVideo{{$lecture->oldOrder}}' class="addVideo hide" getId='{{$lecture->oldOrder}}'>
+                                                                <form id='addVideo{{$lecture->oldOrder}}' class="addVideo hide" getId='{{$lecture->oldOrder}}'>
                                                                     <input type='hidden' name='_token' value='{!! csrf_token() !!}'>
                                                                     <input type='hidden' name='video_id' id='video_id{{$lecture->oldOrder}}' value="{{($lecture->video) ? $lecture->video->id : null}}">
                                                                     <input type='hidden' name='doc_id' id='doc_video_id{{$lecture->oldOrder}}' value="{{($lecture->document) ? $lecture->document->id : null}}">

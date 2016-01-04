@@ -239,11 +239,6 @@ class MasterController extends Controller
         }
     }
 
-    public function create_detail_course($id){
-
-        return View('master.create-course-detail');
-    }
-
     public function doDocumentUpload(Request $request){
         $file = $request->file('file');
         //return Response::json(['doc' => $request->input('doc_id'), 'video' => $request->input('video_doc_id')]);
@@ -742,7 +737,7 @@ class MasterController extends Controller
 
             $courseItems = array(
                 'COURSE CONTENT' => array(
-                    'course-goals'=>'Course goals',
+                    'course-basics'=>'Course basics',
                     'curriculum'=>'Curriculum'
                 ),
                 'COURSE INFO' => array(
@@ -761,6 +756,8 @@ class MasterController extends Controller
             $levels = Learninglevel::lists('level_name','id')->all();
 
             return View('master.create-course', compact('courseItems','languages','categories','levels','course','url'));
+        }else{
+            return view('errors.404');
         }
     }
 

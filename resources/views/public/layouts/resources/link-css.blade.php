@@ -3,7 +3,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <meta name="csrf-token" content="{!! csrf_token() !!}" />
-<title>Home | Code Dojo</title>
+<title>HOME | ITSTUDYONLINE</title>
 <link href="{{url('css/bootstrap.min.css')}}" rel="stylesheet">
 <link href="{{url('css/font-awesome.min.css')}}" rel="stylesheet">
 <link href="{{url('css/prettyPhoto.css')}}" rel="stylesheet">

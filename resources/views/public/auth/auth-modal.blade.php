@@ -36,8 +36,8 @@
 		          				<h5>Or</h5>
 		          			</div>
 		            		<div class="col-md-6">
-			              		<a class="btn btn-facebook col-sm-12 btn-md" style="margin-bottom: 10px; font-size: 16px;" href=""><i class="fa fa-facebook "></i> Login with Facebook</a>
-	                    		<a class="btn btn-google-plus col-sm-12 btn-md" style="font-size: 16px;" href=""><i class="fa fa-google-plus"></i> Login with Google Plus</a>
+			              		<a class="btn btn-facebook col-sm-12 btn-md" style="margin-bottom: 10px; font-size: 16px;" href="{{url('auth/facebook')}}"><i class="fa fa-facebook "></i> Login with Facebook</a>
+	                    		<a class="btn btn-google-plus col-sm-12 btn-md" style="font-size: 16px;" href="{{url('auth/google')}}"><i class="fa fa-google-plus"></i> Login with Google Plus</a>
 		            		</div>
 		              		
 		          		{!! Form::close() !!}

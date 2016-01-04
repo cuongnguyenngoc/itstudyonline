@@ -11,7 +11,7 @@
 @stop
 
 @section('content')
-<div class="container main">
+<div class="container main"  style="min-height: 500px;">
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-info">
@@ -33,13 +33,18 @@
                         {!! Form::select('cate_id',array() + $items,null, ['id' => 'cate_id', 'class' => 'form-control']) !!}
                     </div>
                     @else
-                    {!!Form::hidden('enroll_id',$enroll_id,['id'=>'enroll_id'])!!}
+                    {!!Form::hidden('course_id',$course_id,['id'=>'course_id'])!!}
                     @endif
                     <div class="col-lg-12">
                         {!! Form::textarea('editor1',null,['id'=>'editor1' ,'rows'=>'5','class'=>'form-control']) !!}
                     </div>
                     <div class = "col-lg-2">
-                        <button type="submit" class="btn btn-default">Submit</button>
+                        <button type="submit" class="btn btn-default" >Submit</button>
+                        @if(isset($items))
+                        <a href="javascript:history.go(-1)" class="btn btn-default">Cancel</a>
+                        @else
+                        <a href="javascript:history.go(-1)" class="btn btn-default">Cancel</a>
+                        @endif
                     </div>
                     {!! Form:: close() !!}
                 </div>
@@ -47,21 +52,21 @@
                 <!--/panel-body-->
             </div>
             <!--/panel-->
-            <a href="{{url('forum')}}" class="btn btn-primary btn-sm" style="margin-bottom: 20px;">Back to forum</a>
+
         </div>
     </div>
 </div>
 @stop
 
 @section('footer-bottom')
-    <footer>
+<footer>
     @include('public.layouts.footer.footer-bottom')
-@stop
+    @stop
 
-@section('script')
-<script src="{{url('js/forum/ckeditor.js')}}"></script>
-<script src="{{url('js/forum/adapters/jquery.js')}}"></script>
-<script>
+    @section('script')
+    <script src="{{url('js/forum/ckeditor.js')}}"></script>
+    <script src="{{url('js/forum/adapters/jquery.js')}}"></script>
+    <script>
 
 $('document').ready(function () {
     CKEDITOR.replace('editor1', {
@@ -74,25 +79,24 @@ $('document').ready(function () {
         topic.topic_name = $('#topic_name').val();
         topic.token = $("input[name=_token]").val();
         topic.post = CKEDITOR.instances.editor1.getData();
-        @if(isset($items))
-            topic.cat_id = $('select option:selected').val();
-        @else
-            topic.enroll_id = $("#enroll_id").val();
-        @endif
-        
-        if(topic.post == '')
-            return;
-        $.ajax({
-            type: "POST",
-            url : "{{url('forum/topic/store')}}",
+                @if (isset($items))
+                topic.cat_id = $('select option:selected').val();
+                @else
+                topic.course_id = {{$course_id}};
+            @endif
+
+            if (topic.post == '')
+        return;
+    $.ajax({
+    type: "POST",
+            url: "{{url('forum/topic/store')}}",
             data: topic,
             success: function (response) {
                 $('#message').removeClass('hide');
                 $('#message').find('p').text(response.message);
             }
-        });
-        
     });
+            });
 });
-</script>
-@stop
+    </script>
+    @stop

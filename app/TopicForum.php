@@ -24,6 +24,6 @@ class TopicForum extends Model
         return $this->hasMany("App\ReplyForum", "rep_topic", "id");
     }
     public function EnrollForum(){
-        return $this->belongsTo("App\Enrolls", "enroll_id", "id");
+        return $this->belongsTo("App\Enroll", "enroll_id", "id");
     }
 }

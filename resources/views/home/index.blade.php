@@ -65,7 +65,7 @@
 					<div class="features_items" id="freecourse"><!--features_items-->
 						<h2 class="title text-center">Free Courses</h2>
 						@foreach($usercreatecourses as $usercreatecourse)
-							@if($usercreatecourse->course->cost == 0)
+							@if($usercreatecourse->course->cost == 0 && $usercreatecourse->course->isPublic == 1)
 							<div class="col-sm-4">
 								<div class="product-image-wrapper">
 									<div class="single-products">
@@ -108,6 +108,7 @@
 							@foreach($categories as $category)
 								<div class="tab-pane fade" id="{{str_replace(' ','_',$category->cat_name)}}">
 									@foreach($category->usercreatecourses()->where('isBoss',1)->get() as $usercreatecourse)
+										@if($usercreatecourse->course->isPublic == 1)
 										<div class="col-sm-3">
 											<div class="product-image-wrapper">
 												<div class="single-products">
@@ -120,6 +121,7 @@
 												</div>
 											</div>
 										</div>
+										@endif
 									@endforeach
 								</div>
 							@endforeach
@@ -133,12 +135,12 @@
 							<div class="carousel-inner">
 								<div class="item active">
 									@foreach($usercreatecourses as $usercreatecourse)	
-										@if($usercreatecourse->course()->where('views','>',200)->first() != null)
+										@if($usercreatecourse->course()->where('views','>',200)->first() != null && $usercreatecourse->course->isPublic == 1)
 											<div class="col-sm-4">
 												<div class="product-image-wrapper">
 													<div class="single-products">
 														<div class="productinfo text-center">
-															<img src="/{{$usercreatecourse->course->image->path}}" alt="{{$usercreatecourse->course->image->img_name}}" />
+															<img src="/{{$usercreatecourse->course->image->path}}" alt="{{$usercreatecourse->course->image->img_name}}" height="160px"/>
 															<h2>{{$usercreatecourse->course->cost}}</h2>
 															<p>{{$usercreatecourse->course->course_name}}</p>
 															<a href="{{url('course/'.$usercreatecourse->course->id)}}" class="btn btn-default add-to-cart"> Detail</a>

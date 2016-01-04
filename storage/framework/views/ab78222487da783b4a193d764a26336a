@@ -3,7 +3,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <meta name="csrf-token" content="<?php echo csrf_token(); ?>" />
-<title>Home | Code Dojo</title>
+<title>HOME | ITSTUDYONLINE</title>
 <link href="<?php echo e(url('css/bootstrap.min.css')); ?>" rel="stylesheet">
 <link href="<?php echo e(url('css/font-awesome.min.css')); ?>" rel="stylesheet">
 <link href="<?php echo e(url('css/prettyPhoto.css')); ?>" rel="stylesheet">

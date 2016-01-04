@@ -91,22 +91,21 @@
     Manage Comments 
   </div>
   <div id="comment">
-    <?php foreach ($Comments as $Comment): ?>
+    <?php foreach ($comments as $comment): ?>
       <div id="content">
-        <a data-toggle="collapse" href="#collapse"><p id="name">{{$Comment->fullname}}</p></a>
+        <a data-toggle="collapse" href="#collapse"><p id="name">{{$comment->user->fullname}}</p></a>
         <div id="collapse" class="panel-collapse collapse">
-          <div class="panel-body">{{$Comment->biography}}</div>
+          <div class="panel-body">{{$comment->user->biography}}</div>
         </div>
-        <p id="content-comment">{{$Comment->content}}</p>
-        <!-- <?php echo $Comment->id ?> -->
-        <p><a href="{{route('admin.forumManage.delete',$Comment->id)}}" onclick="return confirm('Do you want to delete Comment?')" id="div-a">Delete</a></p>
+        <p id="content-comment">{{$comment->content}}</p>
+        <p><a href="{{route('admin.forumManage.delete',$comment->id)}}" onclick="return confirm('Do you want to delete Comment?')" id="div-a">Delete</a></p>
       </div>
     <?php endforeach ?>
   </div>
 </div>
 <div class="row">
   <div class="col-lg-4  col-lg-offset-5">
-  {!! $Comments->render() !!}
+  {!! $comments->render() !!}
   </div>
 </div>
 @stop

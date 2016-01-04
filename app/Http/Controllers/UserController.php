@@ -7,6 +7,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Image;
+use App\MoneyManager;
 use Response;
 use Auth;
 use DB;
@@ -33,9 +34,6 @@ class UserController extends Controller
 
     public function editprofile(){
         return view('user.editprofile');
-    }
-    public function login(){
-        return view('login');
     }
 
     public function updateProfile(Request $request){
@@ -103,18 +101,73 @@ class UserController extends Controller
             File::delete($image->path);
 
             $image->img_name = $imgname;
-            $image->path = 'uploads/users/'. $name . '.' . $ext;
+            $image->path = '/uploads/users/'. $name . '.' . $ext;
             $image->save();
         }else{
 
             $image = Auth::user()->image()->create([
                         'img_name' => $imgname,
-                        'path' => 'uploads/users/'. $name . '.' . $ext
+                        'path' => '/uploads/users/'. $name . '.' . $ext
                     ]);
             $image = Image::find($image->id);
         }
 
         return Response::json(['status' => true, 'image'=>$image, 'message'=>'Cool! You have uploaded image successfully']);    
+    }
+     public function rechargeMoney(){
+        $currentMoney = Auth::user()->balance;
+        return View('user.rechargeMoney')->with('balance', $currentMoney);
+    }
+    public function rechargeAction(Request $request){
+        $card_num = $request->input("card_num");
+        $card_type = $request->input("card_type");
+        $card_seri = $request->input("card_seri");
+        /*
+        viettel : 1 -- 50k
+        mobi : 2 --200k
+        vina 3 -- 500k
+        */
+        $currentMoney = Auth::user()->balance;
+        if(strlen($card_num) >= 2){
+            // $money = 0;
+            // if($card_type == 1){
+            //     $money = 50;
+            // } elseif($card_type == 2){
+            //     $money = 200;
+            // }
+            // else{
+            //     $money = 500;
+            // }
+            // $userId = Auth::user()->id;
+            // $chargeMo = new MoneyManager;
+            // $chargeMo->card_type  = $card_type;
+            // $chargeMo->card_id = $card_num;
+            // $chargeMo->user_id = $userId;
+            // $chargeMo = $chargeMo->save();
+            // if(null != $chargeMo){
+            //     $user =  User::find($userId);
+            //     $currentMoney += $money;
+            //     $user->balance =  $currentMoney;
+            //     $user->save();
+            // }
+            $money = MoneyManager::create([
+                'user_id' => Auth::user()->id,
+                'card_type' => $card_type,
+                'card_id' => $card_num,
+                'card_seri' => $card_seri
+                ]);
+            $money = MoneyManager::find($money->id);
+            if($money!=null){
+                Auth::user()->balance += $money->card_id;
+                Auth::user()->save();
+            }
+            return Response::json(['message' => 'Nạp thẻ thành công', 'balance' =>$currentMoney, 'input' => $request->input()]);
+
+        }
+        else{
+            return  Response::json(['message' => 'Nạp thẻ thất bại', 'balance' =>$currentMoney,'input' => $request->input()]);
+        }
+
     }
 }
 

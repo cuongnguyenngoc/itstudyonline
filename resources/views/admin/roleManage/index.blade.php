@@ -62,7 +62,7 @@
                 <td>{{$i}}</td>
                 <td>{{$user->role->role_name}}</td>
                 <td>{{$user->fullname}}</td>
-                <td><img src="/{{$user->image->path}}" height="30px;"></td>
+                <td><img src="{{url($user->image->path)}}" height="30px;"></td>
                 <td>{{$user->address}}</td>
                 <td>{{$user->birth}}</td>
                 <td>

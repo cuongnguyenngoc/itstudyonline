@@ -32,7 +32,9 @@
             </div>
             <div class="form-group showTip">
                 <label for="description">Course Summary</label>
-                <textarea class='form-control' id='descriptionText' name='descriptionText' placeholder='Enter course description' style='width:100%'><?php echo e($course->description); ?></textarea>
+                <div class="text-box">
+                    <textarea class='form-control' id='descriptionText' name='descriptionText' placeholder='Enter course description' style='width:100%'><?php echo e($course->description); ?></textarea>
+                </div>
             </div>
             <button type="submit" class="btn btn-default">Submit</button>
         <?php echo Form::close(); ?>

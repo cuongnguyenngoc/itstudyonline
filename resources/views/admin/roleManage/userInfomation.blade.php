@@ -66,50 +66,50 @@
 
 
 <div id="user">
-	<div id="user-img">
-		<img src="">
+	<div class="col-md-12" style="padding: 37px;">
+		<img src="{{url($user->image->path)}}" height="100px;" />
 	</div>
 	<div id="content">
 		<p>
 			<strong>
 				Name : 
 			</strong>                    
-			{{$User->fullname}}
+			{{$user->fullname}}
 		</p>
 		<p>
 			<strong>
 				Address : 
 			</strong>
-			{{$User->address}}
+			{{$user->address}}
 		</p>
 		<p>
 			<strong>
 				Email : 
 			</strong>
-			{{$User->email}}
+			{{$user->email}}
 		</p>
 		<p>
 			<strong>
 				Birth Day : 
 			</strong>
-			{{$User->birth}}
+			{{$user->birth}}
 		</p>
 		<p>
 			<strong>
-				Contact : {{$User->links}}
+				Contact : {{$user->links}}
 			</strong>
 		</p>
 		<p>
 			<strong>
 				Introduction :
 			</strong>
-			{{$User->biography}}
+			{{$user->biography}}
 		</p>
 		<p>
 			<strong>
 				Expert : 
 			</strong>
-			{{$User->expert}}
+			{{$user->expert}}
 		</p>
 	</div>
 				<!-- <p id="goBack">

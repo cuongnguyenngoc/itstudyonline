@@ -11,7 +11,7 @@
 @stop
 
 @section('content')
-<div class="container main">
+<div class="container main" style="min-height: 500px;">
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-info course-goals">

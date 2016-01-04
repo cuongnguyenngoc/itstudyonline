@@ -35,20 +35,33 @@ class adminController extends BaseController
 
     }
     public function userInfomation($id){
-        $user = User::find($id);
-        return view('admin.roleManage.userInfomation',compact('user'));
+        if(User::find(urldecode($id))!=null){
+            $user = User::find($id);
+            $url = null;
+            return view('admin.roleManage.userInfomation',compact('user','url'));
+        }else{
+            return view('errors.404');
+        }
     }
 
-    public function updateRole($id,$role_id){   
-        $user = User::find($id);
-        $user->role_id = $role_id;
-        $user->save();
+    public function updateRole($id,$role_id){ 
+        if(User::find(urldecode($id))!=null){  
+            $user = User::find(urldecode($id));
+            $user->role_id = $role_id;
+            $user->save();
 
-        return redirect()->route('admin.roleManage')->with('status','Role of user have been changed successfully');
+            return redirect()->route('admin.roleManage')->with('status','Role of user have been changed successfully');
+        }else{
+            return view('errors.404');
+        }
     }
     public function deleteUser($id){
-        $User = User::find($id)->delete();
-        return redirect()->route('admin.roleManage')->with('status','User have been deleted successfully');
+        if(User::find(urldecode($id))!=null){ 
+            $User = User::find(urldecode($id))->delete();
+            return redirect()->route('admin.roleManage')->with('status','User have been deleted successfully');
+        }else{
+            return view('errors.404');
+        }
     }
 
     //controller Course Manage
@@ -60,15 +73,23 @@ class adminController extends BaseController
     }
 
     public function deleteCourse($id){
-        $course = Course::find($id)->delete();
-        return redirect('/admin/courseManage')->with('status','You have deleted course successfully');
+        if(Course::find(urldecode($id))!=null){ 
+            $course = Course::find($id)->delete();
+            return redirect('/admin/courseManage')->with('status','You have deleted course successfully');
+        }else{
+            return view('errors.404');
+        }
     }
 
     public function courseInfomation($id)
     {
-        $course = Course::find($id); 
-        $url = null;
-        return view('admin.courseManage.courseInfomation',compact('course','url'));
+        if(Course::find(urldecode($id))!=null){ 
+            $course = Course::find($id); 
+            $url = null;
+            return view('admin.courseManage.courseInfomation',compact('course','url'));
+        }else{
+            return view('errors.404');
+        }
     }
 
     //Controller Control Posts
@@ -81,21 +102,25 @@ class adminController extends BaseController
 
     public function acceptCourse($id)
     {
-        $course = Course::find($id);
-        if($course->isPublic == 0){
-            $course->isPublic = 1;
-            $course->save();
-        }
+        if(Course::find(urldecode($id))!=null){ 
+            $course = Course::find($id);
+            if($course->isPublic == 0){
+                $course->isPublic = 1;
+                $course->save();
+            }
 
-        return redirect('/admin/courseControl')->with('status','Course is public now');
+            return redirect('/admin/courseControl')->with('status','Course is public now');
+        }else{
+            return view('errors.404');
+        }
     }
 
         //Controller Management Forum
     public function forumManage()
     {
-        $Comments = Comment::paginate(1);
+        $comments = Comment::paginate(1);
         $url = "admin/forumManage"; 
-        return view('admin.forumManage.index',compact('Comments','url'));
+        return view('admin.forumManage.index',compact('comments','url'));
     }
     public function deleteComment($id)
     {
@@ -121,6 +146,16 @@ class adminController extends BaseController
             ]);
         return redirect('/admin/categoryManage')->with('status','Category have been added successfully');
     }
+
+    public function categoryDelete($id){
+        if(Category::find(urldecode($id))!=null){ 
+            $category = Category::find($id)->delete();
+            return redirect()->route('admin.categoryManage')->with('statusdelete','Category have been deleted successfully');
+        }else{
+            return view('errors.404');
+        }
+    }
+
     //Management Language
     public function languageManage(){
         $languages = ProgrammingLanguage::all();
@@ -133,6 +168,15 @@ class adminController extends BaseController
             'lang_name'  => $name
             ]);
         return redirect('/admin/language')->with('status','Language have been added successfully');
+    }
+
+    public function languageDelete($id){
+        if(ProgrammingLanguage::find(urldecode($id))!=null){ 
+            $langugage = ProgrammingLanguage::find($id)->delete();
+            return redirect()->route('admin.languageManage')->with('statusdelete','Programming Language have been deleted successfully'); ;
+        }else{
+            return view('errors.404');
+        }
     }
 
     public function checkLanguageExisted(Request $request){

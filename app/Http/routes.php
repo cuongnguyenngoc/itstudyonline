@@ -12,12 +12,8 @@
 */
 
 Route::get('/','HomeController@index');
-
-// Test Area
-Route::get('test','HomeController@test');
-Route::get('admin/manage','HomeController@manage');
-Route::get('awe','HomeController@awe');
-// End of Test
+Route::get('search','HomeController@search');
+Route::get('back','HomeController@back');
 
 // Home route
 Route::get('course/{id}','HomeController@getCourse');
@@ -27,6 +23,10 @@ Route::post('checkEmailExist','Auth\AuthController@checkEmailExisted');
 Route::post('register','Auth\AuthController@postRegister');
 Route::post('login','Auth\AuthController@postLogin');
 Route::get('logout','Auth\AuthController@getLogout');
+Route::get('auth/facebook', 'Auth\AuthController@redirectToProviderFb');
+Route::get('auth/facebook/callback', 'Auth\AuthController@handleProviderCallbackFb');
+Route::get('auth/google', 'Auth\AuthController@redirectToProviderGg');
+Route::get('auth/google/callback', 'Auth\AuthController@handleProviderCallbackGg');
 // End of Authenciation
 
 //User Area
@@ -40,6 +40,8 @@ Route::post('user/changepass','UserController@changePassword');
 Route::get('user/addphoto','UserController@addphoto');
 Route::post('user/uploadphoto','UserController@uploadphoto');
 Route::post('user/checkRightPassword','UserController@checkRightPassword');
+Route::get('user/rechargeMoney','UserController@rechargeMoney');
+Route::post('user/rechargeMoney','UserController@rechargeAction');
 // End of User Area
 
 // Master Area
@@ -80,7 +82,10 @@ Route::post('lecture/delete-comment','DiscipleController@deleteComment');
 Route::post('lecture/mark-lecture','DiscipleController@markLecture');
 Route::post('disciple/rating-course','DiscipleController@rateCourse');
 Route::post('disciple/do-quiz','DiscipleController@doQuiz');
-Route::get('disciple/watch-rank','DiscipleController@watchRank');
+Route::get('disciple/watch-rank/','DiscipleController@watchRank');
+Route::get('disciple/watch-rank/{id}','DiscipleController@watchRank');
+Route::post('disciple/get-rank','DiscipleController@getRank');
+Route::get('disciple/my-courses','DiscipleController@getCoursesEnrolled');
 // End of disciple
 
 
@@ -176,6 +181,10 @@ Route::post('admin/categoryManage/update',[
     'as'    => 'admin.category.update',
     'uses'  =>'AdminController@categoryUpdate' 
 	]);
+Route::get('admin/category/{id}/delete',[
+	'as'	=> 'admin.category.delete',
+	'uses'	=>'AdminController@categoryDelete'
+	]);
 //Management Language
 Route::get('admin/language',[
 	'as'	=> 'admin.languageManage',
@@ -184,6 +193,10 @@ Route::get('admin/language',[
 Route::post('admin/language/update',[
 	'as'	=> 'admin.language.update',
 	'uses'	=> 'AdminController@languageUpdate'
+	]);
+Route::get('admin/language/{id}/delete',[
+	'as'	=> 'admin.language.delete',
+	'uses'	=>'AdminController@languageDelete'
 	]);
 Route::post('admin/checkLanguageExisted','AdminController@checkLanguageExisted');
 Route::post('admin/checkCategoryExisted','AdminController@checkCategoryExisted');

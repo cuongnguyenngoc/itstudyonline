@@ -7,7 +7,7 @@
             <div class="panel panel-info col-md-12" id="imagePanel" style="margin-bottom: 0px;">
                 <div class="panel-body">
                     <div class="row">
-                        <img src="{{(Auth::user()->image) ? '/'.Auth::user()->image->path : 'nothing'}}" alt="{{(Auth::user()->image) ? Auth::user()->image->img_name:''}}" class='col-md-12' width="700px" height="300px" id='img_preview'/>
+                        <img src="{{(Auth::user()->image) ? url(Auth::user()->image->path) : 'nothing'}}" alt="{{(Auth::user()->image) ? Auth::user()->image->img_name:''}}" class='col-md-12' width="700px" height="300px" id='img_preview'/>
                         <div class="col-md-12" style="margin-top: 10px;">
                         </div>
                     </div>

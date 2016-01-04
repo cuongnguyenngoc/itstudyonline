@@ -15,7 +15,7 @@
         <div class="col-sm-3">
             <!-- Left column -->
             <ul class="side-nav" id="sideUser">
-                <img src="/<?php echo e(Auth::user()->image->path); ?>" width="150" height="150" style="display:inline-block;border: 1px solid #ddd;padding: 4px;margin-top:10px;" />
+                <img src="<?php echo e(url(Auth::user()->image->path)); ?>" width="150" height="150" style="display:inline-block;border: 1px solid #ddd;padding: 4px;margin-top:10px;" />
                 <h5><?php echo e(Auth::user()->fullname); ?></h5>
                 <li style=""> <a href="<?php echo e(route('user.editprofile')); ?>" class="list-group-item ">Profile</a>
                 </li>

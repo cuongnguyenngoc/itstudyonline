@@ -26,8 +26,8 @@
                         <li class="active"><a href="#listlectures" data-toggle="tab"><span class="glyphicon glyphicon-th-list"></span></a></li>
                         <li><a href="#downloadable" data-toggle="tab"><span class="glyphicon glyphicon-download-alt"></span></a></li>
                         <li><a href="#discussion" data-toggle="tab"><span class="glyphicon glyphicon-comment"></span></a></li>
-                        <li><a href="{{url('forum/course/'.$enroll->id)}}">Forum</a></li>
-                        <li><a href="{{url('disciple/watch-rank')}}">Watch rank</a></li>
+                        <li><a href="{{url('forum/course/'.$enroll->course->id)}}">Forum</a></li>
+                        <li><a href="{{url('disciple/watch-rank/'.$enroll->course->id)}}">Rank</a></li>
                     </ul>
                 </div>
                 <input type="hidden" name="course_id" id="course_id" value="{{$enroll->course->id}}">
@@ -62,7 +62,7 @@
                         <div class="col-sm-12" style="margin-bottom: 30px;">
                             <div style="overflow-y: scroll; height: 505px;">
                                 <div class="form-add-comment col-md-12" style="padding: 0px; margin-top: 15px;">
-                                    <img src="/{{(Auth::user()->image)? Auth::user()->image->path:'images/it_me.jpg'}}" class="col-md-1 img-circle" style="padding: 0px;">
+                                    <img src="{{(Auth::user()->image)? url(Auth::user()->image->path):'images/it_me.jpg'}}" class="col-md-1 img-circle" style="padding: 0px;">
                                     <form id="addComment{{$lecture1->id}}" getId="{{$lecture1->id}}" class="col-md-11 add-comment" style="padding: 0px;">
                                         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
                                         <textarea id="contentComment{{$lecture1->id}}" style="width: 100%; overflow-y: none" class="form-control"s placeholder="You need to discussion about content which related this lecture to other people can help you or talking to you"></textarea>
@@ -74,7 +74,7 @@
                                         @foreach($lecture1->comments as $comment)
                                             @if($comment->user->id == Auth::user()->id)
                                                 <div class="col-md-12" style="padding: 0px;margin-top: 10px; padding-bottom: 20px; border-bottom: 1px solid #F0F0E9;"  id="commentCover{{$comment->id}}">
-                                                    <img src="/{{($comment->user->image)? $comment->user->image->path:'images/it_me.jpg'}}" class="col-md-1 img-circle" style="padding: 0px;">
+                                                    <img src="{{($comment->user->image)? url($comment->user->image->path):'images/it_me.jpg'}}" class="col-md-1 img-circle" style="padding: 0px;">
                                                     <div class="col-md-11" style="padding: 0px;">
                                                         <a href="#" class="col-md-8">
                                                             {{$comment->user->fullname}}
@@ -93,12 +93,12 @@
                                                             <input type='hidden' name='comment_id' id='comment_id{{$lecture1->id.$comment->id}}' value='"+response.comment.id+"'>
                                                             <textarea id='editContentComment{{$lecture1->id.$comment->id}}' style='width: 100%; overflow-y: none' class='form-control'>{{$comment->content}}</textarea>
                                                             <button type='submit' class='btn btn-primary btn-sm' style='margin-top: 5px;'> Post</button> Or <a href='#discussion' class='cancel' id='cancel{{$lecture1->id.$comment->id}}' getLecId='{{$lecture1->id}}' getId='{{$comment->id}}'> Cancel</a>
-                                                        </form>                                                     
+                                                        </form>                                              
                                                     </div>
                                                 </div> 
                                             @else
                                                 <div class="col-md-12" style="padding: 0px;margin-top: 10px; padding-bottom: 20px; border-bottom: 1px solid #F0F0E9;">
-                                                    <img src="/{{($comment->user->image)? $comment->user->image->path:'images/it_me.jpg'}}" class="col-md-1 img-circle" style="padding: 0px;">
+                                                    <img src="{{($comment->user->image)? url($comment->user->image->path):'images/it_me.jpg'}}" class="col-md-1 img-circle" style="padding: 0px;">
                                                     <div class="col-md-11" style="padding: 0px;">
                                                         <a href="#" class="col-md-12">
                                                             {{$comment->user->fullname}}
@@ -418,7 +418,7 @@
                                 if(response.lecture.comments[i].user.id == {{Auth::user()->id}}){
                                     $('#discussion').find('#cmtArea').append(
                                         "<div class='col-md-12' style='padding: 0px;margin-top: 10px; padding-bottom: 20px; border-bottom: 1px solid #F0F0E9;' id='commentCover"+response.lecture.comments[i].id+"'>"+
-                                            "<img src='/"+response.lecture.comments[i].user.image.path+"' class='col-md-1 img-circle' style='padding: 0px;'>"+
+                                            "<img src='"+response.lecture.comments[i].user.image.path+"' class='col-md-1 img-circle' style='padding: 0px;'>"+
                                             "<div class='col-md-11' style='padding: 0px;'>"+
                                                 "<a href='#' class='col-md-8'>"
                                                     +response.lecture.comments[i].user.fullname+
@@ -444,7 +444,7 @@
                                 }else{
                                     $('#discussion').find('#cmtArea').append(
                                         "<div class='col-md-12' style='padding: 0px;margin-top: 10px; padding-bottom: 20px; border-bottom: 1px solid #F0F0E9;'>"+
-                                            "<img src='/"+response.lecture.comments[i].user.image.path+"' class='col-md-1 img-circle' style='padding: 0px;'>"+
+                                            "<img src='"+response.lecture.comments[i].user.image.path+"' class='col-md-1 img-circle' style='padding: 0px;'>"+
                                             "<div class='col-md-11' style='padding: 0px;'>"+
                                                 "<a href='#' class='col-md-8'>"
                                                     +response.lecture.comments[i].user.fullname+
@@ -546,7 +546,7 @@
                     if(response.status){
                         $('#cmtArea').prepend(
                             "<div class='col-md-12' style='padding: 0px;margin-top: 10px; padding-bottom: 20px; border-bottom: 1px solid #F0F0E9;' id='commentCover"+response.comment.id+"'>"+
-                                "<img src='/"+response.user.image.path+"' class='col-md-1 img-circle' style='padding: 0px;'>"+
+                                "<img src='"+response.user.image.path+"' class='col-md-1 img-circle' style='padding: 0px;'>"+
                                 "<div class='col-md-11' style='padding: 0px;'>"+
                                     "<a href='#' class='col-md-8'>"
                                         +response.user.fullname+

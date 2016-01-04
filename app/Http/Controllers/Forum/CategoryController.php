@@ -19,11 +19,10 @@ class CategoryController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function __construct() {
-       $this->middleware('auth', ['except' => ['index','show']]);
+       $this->middleware('auth',['except'=>['index','show']]);
     }
 
     public function index() {
-
         $items = CategoryForum::all();
         $topics = [];
         $paginate = TopicForum::where("topic_cat", "<>", 0)->orderBy('topic_date', 'desc')->paginate(10);
@@ -32,7 +31,8 @@ class CategoryController extends Controller {
             $temp['topicName'] = $topic->topic_subject; //ten topic
             $temp['cateName'] = $topic->CategoryForum()->first()->cat_name; // ten category
             $temp['count'] = $topic->replyForums()->count(); // so luot reply cho topic
-            $temp['excerp'] = substr($topic->PostForum()->first()->post_content, 0, 500);
+            $text = $topic->PostForum()->first()->post_content;
+            $temp['excerp'] = substr($text, strlen($text) > 100 ? 100 : strlen($text));
             $temp['date'] = \Carbon\Carbon::parse($topic->topic_date)->format("M d,Y - H:i"); // ngay dang cua topic
             $topics[] = $temp;
         }
@@ -45,18 +45,20 @@ class CategoryController extends Controller {
         //check
         if (!Auth::check())
             return redirect("/");
-        $enroll = Enroll::where("id", "=", $id)->where("user_id", "=", Auth::user()->id)->get();
+        $enroll = Enroll::where("course_id", "=", $id)->where("user_id", "=", Auth::user()->id)->get();
         if ($enroll->count() == 0)
             return redirect("/");
         
         $topics = [];
-        $paginate = TopicForum::where("enroll_id", '=', $id)->orderBy('topic_date', 'desc')->paginate(10);
+        $enroll_ids = Enroll::where('course_id', '=', $id)->select('id')->get();
+        $paginate = TopicForum::whereIn("enroll_id", $enroll_ids)->orderBy('topic_date', 'desc')->paginate(10);
         foreach ($paginate as $topic) {
             $temp = [];
             $temp['enroll_id'] = $id;
             $temp['topicName'] = $topic->topic_subject; //ten topic
             $temp['count'] = $topic->replyForums()->count(); // so luot reply cho topic
-            $temp['excerp'] = substr($topic->PostForum()->first()->post_content, 0, 500);
+            $excerp = $topic->PostForum()->first()->post_content;
+            $temp['excerp'] = substr($excerp, 0, $excerp > 500 ? 500 : strlen($excerp));
             $temp['date'] = \Carbon\Carbon::parse($topic->topic_date)->format("M d,Y - H:i"); // ngay dang cua topic
             $topics[] = $temp;
         }

@@ -6,11 +6,15 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Course;
+use App\Category;
+use App\ProgrammingLanguage;
+use App\Learninglevel;
 use App\Lecture;
 use App\Comment;
 use App\Enroll;
 use App\Rating;
 use App\Answer;
+use App\UserCreateCourse;
 use Response;
 use Auth;
 
@@ -20,6 +24,14 @@ class DiscipleController extends Controller
     {
         $this->middleware('auth'); // Đây là middleware dùng để phân quyền nó có tên là disciple tương ứng với lớp isAdmin trong thư mục Http/Middleware
         // cái này là để phân quyền. nghĩa là khi thêm cái này vào constructor của Controller thì khi sử dụng các function duwoi thì người dùng phải có quyền admin.
+    }
+
+    public function getCoursesEnrolled(){
+        $categories = Category::all();
+        $languages = ProgrammingLanguage::all();
+        $levels = Learninglevel::all();
+        $enrolls = Auth::user()->enrolls()->paginate(4);
+        return view('disciple.courses-enrolled',compact('categories','languages','levels','enrolls'));
     }
 
     public function rateCourse(Request $request){
@@ -49,33 +61,37 @@ class DiscipleController extends Controller
 
     public function learnCourse($id)
     {
+        $id = urldecode($id);
+        if(Course::find($id)!=null){
+            $course = Course::find($id);
 
-        $course = Course::find($id);
+            if(Auth::user()->enroll(intval($id)) == null){
 
-        if(Auth::user()->enroll(intval($id)) == null){
+                $enroll = Auth::user()->enrolls()->create([
+                    'course_id' => $course->id,
+                    'tution' => $course->cost
+                ]);
 
-            $enroll = Auth::user()->enrolls()->create([
-                'course_id' => $course->id,
-                'tution' => $course->cost
-            ]);
+                $enroll = Enroll::find($enroll->id);
 
-            $enroll = Enroll::find($enroll->id);
+            }else{
+                $enroll = Auth::user()->enroll(intval($id));
+            }
 
+            $beforeLearningLecture = $enroll->course->lectures()->where('id',$enroll->lectureSaved)->first();
+            if($beforeLearningLecture){
+                $lecture1 = $beforeLearningLecture;
+            }else{
+                $lecture1 = $enroll->course->lectures()->where('position',1)->first();            
+            }
+
+        	$previousLecture1 = $enroll->course->lectures()->where('position',($lecture1->position - 1))->first();
+            $nextLecture1 = $enroll->course->lectures()->where('position',($lecture1->position + 1))->first();
+
+            return view('disciple.learn-course',compact('lecture1','previousLecture1','nextLecture1','enroll'));
         }else{
-            $enroll = Auth::user()->enroll(intval($id));
+            return view('errors.404');
         }
-
-        $beforeLearningLecture = $enroll->course->lectures()->where('id',$enroll->lectureSaved)->first();
-        if($beforeLearningLecture){
-            $lecture1 = $beforeLearningLecture;
-        }else{
-            $lecture1 = $enroll->course->lectures()->where('position',1)->first();            
-        }
-
-    	$previousLecture1 = $enroll->course->lectures()->where('position',($lecture1->position - 1))->first();
-        $nextLecture1 = $enroll->course->lectures()->where('position',($lecture1->position + 1))->first();
-
-        return view('disciple.learn-course',compact('lecture1','previousLecture1','nextLecture1','enroll'));
     }
 
     public function getLecture(Request $request){
@@ -239,9 +255,38 @@ class DiscipleController extends Controller
         }
     }
 
-    public function watchRank(){
-        $enrolls = Enroll::all();
-        $order = 1;
-        return view('disciple.course-ranking-disciples',compact('enrolls','order'));
+    public function watchRank($id=null){
+        if(isset($id)){
+            if(Course::find(urldecode($id))!=null){
+                $course = Course::find(urldecode($id));
+                $usercreatecourses = UserCreateCourse::where('isBoss',1)->get();
+                $order = 1;
+                return view('disciple.course-ranking-disciples',compact('usercreatecourses','order','course'));
+            }else{
+                return view('errors.404');
+            }
+        }else{                
+            $usercreatecourses = UserCreateCourse::where('isBoss',1)->get();
+            $order = 1;
+            $course = $usercreatecourses->first()->course;
+            return view('disciple.course-ranking-disciples',compact('usercreatecourses','order','course'));
+        }
+        
+    }
+
+    public function getRank(Request $request){
+        if($request->ajax()){
+            if($request->input('getId') != null && Course::find($request->input('getId'))){
+                $course = Course::find($request->input('getId'));
+                $enrolls = $course->enrolls()->orderBy('score','desc')->get();
+                foreach ($enrolls as $enroll) {
+                    $enroll->course->numberwrong = $enroll->course->numWrongAnswerInQuizs();
+                    $enroll->user;
+                }
+                return Response::json(['status' => true, 'enrolls' => $enrolls, 'message' => 'Nice']);
+            }else{
+                return Response::json(['status' => false, 'message'=>'I can not find course, check again buddy']);
+            }
+        }
     }
 }

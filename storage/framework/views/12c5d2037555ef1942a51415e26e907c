@@ -63,7 +63,7 @@
 					<div class="features_items" id="freecourse"><!--features_items-->
 						<h2 class="title text-center">Free Courses</h2>
 						<?php foreach($usercreatecourses as $usercreatecourse): ?>
-							<?php if($usercreatecourse->course->cost == 0): ?>
+							<?php if($usercreatecourse->course->cost == 0 && $usercreatecourse->course->isPublic == 1): ?>
 							<div class="col-sm-4">
 								<div class="product-image-wrapper">
 									<div class="single-products">
@@ -106,6 +106,7 @@
 							<?php foreach($categories as $category): ?>
 								<div class="tab-pane fade" id="<?php echo e(str_replace(' ','_',$category->cat_name)); ?>">
 									<?php foreach($category->usercreatecourses()->where('isBoss',1)->get() as $usercreatecourse): ?>
+										<?php if($usercreatecourse->course->isPublic == 1): ?>
 										<div class="col-sm-3">
 											<div class="product-image-wrapper">
 												<div class="single-products">
@@ -118,6 +119,7 @@
 												</div>
 											</div>
 										</div>
+										<?php endif; ?>
 									<?php endforeach; ?>
 								</div>
 							<?php endforeach; ?>
@@ -131,12 +133,12 @@
 							<div class="carousel-inner">
 								<div class="item active">
 									<?php foreach($usercreatecourses as $usercreatecourse): ?>	
-										<?php if($usercreatecourse->course()->where('views','>',200)->first() != null): ?>
+										<?php if($usercreatecourse->course()->where('views','>',200)->first() != null && $usercreatecourse->course->isPublic == 1): ?>
 											<div class="col-sm-4">
 												<div class="product-image-wrapper">
 													<div class="single-products">
 														<div class="productinfo text-center">
-															<img src="/<?php echo e($usercreatecourse->course->image->path); ?>" alt="<?php echo e($usercreatecourse->course->image->img_name); ?>" />
+															<img src="/<?php echo e($usercreatecourse->course->image->path); ?>" alt="<?php echo e($usercreatecourse->course->image->img_name); ?>" height="160px"/>
 															<h2><?php echo e($usercreatecourse->course->cost); ?></h2>
 															<p><?php echo e($usercreatecourse->course->course_name); ?></p>
 															<a href="<?php echo e(url('course/'.$usercreatecourse->course->id)); ?>" class="btn btn-default add-to-cart"> Detail</a>

@@ -14,13 +14,13 @@
 @section('content')
 
 <!-- Main -->
-<div class="container main">
+<div class="container main" style="min-height: 500px;">
     <div class="row">
         <ul class="nav nav-tabs">
             <li role="presentation" class="active"><a href="{{url('master/manage')}}">Manage Course</a></li>
             <li role="presentation"><a href="{{url('master/create-course')}}">Create Course</a></li>
             <li role="presentation"><a href="javascript:void(0)">Edit Course</a></li>
-            <li role="presentation"><a href="javascript:void(0)">Profile</a></li>
+            <li role="presentation"><a href="{{ url('user/editprofile') }}">Profile</a></li>
         </ul>
         <div class="col-sm-12" style="margin-top: 20px;">
             <div class="row">
@@ -28,42 +28,46 @@
                     <div class="panel-heading" style="text-align: center;">
                         Your Courses
                     </div>
-                    <div class="panel-body">
-                        @foreach($usercreatecourses as $usercreatecourse)
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <a href="javascript:void(0)" class="thumbnail">
-                                                <img src="/{{$usercreatecourse->course->image->path}}" alt="{{$usercreatecourse->course->image->img_name}}" style="height: 240px;">
-                                            </a>
-                                            <h2>{{$usercreatecourse->course->course_name}}</h2>
+                    <div class="panel-body" style="min-height: 200px;">
+                        @if($usercreatecourses->count() > 0)
+                            @foreach($usercreatecourses as $usercreatecourse)
+                                <div class="col-sm-3">
+                                    <div class="product-image-wrapper">
+                                        <div class="single-products">
+                                            <div class="productinfo text-center">
+                                                <a href="javascript:void(0)" class="thumbnail">
+                                                    <img src="/{{$usercreatecourse->course->image->path}}" alt="{{$usercreatecourse->course->image->img_name}}" style="height: 240px;">
+                                                </a>
+                                                <h2>{{$usercreatecourse->course->course_name}}</h2>
+                                                <ul class="nav nav-pills nav-justified">
+                                                    <li>
+                                                        <h5>
+                                                            <a href="javascript:void(0)"><i class="glyphicon glyphicon-user"></i>
+                                                                {{$usercreatecourse->course->enrolls()->count()}} students enrolled
+                                                            </a>
+                                                        </h5>
+                                                    </li>
+                                                    <li><h5><i class="glyphicon glyphicon-usd"></i>{{($usercreatecourse->course->cost == 0) ? "FREE" : $usercreatecourse->course->cost." VND"}}</h5></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="choose">
                                             <ul class="nav nav-pills nav-justified">
-                                                <li>
-                                                    <h5>
-                                                        <a href="javascript:void(0)"><i class="glyphicon glyphicon-user"></i>
-                                                            {{$usercreatecourse->course->enrolls()->count()}} students enrolled
-                                                        </a>
-                                                    </h5>
-                                                </li>
-                                                <li><h5><i class="glyphicon glyphicon-usd"></i>{{($usercreatecourse->course->cost == 0) ? "FREE" : $usercreatecourse->course->cost." VND"}}</h5></li>
+                                                <li><h5><a href="javascript:void(0)" class="editCourse" getId="{{$usercreatecourse->course->id}}"><i class="glyphicon glyphicon-edit"></i> Edit</a></h5></li>
+                                                <li><h5 style="padding-left: 47px;"><a href="javascript:void(0)" class="deleteCourse" getId="{{$usercreatecourse->course->id}}" del="{{$usercreatecourse->can_delete}}"><i class="glyphicon glyphicon-trash"></i> Delete</a></h5></li>
                                             </ul>
                                         </div>
-                                    </div>
-                                    <div class="choose">
-                                        <ul class="nav nav-pills nav-justified">
-                                            <li><h5><a href="javascript:void(0)" class="editCourse" getId="{{$usercreatecourse->course->id}}"><i class="glyphicon glyphicon-edit"></i> Edit</a></h5></li>
-                                            <li><h5 style="padding-left: 47px;"><a href="javascript:void(0)" class="deleteCourse" getId="{{$usercreatecourse->course->id}}" del="{{$usercreatecourse->can_delete}}"><i class="glyphicon glyphicon-trash"></i> Delete</a></h5></li>
-                                        </ul>
-                                    </div>
-                                    <div class="choose">
-                                        <div class="boss" style="text-align: center; padding:10px;">
-                                            {!!($usercreatecourse->isBoss)?"You have ".$usercreatecourse->course->membercreatecourses()->count()." members":"Owner is <a href=''>".$usercreatecourse->course->bosscreatecourse()->user->fullname."</a>"!!}
+                                        <div class="choose">
+                                            <div class="boss" style="text-align: center; padding:10px;">
+                                                {!!($usercreatecourse->isBoss)?"You have ".$usercreatecourse->course->membercreatecourses()->count()." members":"Owner is <a href=''>".$usercreatecourse->course->bosscreatecourse()->user->fullname."</a>"!!}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        @else
+                            <p style="text-align: center; font-size: 16px;">You haven't create any course yet. Do you want to create course? Click <a href="{{url('master/create-course')}}\">here</a></p>
+                        @endif
                     </div>
                     <!--/panel-body-->
                 </div>

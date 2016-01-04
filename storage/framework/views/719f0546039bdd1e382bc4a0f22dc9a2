@@ -263,7 +263,23 @@
                     $("#authModal").modal();
                     login_selected();
                 }else{
-                    window.location.href = "/course/learning/" + $('#course_id_hide').val();
+                    // window.location.href = "/course/learning/" + $('#course_id_hide').val();
+                    <?php
+                        $ok = 0;
+                        $balance = Auth::user()->balance;
+                        $courseCost = App\Course::find($course->id)->cost;
+                        if($balance >= $courseCost){
+                            $user = Auth::user();
+                            $user->balance = $user->balance - $courseCost;
+                            $user->save();
+                            $ok = 1;
+                        }
+                    ?>
+                        <?php if($ok == 1 || $courseCost==0): ?>
+                            window.location.href = "/course/learning/" + $('#course_id_hide').val();
+                        <?php else: ?>
+                             window.location.href = "/user/rechargeMoney";
+                        <?php endif; ?>
                 }
             });
         //});

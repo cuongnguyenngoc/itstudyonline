@@ -89,7 +89,7 @@
                                                     <div class='tab-content'>
                                                         <?php if($lecture->type == 'Video'): ?>
                                                             <div id='video<?php echo e($lecture->oldOrder); ?>' class="tab-pane fade in active">
-                                                               <form id='addVideo<?php echo e($lecture->oldOrder); ?>' class="addVideo" getId='<?php echo e($lecture->oldOrder); ?>'>
+                                                                <form id='addVideo<?php echo e($lecture->oldOrder); ?>' class="addVideo" getId='<?php echo e($lecture->oldOrder); ?>'>
                                                                     <input type='hidden' name='_token' value='<?php echo csrf_token(); ?>'>
                                                                     <input type='hidden' name='video_id' id='video_id<?php echo e($lecture->oldOrder); ?>' value="<?php echo e(($lecture->video) ? $lecture->video->id : null); ?>">
                                                                     <input type='hidden' name='doc_id' id='doc_video_id<?php echo e($lecture->oldOrder); ?>' value="<?php echo e(($lecture->document) ? $lecture->document->id : null); ?>">
@@ -111,7 +111,7 @@
                                                             </div>
                                                         <?php elseif($lecture->type == 'Document'): ?>
                                                             <div id='video<?php echo e($lecture->oldOrder); ?>' class="tab-pane fade in active">
-                                                               <form id='addVideo<?php echo e($lecture->oldOrder); ?>' class="addVideo hide" getId='<?php echo e($lecture->oldOrder); ?>'>
+                                                                <form id='addVideo<?php echo e($lecture->oldOrder); ?>' class="addVideo hide" getId='<?php echo e($lecture->oldOrder); ?>'>
                                                                     <input type='hidden' name='_token' value='<?php echo csrf_token(); ?>'>
                                                                     <input type='hidden' name='video_id' id='video_id<?php echo e($lecture->oldOrder); ?>' value="<?php echo e(($lecture->video) ? $lecture->video->id : null); ?>">
                                                                     <input type='hidden' name='doc_id' id='doc_video_id<?php echo e($lecture->oldOrder); ?>' value="<?php echo e(($lecture->document) ? $lecture->document->id : null); ?>">

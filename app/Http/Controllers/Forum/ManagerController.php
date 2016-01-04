@@ -10,6 +10,7 @@ use App\CategoryForum;
 use App\TopicForum;
 use Illuminate\Support\Facades\Auth;
 class ManagerController extends Controller{
+	
     public function __construct() {
         $this->middleware('auth');
     }

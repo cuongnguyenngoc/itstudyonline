@@ -21,12 +21,6 @@ use Auth;
 class HomeController extends Controller
 {
 
-    public function __construct()
-    {
-        // $this->middleware('admin', ['except' => 'index']); // Đây là middleware dùng để phân quyền nó có tên là admin tương ứng với lớp isAdmin trong thư mục Http/Middleware
-        // cái này là để phân quyền. nghĩa là khi thêm cái này vào constructor của Controller thì khi sử dụng các function duwoi thì người dùng phải có quyền admin.
-    }
-
     public function index()
     {
         $categories = Category::all();
@@ -37,23 +31,33 @@ class HomeController extends Controller
     }
 
     public function getCourse($id){
-
-        $course = Course::find($id);
-        $course->views += 1;
-        $course->save();
-        if(Auth::user() && Auth::user()->enroll(intval($id)) != null){
-            $enroll = Auth::user()->enroll(intval($id));
+        $id = urldecode($id);
+        if(Course::find($id)!=null){
+            $course = Course::find($id);
+            $course->views += 1;
+            $course->save();
+            if(Auth::user() && Auth::user()->enroll(intval($id)) != null){
+                $enroll = Auth::user()->enroll(intval($id));
+            }else{
+                $enroll = null;
+            }
+            return view('home.course',compact('course','enroll'));
         }else{
-            $enroll = null;
+            return view('errors.404');
         }
-        return view('home.course',compact('course','enroll'));
     }
 
-    public function test()
+    public function search(Request $request)
     {
-        
-        $course = Course::find(1);
-        $course->lectureAndQuizMixed();
-        
+        $query = urldecode($request->get('query'));
+        $categories = Category::all();
+        $languages = ProgrammingLanguage::all();
+        $levels = Learninglevel::all();
+        $courses = Course::whereRaw('course_name like ? and isPublic = 1',['%'.$query.'%'])->paginate(4);
+        return view('home.search-course',compact('query','courses','categories','languages','levels'));
+    }
+
+    public function back(){
+        return back();
     }
 }
