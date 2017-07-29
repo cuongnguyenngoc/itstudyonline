@@ -1,6 +1,6 @@
 **Introduction**
 
-This is the project which I have done in my fourth year student, I was a leader of a team with 4 members. This project was developed using Laravel framework for backend and JQuery, Boostrap for frontend. The idea of making this project that was inspired from https://www.coursera.org/, I wanted to make this project to learn more about Laravel framework and Jquery, Ajax technology. 
+This is the project which I have done in my fourth year student, I was a leader of a team with 4 members. This project was developed using Laravel framework for backend and JQuery, Boostrap for frontend. The idea of making this project that was inspired by https://www.coursera.org/, I wanted to make this project to learn more about Laravel framework and Jquery, Ajax technology. 
 
 **How to install**
 
