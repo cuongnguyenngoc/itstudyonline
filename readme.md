@@ -16,3 +16,5 @@ This is the project which I have done in my fourth year student, I was a leader 
   - Run `php artisan migrate` to migrate database from laravel to mysql database
   - Run `php artisan serve`
 
+**Demo**
+![Demo](Untitled.png)
